@@ -897,8 +897,7 @@
         </div>
 
         <div id="apps-container">
-            <!-- سيتم ملؤه ديناميكيًا -->
-        </div>
+            </div>
     </section>
 
     <section id="about" style="background-color: #f1f1f1; padding: 60px 20px; text-align: center;">
@@ -956,8 +955,7 @@
 
             <h4 style="color: var(--dark); margin-bottom: 10px;">لقطات الشاشة</h4>
             <div id="detailsScreenshots">
-                <!-- سيتم ملؤه ديناميكيًا -->
-            </div>
+                </div>
 
             <button class="download-modal-btn" onclick="downloadApp(window.currentAppId, this)">تحميل التطبيق الآن <i class="fas fa-download"></i></button>
         </div>
@@ -1117,7 +1115,7 @@
             });
         }
 
-        // **دالة التحميل المحدثة: إضافة تأثير التحميل واستخدام Toast**
+        // **دالة التحميل المُعدلة: تمت إضافة تشغيل التحميل الفعلي (window.location.href)**
         window.downloadApp = function(id, buttonElement = null) {
             let btn = buttonElement;
             if (!btn) {
@@ -1129,20 +1127,35 @@
                 btn.classList.add('loading');
             }
 
-            // زيادة عدد التنزيلات في قاعدة البيانات
+            // 1. جلب بيانات التطبيق
             appsCollection.doc(id).get().then(doc => {
                 if (doc.exists) {
-                    const currentDownloads = doc.data().downloads || 0;
+                    const appData = doc.data();
+                    const currentDownloads = appData.downloads || 0;
+
+                    // 2. زيادة عدد التنزيلات في قاعدة البيانات
                     appsCollection.doc(id).update({
                         downloads: currentDownloads + 1
                     }).then(() => {
-                        // إزالة تأثير التحميل بعد 2 ثانية
+                        
+                        // ⭐ الخطوة الجديدة: بدء التحميل الفعلي للملف
+                        // (يفترض أن اسم حقل رابط الملف في Firestore هو appFileUrl)
+                        if (appData.appFileUrl) { 
+                            window.location.href = appData.appFileUrl; 
+                        } else {
+                            // رسالة في حال لم يكن هناك رابط ملف في قاعدة البيانات
+                            console.warn(`No appFileUrl found for app: ${appData.name}`);
+                        }
+                        // ⭐ نهاية الخطوة الجديدة
+
+                        // 3. إزالة تأثير التحميل وإظهار رسالة النجاح
                         setTimeout(() => {
                             if (btn) {
                                 btn.classList.remove('loading');
                             }
-                            showToast(`تم بدء تحميل "${doc.data().name}" بنجاح!`);
+                            showToast(`تم بدء تحميل "${appData.name}" بنجاح!`);
                         }, 2000);
+
                     }).catch(error => {
                         console.error("Error updating downloads: ", error);
                         if (btn) {
@@ -1150,6 +1163,7 @@
                         }
                         showToast('حدث خطأ أثناء تحديث عدد التنزيلات.');
                     });
+
                 } else {
                     if (btn) {
                         btn.classList.remove('loading');
