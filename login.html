@@ -144,13 +144,13 @@
         <h2>تسجيل دخول الإدارة</h2>
         <form id="loginForm">
             <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="username" class="form-control" placeholder="اسم المستخدم" required>
-            </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="password" class="form-control" placeholder="كلمة المرور" required>
-            </div>
+    <i class="fas fa-user"></i>
+    <input type="text" id="username" class="form-control" placeholder="اسم المستخدم" required>
+</div>
+<div class="input-group">
+    <i class="fas fa-lock"></i>
+    <input type="password" id="password" class="form-control" placeholder="كلمة المرور" required>
+</div>
             <button type="submit" class="login-btn">تسجيل الدخول</button>
             <p id="loginMessage" class="message"></p>
         </form>
@@ -195,11 +195,6 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const message = document.getElementById('loginMessage');
-            
-            // بيانات تسجيل الدخول الافتراضية
-            const ADMIN_USERNAME = 'admin';
-            const ADMIN_PASSWORD = 'admin123';
-            
             if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
                 // تسجيل الدخول بنجاح
                 const userData = {
