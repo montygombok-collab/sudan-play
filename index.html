@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta n.م./
+    ة/ج؛ame="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudan Play - متجر التطبيقات السوداني</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -621,8 +622,8 @@
     <header>
         <nav>
             <div class="logo">
-                <img src="logo.jpeg" alt="Sudan Play Logo">
-                <h1>Sudan Play</h1>
+                <img src="logo.jpeg" alt="Sudan Play">
+                <h1></h1>
             </div>
             <div class="nav-links">
                 <a href="#apps"><i class="fas fa-th"></i> التطبيقات</a>
@@ -662,13 +663,13 @@
     <section id="about" style="background-color: #f1f1f1; padding: 60px 40px; text-align: center;">
         <h2>عن Sudan Play</h2>
         <p style="max-width: 800px; margin: 0 auto; color: #555; line-height: 1.8;">
-            Sudan Play هو بوابتك لاكتشاف المحتوى الرقمي الموثوق والمناسب للمستخدم السوداني. نحن نسعى لتقديم أفضل تجربة تحميل، مع التركيز على دعم المطورين المحليين وضمان جودة التطبيقات المقدمة. مهمتنا هي ربط المستخدم بالتكنولوجيا التي تخدمه.
+            Sudan Play هو بوابتك لاكتشاف المحتوى الرقمي الموثوق والمناسب للمستخدم السوداني. نحن نسعى لتقديم أفضل تجربة تحميل، مع التركيز على دعم المطورين المحليين وضمان جودة التطبيقات المقدمة. مهمتنا هي ربط المستخدم بالتكنولوجيا التي تخدمه تم تطوره بواسطة Monty GO SDN-Co.ltd.
         </p>
     </section>
 
     <section id="contact">
         <h2>تواصل معنا</h2>
-        <p>للدعم الفني، الاستفسارات، أو إدراج تطبيقك، يرجى ملء النموذج أدناه.</p>
+        <p> ، الاستفسارات، و نشر تطبيقك، يرجى ملء النموذج أدناه.</p>
         <form class="contact-form" id="contactForm">
             <input type="text" placeholder="اسمك الكامل" required>
             <input type="email" placeholder="بريدك الإلكتروني" required>
@@ -730,7 +731,7 @@
     <div id="toast-message"></div>
 
     <footer>
-        &copy; 2024 Sudan Play. جميع الحقوق محفوظة.
+        &copy;   -watsapp-249127432167-Monty Go SDN-Co.ltd2025 Sudan Play. جميع الحقوق محفوظة.
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -814,11 +815,11 @@
                                 <div class="app-rating">
                                     ${fullStars}
                                     ${emptyStars}
-                                    <span>(${app.downloads || 0} تحميل)</span>
+                                    <span>(${app.downloads || 0} تنزيل)</span>
                                 </div>
                             </div>
                         </div>
-                        <button class="download-btn" onclick="downloadApp('${app.id}', this)">تحميل <i class="fas fa-download"></i></button>
+                        <button class="download-btn" onclick="downloadApp('${app.id}', this)">تنزيل <i class="fas fa-download"></i></button>
                     `;
                     appsContainer.appendChild(appCard);
                 });
@@ -895,12 +896,12 @@
                 
                 // 2. التحقق من رابط التحميل
                 if (!app || !app.downloadLink) {
-                    showToast('عفواً، رابط تحميل هذا التطبيق غير متوفر حالياً.', 4000);
+                    showToast('عفواً، التطبيق غير متوفر حاليا.', 4000);
                     return Promise.reject(new Error("Download link not available"));
                 }
                 
                 // رسالة "جاري تثبيت التطبيق" الاحترافية
-                showToast(`جاري تحضير ملف ${app.name} للتحميل...`, 2500);
+                showToast(`جاري التحميل ${app.name} للتحميل...`, 2500);
 
                 // 3. زيادة عداد التحميلات في Firestore
                 return appsCollection.doc(id).update({
