@@ -104,6 +104,16 @@
         .form-control[type="password"] {
             letter-spacing: normal;
         }
+        
+        /* هذا الجزء يمنع ظهور "البيانات الجاهزة" من المتصفح في حقل الدخول */
+        .form-control:-webkit-autofill,
+        .form-control:-webkit-autofill:hover, 
+        .form-control:-webkit-autofill:focus, 
+        .form-control:-webkit-autofill:active  {
+            -webkit-box-shadow: 0 0 0 30px var(--light) inset !important;
+            -webkit-text-fill-color: var(--dark) !important;
+        }
+
 
         button {
             width: 100%;
@@ -137,7 +147,6 @@
         <h2>تسجيل الدخول للمسؤول</h2>
         <form onsubmit="event.preventDefault(); login();">
 
-            <!-- تم تغيير id إلى email لتفادي مشاكل الملء التلقائي -->
             <div class="input-group">
                 <i class="fas fa-envelope"></i>
                 <input type="email" id="email" class="form-control" placeholder="البريد الإلكتروني" required>
@@ -181,7 +190,6 @@
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    // تخزين uid وليس كائن المستخدم بالكامل
                     localStorage.setItem('sudanPlayAdmin', user.uid);
                     window.location.href = '/dashboard.html'; 
                 })
