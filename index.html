@@ -1080,9 +1080,10 @@
                     document.getElementById('detailsTitle').textContent = app.name;
 
                     document.getElementById('detailsCategory').textContent = app.category;
-                    document.getElementById('detailsDescription').textContent = app.description;
-                    document.getElementById('detailsVersion').textContent = `${app.version}`;
-                    document.getElementById('detailsSize').textContent = `${app.size} ميغابايت`;
+                    // ملاحظة: قد تحتاج إلى إضافة حقل وصف التطبيق في Firestore
+                    document.getElementById('detailsDescription').textContent = app.description || app.shortDescription || 'لا يتوفر وصف حالياً لهذا التطبيق.'; 
+                    document.getElementById('detailsVersion').textContent = `${app.version || 'غير محدد'}`;
+                    document.getElementById('detailsSize').textContent = `${app.size || 'غير محدد'} ميغابايت`;
                     
                     const ratingContainer = document.getElementById('detailsRating');
                     const ratingValue = parseFloat(app.rating) || 0;
@@ -1115,7 +1116,7 @@
             });
         }
 
-        // **دالة التحميل المُعدلة: تم تحسين طريقة بدء التحميل الفعلي (باستخدام الرابط المخفي)**
+        // **دالة التحميل المُعدلة والنهائية: تصحيح اسم الحقل واستخدام طريقة التحميل الموثوقة**
         window.downloadApp = function(id, buttonElement = null) {
             let btn = buttonElement;
             if (!btn) {
@@ -1138,30 +1139,29 @@
                         downloads: currentDownloads + 1
                     }).then(() => {
                         
-                        // ⭐ الخطوة المُحسّنة: بدء التحميل الفعلي باستخدام عنصر رابط مخفي (الأكثر موثوقية)
-                        if (appData.appFileUrl) { 
-                            const downloadLink = document.createElement('a');
-                            downloadLink.href = appData.appFileUrl;
+                        // ⭐ التصحيح هنا: استخدام 'downloadLink' (كما هو موجود في Firestore) وتطبيق طريقة التحميل الموثوقة
+                        if (appData.downloadLink) { 
+                            const downloadLinkElement = document.createElement('a');
+                            downloadLinkElement.href = appData.downloadLink; // استخدام downloadLink
                             
                             // إضافة خاصية 'download' لضمان أن المتصفح يتعامل معه كتنزيل ملف
-                            downloadLink.download = appData.name || ''; 
+                            downloadLinkElement.download = appData.name || 'app_file'; 
 
                             // إدراج العنصر والضغط عليه برمجياً ثم إزالته
-                            document.body.appendChild(downloadLink);
-                            downloadLink.click();
-                            document.body.removeChild(downloadLink); 
+                            document.body.appendChild(downloadLinkElement);
+                            downloadLinkElement.click();
+                            document.body.removeChild(downloadLinkElement); 
                         } else {
-                            // رسالة في حال لم يكن هناك رابط ملف في قاعدة البيانات
-                            console.warn(`No appFileUrl found for app: ${appData.name}`);
-                            showToast(`خطأ: لم يتم العثور على ملف تحميل للتطبيق "${appData.name}".`, 5000);
+                            // رسالة خطأ واضحة في الـ Toast إذا لم يتم العثور على الرابط
+                            console.warn(`Error: 'downloadLink' field missing for app: ${appData.name}`);
+                            showToast(`خطأ: لم يتم العثور على ملف تحميل للتطبيق "${appData.name}".`, 5000); 
                             
-                            // نضمن إزالة حالة التحميل حتى لو فشل العثور على الرابط
                             if (btn) {
                                 btn.classList.remove('loading');
                             }
-                            return; // إيقاف الكود هنا لمنع رسالة النجاح الكاذبة
+                            return; 
                         }
-                        // ⭐ نهاية الخطوة المُحسّنة
+                        // ⭐ نهاية الكود المُصحح
 
                         // 3. إزالة تأثير التحميل وإظهار رسالة النجاح
                         setTimeout(() => {
