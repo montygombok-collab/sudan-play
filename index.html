@@ -92,21 +92,41 @@
         .hero {
             background: var(--gradient);
             color: var(--light);
-            padding: 60px 20px;
+            padding: 80px 20px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://www.appcreator24.com/srv/imgs/gen/3625531_splash.png?ts=1760602896') center/cover no-repeat;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
 
         .hero h2 {
-            font-size: 2.2em;
-            margin-bottom: 10px;
+            font-size: 2.5em;
+            margin-bottom: 15px;
             line-height: 1.3;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .hero p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 1.2em;
+            opacity: 0.95;
             margin-bottom: 30px;
-            line-height: 1.5;
+            line-height: 1.6;
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
@@ -116,21 +136,23 @@
             background-color: var(--dark);
             color: var(--light);
             border: none;
-            padding: 14px 30px;
+            padding: 15px 35px;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1.1em;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .hero button:hover {
             background-color: #000;
             transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
         /* --- App Showcase --- */
         #apps {
-            padding: 40px 20px;
+            padding: 60px 20px;
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
@@ -139,8 +161,60 @@
         #apps h2 {
             text-align: center;
             color: var(--dark);
+            margin-bottom: 40px;
+            font-size: 2.2em;
+            position: relative;
+        }
+
+        #apps h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .search-section {
+            display: flex;
+            justify-content: center;
             margin-bottom: 30px;
-            font-size: 2em;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid var(--primary);
+            border-radius: 25px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2em;
         }
 
         .filter-section {
@@ -166,47 +240,8 @@
             min-width: 200px;
             width: 100%;
             max-width: 250px;
-        }
-
-        /* شريط البحث الجديد */
-        .search-section {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .search-box {
-            position: relative;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 45px 12px 15px;
-            border: 2px solid var(--primary);
-            border-radius: 25px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            background-color: white;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
-            border-color: var(--secondary);
-        }
-
-        .search-box i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-size: 1.2em;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         #apps-container {
@@ -222,12 +257,14 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s;
+            transition: all 0.3s ease;
             cursor: pointer;
+            border: 1px solid #f0f0f0;
         }
 
         .app-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
         .app-cover {
@@ -284,6 +321,7 @@
             object-fit: cover;
             border: 3px solid var(--primary);
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .app-text {
@@ -305,6 +343,7 @@
             font-size: 0.9em;
             color: var(--primary);
             margin-bottom: 5px;
+            font-weight: 600;
         }
 
         .app-rating {
@@ -333,12 +372,14 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1em;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
             text-align: center;
+            font-weight: 600;
         }
 
         .download-btn:hover {
             opacity: 0.8;
+            transform: translateY(-1px);
         }
 
         /* --- App Details Modal --- */
@@ -402,6 +443,7 @@
             object-fit: cover;
             border: 4px solid var(--primary);
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .details-text {
@@ -447,6 +489,7 @@
             border-radius: 10px;
             margin-bottom: 20px;
             flex-wrap: wrap;
+            border: 1px solid rgba(74, 107, 255, 0.1);
         }
 
         .details-info div {
@@ -483,6 +526,7 @@
             cursor: pointer;
             transition: transform 0.3s;
             flex-shrink: 0;
+            border: 1px solid #ddd;
         }
 
         #detailsScreenshots img:hover {
@@ -499,11 +543,14 @@
             cursor: pointer;
             font-size: 1.1em;
             margin-top: 20px;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(74, 107, 255, 0.3);
         }
 
         .download-modal-btn:hover {
             opacity: 0.9;
+            transform: translateY(-1px);
         }
 
         /* Image View Modal */
@@ -537,6 +584,7 @@
 
         #contact h2 {
             color: var(--accent);
+            margin-bottom: 20px;
         }
 
         #contact p {
@@ -544,6 +592,7 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            opacity: 0.9;
         }
 
         .contact-form {
@@ -562,6 +611,14 @@
             font-size: 1em;
             background-color: rgba(255, 255, 255, 0.1);
             color: var(--light);
+            transition: all 0.3s;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px var(--accent);
         }
 
         .contact-form input::placeholder,
@@ -577,12 +634,14 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.1em;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
             width: 100%;
+            font-weight: 600;
         }
 
         .contact-form button:hover {
             opacity: 0.8;
+            transform: translateY(-1px);
         }
 
         /* --- Footer --- */
@@ -590,8 +649,31 @@
             background-color: var(--dark);
             color: var(--light);
             text-align: center;
-            padding: 20px;
+            padding: 30px 20px;
             margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .company-logo {
+            width: 120px;
+            height: auto;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .copyright {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.5;
         }
 
         /* --- Toast Message --- */
@@ -713,7 +795,7 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) { nav { padding: 0 20px; } } @media (max-width: 992px) { .hero h2 { font-size: 2em; } .hero p { font-size: 1em; } #apps-container { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } } @media (max-width: 768px) { header { padding: 12px 15px; } nav { flex-direction: column; align-items: flex-start; } .logo { margin-bottom: 10px; } .logo h1 { font-size: 1.3em; } .nav-links { margin-top: 10px; width: 100%; justify-content: space-between; } .nav-links a { margin-right: 0; font-size: 0.9em; padding: 5px 0; } .hero { padding: 50px 15px; } .hero h2 { font-size: 1.8em; } .hero button { padding: 12px 25px; font-size: 1em; } #apps { padding: 30px 15px; } #apps h2 { font-size: 1.8em; } .filter-section { flex-direction: column; align-items: flex-start; gap: 10px; } #categoryFilter { width: 100%; max-width: 100%; } .search-section { flex-direction: column; } .search-box { max-width: 100%; } #apps-container { grid-template-columns: 1fr; gap: 20px; } .app-info { padding: 12px; } .app-icon { width: 50px; height: 50px; } .app-title { font-size: 1.1em; } .modal-content { margin: 10% auto; padding: 20px; width: 95%; } .details-header { flex-direction: column; text-align: center; gap: 15px; } .details-text h3 { margin-top: 10px; font-size: 1.5em; } .details-info { flex-wrap: wrap; } .details-info > div { flex-basis: 50%; margin: 10px 0; } #detailsScreenshots img { width: 150px; height: 260px; } #contact { padding: 50px 15px; } } @media (max-width: 576px) { .logo { font-size: 1.5em; } .logo img { height: 35px; } .nav-links { flex-wrap: wrap; justify-content: center; } .nav-links a { margin: 0 8px 5px 8px; } .hero h2 { font-size: 1.6em; } .hero p { font-size: 0.95em; } #apps h2 { font-size: 1.6em; } .app-card { border-radius: 12px; } .app-cover { height: 130px; } .app-info { gap: 12px; } .modal-content { padding: 15px; } .close-btn { top: 10px; left: 15px; font-size: 24px; } .details-text h3 { font-size: 1.3em; } .details-info p { font-size: 1.3em; } #detailsScreenshots img { width: 120px; height: 210px; } .download-modal-btn { padding: 12px; font-size: 1em; } #contact h2 { font-size: 1.6em; } } @media (max-width: 400px) { .logo h1 { font-size: 1.1em; } .nav-links a { font-size: 0.85em; } .hero h2 { font-size: 1.4em; } #apps h2 { font-size: 1.4em; } .details-info > div { flex-basis: 100%; } #detailsScreenshots img { width: 100px; height: 175px; } } </style>
+        @media (max-width: 1200px) { nav { padding: 0 20px; } } @media (max-width: 992px) { .hero h2 { font-size: 2em; } .hero p { font-size: 1em; } #apps-container { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } } @media (max-width: 768px) { header { padding: 12px 15px; } nav { flex-direction: column; align-items: flex-start; } .logo { margin-bottom: 10px; } .logo h1 { font-size: 1.3em; } .nav-links { margin-top: 10px; width: 100%; justify-content: space-between; } .nav-links a { margin-right: 0; font-size: 0.9em; padding: 5px 0; } .hero { padding: 60px 15px; } .hero h2 { font-size: 1.8em; } .hero button { padding: 12px 25px; font-size: 1em; } #apps { padding: 40px 15px; } #apps h2 { font-size: 1.8em; } .filter-section { flex-direction: column; align-items: flex-start; gap: 10px; } #categoryFilter { width: 100%; max-width: 100%; } .search-section { flex-direction: column; } .search-box { max-width: 100%; } #apps-container { grid-template-columns: 1fr; gap: 20px; } .app-info { padding: 12px; } .app-icon { width: 50px; height: 50px; } .app-title { font-size: 1.1em; } .modal-content { margin: 10% auto; padding: 20px; width: 95%; } .details-header { flex-direction: column; text-align: center; gap: 15px; } .details-text h3 { margin-top: 10px; font-size: 1.5em; } .details-info { flex-wrap: wrap; } .details-info > div { flex-basis: 50%; margin: 10px 0; } #detailsScreenshots img { width: 150px; height: 260px; } #contact { padding: 40px 15px; } .company-logo { width: 100px; } } @media (max-width: 576px) { .logo { font-size: 1.5em; } .logo img { height: 35px; } .nav-links { flex-wrap: wrap; justify-content: center; } .nav-links a { margin: 0 8px 5px 8px; } .hero h2 { font-size: 1.6em; } .hero p { font-size: 0.95em; } #apps h2 { font-size: 1.6em; } .app-card { border-radius: 12px; } .app-cover { height: 130px; } .app-info { gap: 12px; } .modal-content { padding: 15px; } .close-btn { top: 10px; left: 15px; font-size: 24px; } .details-text h3 { font-size: 1.3em; } .details-info p { font-size: 1.3em; } #detailsScreenshots img { width: 120px; height: 210px; } .download-modal-btn { padding: 12px; font-size: 1em; } #contact h2 { font-size: 1.6em; } .company-logo { width: 80px; } .copyright { font-size: 0.8em; } } @media (max-width: 400px) { .logo h1 { font-size: 1.1em; } .nav-links a { font-size: 0.85em; } .hero h2 { font-size: 1.4em; } #apps h2 { font-size: 1.4em; } .details-info > div { flex-basis: 100%; } #detailsScreenshots img { width: 100px; height: 175px; } .company-logo { width: 70px; } } </style>
 </head>
 <body onload="loadApps()">
     <header>
@@ -733,9 +815,11 @@
 
     <main>
         <section class="hero">
-            <h2>متجر التطبيقات السوداني</h2>
-            <p> متجر التطبيقات السوداني الأولى، نوفر لك أحدث وأفضل البرامج والخدمات المحلية والدولية.</p>
-            <button onclick="document.getElementById('apps').scrollIntoView();">ابدأ التصفح</button>
+            <div class="hero-content">
+                <h2>متجر التطبيقات السوداني</h2>
+                <p>منصة متجر التطبيقات السوداني الأولى، نوفر لك أحدث وأفضل البرامج والخدمات المحلية والدولية.</p>
+                <button onclick="document.getElementById('apps').scrollIntoView();">ابدأ التصفح</button>
+            </div>
         </section>
 
         <section id="apps">
@@ -775,7 +859,13 @@
     </main>
 
     <footer>
-        <p>&copy; -Monty Go SDN-Co.Ltd-2024 Sudan Play. جميع الحقوق محفوظة -249127432167-watsapp</p>
+        <div class="footer-content">
+            <img src="https://www.appcreator24.com/srv/imgs/gen/3625531_splash.png?ts=1760602896" alt="Monty Go SDN-Co.Ltd" class="company-logo">
+            <div class="copyright">
+                <p>&copy; 2024 Sudan Play. جميع الحقوق محفوظة</p>
+                <p>Monty Go SDN-Co.Ltd - 249127432167 - WhatsApp</p>
+            </div>
+        </div>
     </footer>
 
     <div id="appDetailsModal" class="modal">
@@ -806,7 +896,7 @@
 
             <div class="details-description" id="detailsDescription"></div>
             
-            <h4></h4> صور التطبيق  </h4>
+            <h4>صور التطبيق</h4>
             <div id="detailsScreenshots">
                 </div>
 
@@ -826,12 +916,12 @@
     <div id="submissionModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeSubmissionModal()">&times;</span>
-            <h2>    تقديم طلب نشر تطبيق- سعر نشر التطبيق 25الف جنيه سوداني</h2>
+            <h2>تقديم طلب نشر تطبيق- سعر نشر التطبيق 25الف جنيه سوداني</h2>
             
             <div class="payment-info">
                 <p>يرجى إتمام عملية التحويل المصرفي قبل التقديم عبر خدمة بنكك.</p>
                 <p><strong>رقم الحساب لاستلام التحويل:</strong> <code>8437856</code></p>
-                <p><strong></strong>اسم الحساب :</strong>Monty Go Sdn trading works</p>
+                <p><strong>اسم الحساب:</strong> Monty Go Sdn trading works</p>
                 <p class="review-note">مدة المراجعة المتوقعة: 30 ساعة لن يتم نشر التطبيق اذا لم يتم دفع الرسوم كاملة.</p>
             </div>
 
@@ -849,7 +939,7 @@
                     <input type="text" id="devName" placeholder="اسمك الكامل (المستخدم)" required>
                     <input type="text" id="companyName" placeholder="اسم الشركة (اختياري)">
                     <input type="email" id="devEmail" placeholder="البريد الإلكتروني للتواصل" required>
-                    <input type="text" id="transactionId" placeholder=" (رقم عملية التحويل البنكي (بنكك " required>
+                    <input type="text" id="transactionId" placeholder="رقم عملية التحويل البنكي (بنكك)" required>
                 </fieldset>
 
                 <button type="submit" class="btn btn-primary">إرسال للمراجعة</button>
