@@ -854,7 +854,7 @@
         }
 
         // ----------------------------------------------------
-        // دوال طلبات النشر (الجديدة)
+        // دوال طلبات النشر (المصححة)
         // ----------------------------------------------------
 
         // 1. دالة جلب وعرض طلبات النشر
@@ -864,8 +864,8 @@
             
             submissionsList.innerHTML = '<h3>جاري تحميل الطلبات...</h3>';
             
-            // جلب الطلبات التي حالتها 'pending'
-            db.collection('submissions').where('status', '==', 'pending').onSnapshot(snapshot => {
+            // جلب الطلبات التي حالتها 'Pending' (تم التصحيح هنا)
+            db.collection('submissions').where('reviewStatus', '==', 'Pending').onSnapshot(snapshot => {
                 submissionsList.innerHTML = ''; 
                 const pendingCount = snapshot.size;
                 
@@ -898,14 +898,14 @@
                     // تحويل البيانات إلى سلسلة نصية آمنة لتمريرها إلى الدالة
                     const submissionDataString = JSON.stringify(submission).replace(/"/g, '&quot;'); 
 
-                    const dateString = submission.submittedAt ? new Date(submission.submittedAt.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
+                    const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
                     
                     // معالجة الصور
                     let imagesHTML = '';
-                    if (submission.images && submission.images.length > 0) {
+                    if (submission.appImages && submission.appImages.length > 0) {
                         imagesHTML = `
                             <div class="submission-images">
-                                ${submission.images.map(img => `
+                                ${submission.appImages.map(img => `
                                     <img src="${img}" alt="صورة التطبيق" class="submission-image" onclick="openImageModal('${img}')">
                                 `).join('')}
                             </div>
@@ -914,17 +914,17 @@
 
                     card.innerHTML = `
                         <div class="submission-header">
-                            <h3 class="submission-title">${submission.name}</h3>
+                            <h3 class="submission-title">${submission.appName}</h3>
                             <span class="status-badge status-pending">قيد المراجعة</span>
                         </div>
                         
                         <div class="submission-details">
-                            <p><strong>نوع التطبيق:</strong> ${submission.type}</p>
-                            <p><strong>المطور:</strong> ${submission.developerName}</p>
+                            <p><strong>نوع التطبيق:</strong> ${submission.appType}</p>
+                            <p><strong>المطور:</strong> ${submission.devName}</p>
                             <p><strong>الشركة:</strong> ${submission.companyName || 'لا توجد شركة'}</p>
-                            <p><strong>البريد الإلكتروني:</strong> ${submission.email}</p>
+                            <p><strong>البريد الإلكتروني:</strong> ${submission.devEmail}</p>
                             <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId}</code></p>
-                            <p><strong>رابط التطبيق:</strong> <a href="${submission.link}" target="_blank">اضغط للتحميل/المعاينة</a></p>
+                            <p><strong>رابط التطبيق:</strong> <a href="${submission.appLink}" target="_blank">اضغط للتحميل/المعاينة</a></p>
                             <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
                         </div>
                         
@@ -952,7 +952,7 @@
             
             // 1. تحديث حالة الطلب في مجموعة submissions
             db.collection('submissions').doc(submissionId).update({
-                status: status,
+                reviewStatus: status,
                 reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
             })
             .then(() => {
@@ -961,19 +961,19 @@
                     
                     // 2. إذا تمت الموافقة، قم بنسخ بيانات التطبيق إلى مجموعة 'apps'
                     const appData = {
-                        name: submissionData.name,
-                        category: submissionData.type, 
-                        downloadLink: submissionData.link,
-                        screenshotsPaths: submissionData.images || [],
-                        developerName: submissionData.developerName,
-                        shortDescription: `تطبيق مقدم بواسطة ${submissionData.developerName}.`,
-                        fullDescription: `تطبيق ${submissionData.name} تم تقديمه بواسطة ${submissionData.developerName}.`,
+                        name: submissionData.appName,
+                        category: submissionData.appType, 
+                        downloadLink: submissionData.appLink,
+                        screenshotsPaths: submissionData.appImages || [],
+                        developerName: submissionData.devName,
+                        shortDescription: `تطبيق مقدم بواسطة ${submissionData.devName}.`,
+                        fullDescription: `تطبيق ${submissionData.appName} تم تقديمه بواسطة ${submissionData.devName}.`,
                         
                         // قيم مبدئية
                         size: 0,
                         rating: 0,
                         downloads: 0,
-                        iconPath: submissionData.images && submissionData.images.length > 0 ? submissionData.images[0] : 'placeholder-icon.png',
+                        iconPath: submissionData.appImages && submissionData.appImages.length > 0 ? submissionData.appImages[0] : 'placeholder-icon.png',
                         
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     };
@@ -1049,7 +1049,7 @@
             });
             
             // طلبات مقبولة
-            db.collection('submissions').where('status', '==', 'approved').get().then(snapshot => {
+            db.collection('submissions').where('reviewStatus', '==', 'approved').get().then(snapshot => {
                 document.getElementById('approvedSubmissions').textContent = snapshot.size;
             });
         }
