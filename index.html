@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudan Play - متجر التطبيقات السوداني</title>
+    <title>تسجيل الدخول - Sudan Play</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* الأنماط السابقة تبقى كما هي */
         * {
             margin: 0;
             padding: 0;
@@ -26,242 +25,131 @@
         }
 
         body {
-            background-color: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background: var(--dark);
+            overflow: hidden;
+            position: relative;
         }
 
-        /* --- Header / Navigation --- */
-        header {
-            background-color: var(--dark);
-            color: var(--light);
-            padding: 15px 20px;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-        
-        .logo h1 {
-            color: var(--light);
-            font-size: 1.5em;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--light);
-            text-decoration: none;
-            margin-right: 20px;
-            font-size: 1em;
-            transition: color 0.3s;
-            white-space: nowrap;
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary);
-        }
-
-        /* زر نشر تطبيق جديد */
-        .submit-app-btn {
-            background: var(--secondary);
-            color: var(--light);
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background 0.3s;
-            margin-right: 10px;
-        }
-
-        .submit-app-btn:hover {
-            background: rgb(200, 70, 95);
-        }
-
-        /* --- Hero Section --- */
-        .hero {
-            background: var(--gradient);
-            color: var(--light);
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .hero h2 {
-            font-size: 2.2em;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .hero p {
-            font-size: 1.1em;
-            opacity: 0.9;
-            margin-bottom: 30px;
-            line-height: 1.5;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero button {
-            background-color: var(--dark);
-            color: var(--light);
-            border: none;
-            padding: 14px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1.1em;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .hero button:hover {
-            background-color: #000;
-            transform: translateY(-3px);
-        }
-
-        /* --- نافذة نشر التطبيق --- */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
+        .particles {
+            position: absolute;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(5px);
+            z-index: 0;
         }
 
-        .modal-content {
-            background-color: var(--light);
-            margin: 5% auto;
-            padding: 25px;
+        .login-box {
+            background: var(--light);
+            padding: 40px;
             border-radius: 15px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
+            width: 350px;
+            text-align: center;
             position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            cursor: pointer;
             z-index: 1;
+            transition: transform 0.3s ease;
         }
 
-        .close-btn:hover,
-        .close-btn:focus {
-            color: var(--secondary);
-            text-decoration: none;
+        .login-box:hover {
+            transform: translateY(-5px);
         }
 
-        .submit-form {
+        .login-box h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            align-items: center;
+            background: var(--gradient-light);
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
+        .input-group:focus-within {
+            box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
         }
 
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--dark);
+        .input-group i {
+            color: var(--primary);
+            font-size: 18px;
+            margin-left: 10px;
         }
 
         .form-control {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(74, 107, 255, 0.2);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .bank-info {
-            background-color: var(--gradient-light);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-right: 4px solid var(--primary);
-        }
-
-        .bank-info h4 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .bank-info p {
-            margin: 5px 0;
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            padding: 5px 0;
+            font-size: 16px;
             color: var(--dark);
+            outline: none;
+            transition: all 0.3s ease;
         }
 
-        .submit-btn {
+        .form-control::placeholder {
+            color: rgba(30, 30, 45, 0.6);
+        }
+
+        .form-control[type="password"] {
+            letter-spacing: normal;
+        }
+        
+        .form-control:-webkit-autofill,
+        .form-control:-webkit-autofill:hover, 
+        .form-control:-webkit-autofill:focus, 
+        .form-control:-webkit-autofill:active  {
+            -webkit-box-shadow: 0 0 0 30px var(--light) inset !important;
+            -webkit-text-fill-color: var(--dark) !important;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
             background: var(--gradient);
             color: var(--light);
             border: none;
-            padding: 15px;
             border-radius: 8px;
+            font-size: 18px;
             cursor: pointer;
-            font-size: 1.1em;
             font-weight: 600;
-            transition: opacity 0.3s;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(74, 107, 255, 0.4);
         }
 
-        .submit-btn:hover {
+        button:hover {
             opacity: 0.9;
+            transform: translateY(-2px);
         }
 
-        .submit-btn.loading {
-            pointer-events: none;
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            color: var(--secondary);
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .loading {
             position: relative;
             color: transparent !important;
         }
 
-        .submit-btn.loading::after {
+        .loading::after {
             content: "";
             position: absolute;
             width: 20px;
@@ -276,327 +164,333 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* --- إضافة تصميم شريط الرسائل التفاعلية (Toast/Snackbar) --- */
-        #toast-message {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: var(--dark);
-            color: var(--light);
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
-            position: fixed;
-            z-index: 3000;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 30px;
-            font-size: 1.1em;
-            box-shadow: var(--shadow);
-            transition: visibility 0s, opacity 0.5s linear;
-            opacity: 0;
-            max-width: 90%;
+        .logo {
+            margin-bottom: 20px;
         }
 
-        #toast-message.show {
-            visibility: visible;
-            opacity: 1;
+        .logo h1 {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 5px;
         }
 
-        /* تصميم الاستجابة للهواتف والأجهزة اللوحية */
-        @media (max-width: 768px) {
-            header {
-                padding: 12px 15px;
-            }
-            
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .logo {
-                margin-bottom: 10px;
-            }
-            
-            .logo h1 {
-                font-size: 1.3em;
-            }
-
-            .nav-links {
-                margin-top: 10px;
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .nav-links a {
-                margin-right: 0;
-                font-size: 0.9em;
-                padding: 5px 0;
-            }
-
-            .submit-app-btn {
-                margin-top: 10px;
-                width: 100%;
-                text-align: center;
-            }
-
-            .hero {
-                padding: 50px 15px;
-            }
-
-            .hero h2 {
-                font-size: 1.8em;
-            }
-
-            .hero button {
-                padding: 12px 25px;
-                font-size: 1em;
-            }
-
-            .modal-content {
-                margin: 10% auto;
-                padding: 20px;
-                width: 95%;
-            }
+        .logo p {
+            color: #666;
+            font-size: 14px;
         }
     </style>
+
+    <!-- مكتبات Firebase الأساسية (الإصدار 8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                <h1>Sudan Play</h1>
-            </div>
-            <div class="nav-links">
-                <a href="#apps"><i class="fas fa-th"></i> التطبيقات</a>
-                <a href="#about"><i class="fas fa-info-circle"></i> عن المتجر</a>
-                <a href="#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
-                <button class="submit-app-btn" onclick="openSubmitAppModal()">
-                    <i class="fas fa-plus"></i> نشر تطبيق
-                </button>
-            </div>
-        </nav>
-    </header>
 
-    <section class="hero">
-        <h2>متجر التطبيقات السوداني</h2>
-        <p>اكتشف وحمل أفضل التطبيقات والألعاب المحلية والعالمية المصممة خصيصًا لك.</p>
-        <a href="#apps"><button>ابدأ التصفح <i class="fas fa-arrow-down"></i></button></a>
-    </section>
+    <div class="particles" id="particles-js"></div>
 
-    <!-- نافذة نشر التطبيق -->
-    <div id="submitAppModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeSubmitAppModal()">&times;</span>
-            <h2 style="color: var(--primary); margin-bottom: 20px;">نشر تطبيق جديد</h2>
-            
-            <div class="bank-info">
-                <h4><i class="fas fa-university"></i> معلومات الحساب البنكي</h4>
-                <p><strong>اسم البنك:</strong> بنك السودان المركزي</p>
-                <p><strong>رقم الحساب:</strong> 1234567890</p>
-                <p><strong>اسم المستفيد:</strong> Monty GO SDN-Co.LTD</p>
-                <p><strong>مبلغ التحويل:</strong> 50 جنيه سوداني</p>
-            </div>
-            
-            <form class="submit-form" id="submitAppForm">
-                <div class="form-group">
-                    <label for="appType">نوع التطبيق</label>
-                    <select id="appType" class="form-control" required>
-                        <option value="">اختر نوع التطبيق</option>
-                        <option value="ألعاب">ألعاب</option>
-                        <option value="أدوات">أدوات</option>
-                        <option value="تواصل">تواصل</option>
-                        <option value="تعليم">تعليم</option>
-                        <option value="ترفيه">ترفيه</option>
-                        <option value="مال وأعمال">مال وأعمال</option>
-                        <option value="أخرى">أخرى</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="appName">اسم التطبيق</label>
-                    <input type="text" id="appName" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="appImages">روابط صور التطبيق (افصل بينها بفاصلة)</label>
-                    <textarea id="appImages" class="form-control form-textarea" placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="appLink">رابط التطبيق (APK أو رابط المتجر)</label>
-                    <input type="url" id="appLink" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="transactionId">رقم عملية التحويل البنكي</label>
-                    <input type="text" id="transactionId" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="devName">اسم المطور/المستخدم</label>
-                    <input type="text" id="devName" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="companyName">اسم الشركة (اختياري)</label>
-                    <input type="text" id="companyName" class="form-control">
-                </div>
-                
-                <div class="form-group">
-                    <label for="devEmail">البريد الإلكتروني</label>
-                    <input type="email" id="devEmail" class="form-control" required>
-                </div>
-                
-                <button type="submit" class="submit-btn" id="submitAppBtn">إرسال الطلب للمراجعة <i class="fas fa-paper-plane"></i></button>
-            </form>
+    <div class="login-box">
+        <div class="logo">
+            <h1>Sudan Play</h1>
+            <p>لوحة تحكم المسؤول</p>
         </div>
+        
+        <h2>تسجيل الدخول</h2>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" class="form-control" placeholder="البريد الإلكتروني" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" class="form-control" placeholder="كلمة المرور" required>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+            
+            <button type="submit" id="loginBtn">
+                <span id="btnText">دخول</span>
+            </button>
+        </form>
     </div>
 
-    <div id="toast-message"></div>
+    <!-- كود الجزيئات (Particles) -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
-    <footer>
-        &copy; 2025 Sudan Play. جميع الحقوق محفوظة. - واتساب: 249127432167 - Monty Go SDN-Co.LTD
-    </footer>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script> 
     <script>
-        // تهيئة Firebase
+        // ** إعدادات Firebase الصحيحة لمشروعك **
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
             projectId: "sudan-play",
             storageBucket: "sudan-play.firebasestorage.app",
             messagingSenderId: "981764948623",
-            appId: "1:981764948623:web:00e5c9268198f70e39a6fa",
-            measurementId: "G-Y6NP2MNQR9"
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
         };
-
+        
         // تهيئة Firebase
-        let db;
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
-            db = firebase.firestore();
             console.log("✅ Firebase initialized successfully");
         } catch (error) {
             console.error("❌ Firebase initialization error:", error);
+            showError("خطأ في تهيئة النظام");
         }
 
-        // دالة عرض الرسائل
-        function showToast(message, duration = 3000) {
-            const toast = document.getElementById('toast-message');
-            toast.textContent = message;
-            toast.className = "show";
-            
-            setTimeout(function() {
-                toast.className = toast.className.replace("show", "");
-            }, duration);
-        }
+        // عناصر DOM
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const btnText = document.getElementById('btnText');
+        const errorMessage = document.getElementById('errorMessage');
 
-        // دالة فتح نافذة نشر التطبيق
-        function openSubmitAppModal() {
-            document.getElementById('submitAppModal').style.display = 'block';
-        }
+        // دالة تسجيل الدخول
+        async function login() {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
 
-        // دالة إغلاق نافذة نشر التطبيق
-        function closeSubmitAppModal() {
-            document.getElementById('submitAppModal').style.display = 'none';
-        }
+            // التحقق من المدخلات
+            if (!email || !password) {
+                showError("الرجاء إدخال البريد الإلكتروني وكلمة المرور");
+                return;
+            }
 
-        // إرسال نموذج نشر التطبيق
-        document.getElementById('submitAppForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitAppBtn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.classList.add('loading');
-            
+            if (!isValidEmail(email)) {
+                showError("البريد الإلكتروني غير صالح");
+                return;
+            }
+
+            // عرض حالة التحميل
+            setLoading(true);
+            hideError();
+
             try {
-                // جمع بيانات النموذج
-                const formData = {
-                    appType: document.getElementById('appType').value,
-                    appName: document.getElementById('appName').value,
-                    appImages: document.getElementById('appImages').value.split(',').map(img => img.trim()).filter(img => img.length > 0),
-                    appLink: document.getElementById('appLink').value,
-                    transactionId: document.getElementById('transactionId').value,
-                    devName: document.getElementById('devName').value,
-                    companyName: document.getElementById('companyName').value || '',
-                    devEmail: document.getElementById('devEmail').value,
-                    reviewStatus: 'Pending', // استخدام reviewStatus بدلاً من status
-                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                console.log("📤 Sending data to Firebase:", formData);
-
-                // التحقق من اتصال Firebase
-                if (!db) {
-                    throw new Error("Firebase not initialized");
-                }
-
-                // إرسال البيانات إلى مجموعة 'submissions'
-                const docRef = await db.collection('submissions').add(formData);
-                console.log("✅ Submission successful with ID:", docRef.id);
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
                 
-                // إعادة تعيين النموذج وإظهار رسالة النجاح
-                submitBtn.classList.remove('loading');
-                submitBtn.innerHTML = originalText;
+                // حفظ حالة تسجيل الدخول
+                localStorage.setItem('sudanPlayAdmin', user.uid);
+                localStorage.setItem('sudanPlayAdminEmail', user.email);
                 
-                showToast('✅ تم إرسال طلب نشر التطبيق بنجاح وسيتم مراجعته خلال 30 ساعة');
-                closeSubmitAppModal();
-                document.getElementById('submitAppForm').reset();
+                console.log("✅ Login successful:", user.email);
+                
+                // التوجيه إلى لوحة التحكم
+                window.location.href = 'dashboard.html';
                 
             } catch (error) {
-                console.error("❌ Error submitting app:", error);
-                submitBtn.classList.remove('loading');
-                submitBtn.innerHTML = originalText;
+                console.error("❌ Login error:", error);
+                setLoading(false);
                 
-                let errorMessage = 'حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى';
+                // عرض رسالة الخطأ المناسبة
+                let errorMsg = "خطأ في تسجيل الدخول";
                 
-                if (error.code) {
-                    switch (error.code) {
-                        case 'permission-denied':
-                            errorMessage = 'خطأ في الأذونات: يرجى التحقق من إعدادات قاعدة البيانات';
-                            break;
-                        case 'unavailable':
-                            errorMessage = 'تعذر الاتصال بالخادم، يرجى التحقق من اتصال الإنترنت';
-                            break;
-                        case 'invalid-argument':
-                            errorMessage = 'بيانات غير صالحة، يرجى التحقق من المدخلات';
-                            break;
-                        default:
-                            errorMessage = `خطأ: ${error.message}`;
-                    }
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        errorMsg = "البريد الإلكتروني غير صالح";
+                        break;
+                    case 'auth/user-disabled':
+                        errorMsg = "هذا الحساب معطل";
+                        break;
+                    case 'auth/user-not-found':
+                        errorMsg = "لم يتم العثور على حساب بهذا البريد الإلكتروني";
+                        break;
+                    case 'auth/wrong-password':
+                        errorMsg = "كلمة المرور غير صحيحة";
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMsg = "خطأ في الاتصال بالشبكة";
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMsg = "محاولات تسجيل دخول كثيرة، يرجى المحاولة لاحقاً";
+                        break;
+                    default:
+                        errorMsg = error.message || "حدث خطأ غير متوقع";
                 }
                 
-                showToast('❌ ' + errorMessage);
-            }
-        });
-
-        // إغلاق النوافذ المنبثقة عند النقر خارجها
-        window.onclick = function(event) {
-            const modal = document.getElementById('submitAppModal');
-            if (event.target === modal) {
-                modal.style.display = "none";
+                showError(errorMsg);
             }
         }
 
-        // اختبار اتصال Firebase عند التحميل
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("🚀 Page loaded");
-            
-            if (db) {
-                console.log("✅ Firebase is connected and ready");
-                showToast("✅ النظام جاهز", 2000);
+        // دالة التحقق من صحة البريد الإلكتروني
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // دالة عرض الخطأ
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // دالة إخفاء الخطأ
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // دالة تعيين حالة التحميل
+        function setLoading(loading) {
+            if (loading) {
+                loginBtn.disabled = true;
+                loginBtn.classList.add('loading');
+                btnText.style.visibility = 'hidden';
             } else {
-                console.error("❌ Firebase is not connected");
-                showToast("⚠️ تحذير: هناك مشكلة في الاتصال بالخادم", 5000);
+                loginBtn.disabled = false;
+                loginBtn.classList.remove('loading');
+                btnText.style.visibility = 'visible';
             }
+        }
+
+        // دالة إنشاء الجزيئات
+        function createParticles() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    "particles": {
+                        "number": { 
+                            "value": 80, 
+                            "density": { 
+                                "enable": true, 
+                                "value_area": 800 
+                            } 
+                        },
+                        "color": { 
+                            "value": "#ffffff" 
+                        },
+                        "shape": { 
+                            "type": "circle", 
+                            "stroke": { 
+                                "width": 0, 
+                                "color": "#000000" 
+                            } 
+                        },
+                        "opacity": { 
+                            "value": 0.5, 
+                            "random": false
+                        },
+                        "size": { 
+                            "value": 3, 
+                            "random": true
+                        },
+                        "line_linked": { 
+                            "enable": true, 
+                            "distance": 150, 
+                            "color": "#ffffff", 
+                            "opacity": 0.4, 
+                            "width": 1 
+                        },
+                        "move": { 
+                            "enable": true, 
+                            "speed": 6, 
+                            "direction": "none", 
+                            "random": false, 
+                            "straight": false, 
+                            "out_mode": "out"
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas", 
+                        "events": { 
+                            "onhover": { 
+                                "enable": true, 
+                                "mode": "grab" 
+                            }, 
+                            "onclick": { 
+                                "enable": true, 
+                                "mode": "push" 
+                            } 
+                        }
+                    }
+                });
+            } else {
+                console.warn("Particles.js not loaded");
+            }
+        }
+
+        // دالة التحقق من تسجيل دخول سابق
+        function checkExistingLogin() {
+            const session = localStorage.getItem('sudanPlayAdmin');
+            if (session) {
+                console.log("Found existing session, redirecting...");
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // دالة التحقق من صحة Firebase
+        function checkFirebaseAuth() {
+            return new Promise((resolve) => {
+                const auth = firebase.auth();
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        console.log("User already signed in:", user.email);
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🚀 Login page loaded");
+            
+            // التحقق من تسجيل الدخول السابق
+            checkExistingLogin();
+            
+            // إنشاء الجزيئات
+            createParticles();
+            
+            // إضافة تأثيرات للحقول
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                    hideError();
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+
+                // إدخال البيانات
+                input.addEventListener('input', function() {
+                    hideError();
+                });
+            });
+
+            // إرسال النموذج
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                login();
+            });
+
+            // إدخال بالزر Enter
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+
+            // اختبار اتصال Firebase
+            checkFirebaseAuth().then(() => {
+                console.log("✅ Firebase auth ready");
+            }).catch(error => {
+                console.error("❌ Firebase auth error:", error);
+                showError("خطأ في اتصال النظام");
+            });
+        });
+
+        // معالجة أخطاء الصفحة
+        window.addEventListener('error', function(e) {
+            console.error("Global error:", e.error);
         });
     </script>
 </body>
