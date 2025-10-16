@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudan Play - نشر تطبيق جديد</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* أنماط CSS الأساسية المنسقة مع الداشبورد */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: rgb(74, 107, 255);
+            --secondary: rgb(255, 94, 125);
+            --accent: rgb(46, 196, 182);
+            --dark: rgb(30, 30, 45);
+            --light: rgb(248, 249, 254);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-light: linear-gradient(135deg, rgba(74, 107, 255, 0.1) 0%, rgba(255, 94, 125, 0.1) 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header / Navigation (مماثل للملف الأصلي) --- */
+        header {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        .logo img {
+            height: 40px;
+            border-radius: 8px;
+            margin-left: 10px; 
+            box-shadow: 0 0 10px rgba(74, 107, 255, 0.5);
+        }
+        
+        .logo h1 {
+            color: var(--light);
+            font-size: 1.5em;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 1em;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+        }
+        
+        /* --- Publish App Section Styles --- */
+        #publish-app {
+            padding: 60px 20px;
+            max-width: 800px;
+            margin: 40px auto; /* زيادة الهامش العلوي */
+            width: 100%;
+            text-align: center;
+            flex-grow: 1; /* للسماح للقسم بالتمدد */
+        }
+
+        #publish-app h2 {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        #publish-app .publish-form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            text-align: right;
+        }
+
+        #publish-app .form-group {
+            margin-bottom: 20px;
+        }
+
+        #publish-app label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 1.1em;
+        }
+
+        #publish-app .form-control,
+        #publish-app .form-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            resize: vertical;
+        }
+
+        #publish-app .form-control:focus,
+        #publish-app .form-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            outline: none;
+        }
+
+        #publish-app h3 {
+            color: var(--secondary);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 5px;
+            font-size: 1.5em;
+            text-align: right;
+        }
+
+        #publish-app .fixed-info {
+            background-color: var(--gradient-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 1px dashed var(--primary);
+        }
+        
+        #publish-app .fixed-info p {
+            margin: 5px 0;
+            line-height: 1.8;
+        }
+
+        #publish-app .fixed-info p:first-child {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1em;
+        }
+
+        #publish-app .fixed-info p:nth-child(2) {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: var(--dark);
+            direction: ltr; /* لضمان عرض الرقم بشكل صحيح */
+        }
+
+        .submit-publish-btn {
+            background: var(--gradient);
+            color: var(--light);
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-top: 30px;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .submit-publish-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .info-note {
+            font-size: 0.9em;
+            color: var(--secondary);
+            margin-top: 15px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        
+        /* --- Footer (مماثل للملف الأصلي) --- */
+        footer {
+            background-color: var(--dark);
+            color: var(--light);
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        /* --- شريط الرسائل التفاعلية (Toast/Snackbar) --- */
+        #toast-message {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--dark);
+            color: var(--light);
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 3000;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 30px;
+            font-size: 1.1em;
+            box-shadow: var(--shadow);
+            transition: visibility 0s, opacity 0.5s linear;
+            opacity: 0;
+            max-width: 90%;
+        }
+
+        #toast-message.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* تصميم الاستجابة للهواتف والأجهزة اللوحية */
+        @media (max-width: 768px) {
+            header { padding: 12px 15px; }
+            nav { flex-direction: column; align-items: flex-start; }
+            .logo { margin-bottom: 10px; }
+            .nav-links { margin-top: 10px; width: 100%; justify-content: space-around; }
+            .nav-links a { margin-right: 0; font-size: 0.95em; padding: 5px 0; }
+            #publish-app { padding: 40px 15px; margin: 20px auto; }
+            #publish-app h2 { font-size: 1.8em; }
+            #publish-app .publish-form-container { padding: 20px; }
+            .submit-publish-btn { padding: 15px; font-size: 1.1em; }
+            #publish-app .fixed-info p:nth-child(2) { font-size: 1.6em; }
+        }
+        @media (max-width: 576px) {
+            .logo h1 { font-size: 1.3em; }
+            .nav-links { flex-wrap: wrap; }
+            .nav-links a { margin: 0 5px 5px 5px; }
+            #publish-app h2 { font-size: 1.6em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="toast-message"></div>
+
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <img src="logo-placeholder.png" alt="Sudan Play Logo">
+                <h1>Sudan Play</h1>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#apps">التطبيقات</a>
+                <a href="publish.html" class="active">انشر تطبيقك</a>
+                <a href="#">المدونة</a>
+                <a href="index.html#contact">تواصل معنا</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="publish-app">
+            <h2>نشر تطبيق جديد</h2>
+
+            <p style="
+                font-size: 1.1em;
+                color: #555;
+                margin-bottom: 30px;
+                text-align: center;
+            ">املأ النموذج التالي لتقديم طلب نشر تطبيقك على متجر Sudan Play. يرجى التأكد من دقة المعلومات لإتمام عملية المراجعة بنجاح.</p>
+
+            <div class="publish-form-container">
+                <form id="publishAppForm">
+                    <h3 style="color: var(--primary);">معلومات التطبيق</h3>
+
+                    <div class="form-group">
+                        <label for="appName"><i class="fas fa-mobile-alt" style="margin-left: 5px;"></i> اسم التطبيق:</label>
+                        <input type="text" id="appName" name="appName" class="form-control" placeholder="ادخل الاسم الكامل للتطبيق" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="appLink"><i class="fas fa-link" style="margin-left: 5px;"></i> رابط ملف التطبيق (APK/متجر):</label>
+                        <input type="url" id="appLink" name="appLink" class="form-control" placeholder="رابط التحميل المباشر أو رابط المتجر" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appScreenshots"><i class="fas fa-images" style="margin-left: 5px;"></i> روابط صور/لقطات الشاشة (3 روابط على الأقل - افصل بينها بفاصلة):</label>
+                        <textarea id="appScreenshots" name="appScreenshots" class="form-textarea" rows="4" placeholder="رابط الصورة 1, رابط الصورة 2, رابط الصورة 3, ..." required></textarea>
+                    </div>
+
+                    <h3>معلومات المطور والشركة</h3>
+                    
+                    <div class="form-group">
+                        <label for="developerName"><i class="fas fa-user" style="margin-left: 5px;"></i> اسم المطور:</label>
+                        <input type="text" id="developerName" name="developerName" class="form-control" placeholder="اسمك أو اسم الفريق المطور" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="developerEmail"><i class="fas fa-envelope" style="margin-left: 5px;"></i> البريد الإلكتروني للمطور:</label>
+                        <input type="email" id="developerEmail" name="developerEmail" class="form-control" placeholder="example@domain.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="companyName"><i class="fas fa-building" style="margin-left: 5px;"></i> اسم الشركة/المؤسسة (اختياري):</label>
+                        <input type="text" id="companyName" name="companyName" class="form-control" placeholder="اسم الشركة (إذا وجد)">
+                    </div>
+
+                    <h3>تفاصيل الدفع لنشر التطبيق</h3>
+
+                    <div class="fixed-info">
+                        <p>رقم الحساب الثابت للمتجر (يرجى التحويل إليه):</p>
+                        <p style="font-family: monospace;">SDPLAY-ACC-123456789</p>
+                        <small style="color: #777;">(استخدم هذا الرقم لإتمام عملية التحويل عبر وسيلة الدفع المتاحة)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transactionID"><i class="fas fa-money-check-alt" style="margin-left: 5px;"></i> رقم عملية التحويل (للتحقق من الدفع):</label>
+                        <input type="text" id="transactionID" name="transactionID" class="form-control" placeholder="أدخل رقم العملية الذي يظهر في إيصال التحويل" required>
+                    </div>
+
+                    <button type="submit" class="submit-publish-btn">
+                        <i class="fas fa-paper-plane" style="margin-left: 5px;"></i> إرسال طلب النشر
+                    </button>
+                    
+                    <p class="info-note">
+                        <i class="fas fa-hourglass-half" style="margin-left: 5px;"></i> ملاحظة: سيتم التحقق من الطلب والموافقة عليه خلال مدة تصل إلى **30 ساعة** بعد التحقق من صحة رقم عملية التحويل.
+                    </p>
+                </form>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Sudan Play. جميع الحقوق محفوظة.</p>
+        <p>تصميم وتطوير برعاية مجتمع المطورين السوداني.</p>
+    </footer>
+
+    <script>
+        // دالة لعرض رسالة تفاعلية (Toast)
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast-message');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // إرسال نموذج نشر التطبيق
+        document.getElementById('publishAppForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // بما أننا نعدل على HTML فقط، سنعرض رسالة نجاح وهمية
+            showToast('✅ تم استلام طلب نشر تطبيقك بنجاح! سيتم مراجعته خلال 30 ساعة بعد التحقق من الدفع.', 7000);
+            this.reset();
+        });
+    </script>
+</body>
+</html>
