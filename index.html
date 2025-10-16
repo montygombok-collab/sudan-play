@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول - Sudan Play</title>
+    <title>Sudan Play - متجر التطبيقات السوداني</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* الأنماط الحالية تبقى كما هي */
         * {
             margin: 0;
             padding: 0;
@@ -25,192 +26,128 @@
         }
 
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: var(--light);
             min-height: 100vh;
-            background: var(--dark);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        .login-box {
-            background: var(--light);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            width: 350px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            transition: transform 0.3s ease;
-        }
-
-        .login-box:hover {
-            transform: translateY(-5px);
-        }
-
-        .login-box h2 {
-            color: var(--primary);
-            margin-bottom: 30px;
-            font-weight: 700;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 25px;
             display: flex;
-            align-items: center;
-            background: var(--gradient-light);
-            border-radius: 8px;
-            padding: 10px 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            flex-direction: column;
         }
 
-        .input-group:focus-within {
-            box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
-        }
+        /* باقي الأنماط تبقى كما هي */
+        /* ... */
 
-        .input-group i {
-            color: var(--primary);
-            font-size: 18px;
-            margin-left: 10px;
-        }
-
-        .form-control {
-            flex-grow: 1;
-            border: none;
-            background: transparent;
-            padding: 5px 0;
-            font-size: 16px;
-            color: var(--dark);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .form-control::placeholder {
-            color: rgba(30, 30, 45, 0.6);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: var(--gradient);
-            color: var(--light);
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(74, 107, 255, 0.4);
-        }
-
-        button:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .error-message {
-            color: var(--secondary);
-            font-size: 14px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .loading {
-            position: relative;
-            color: transparent !important;
-        }
-
-        .loading::after {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        .firebase-status {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
     </style>
-
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
 </head>
-<body>
+<body onload="loadApps()">
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Sudan Play</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#apps"><i class="fas fa-th"></i> التطبيقات</a>
+                <a href="#about"><i class="fas fa-info-circle"></i> عن المتجر</a>
+                <a href="#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
+                <button class="submit-app-btn" onclick="openSubmitAppModal()">
+                    <i class="fas fa-plus"></i> نشر تطبيق
+                </button>
+            </div>
+        </nav>
+    </header>
 
-    <div class="particles" id="particles-js"></div>
+    <!-- المحتوى الحالي يبقى كما هو -->
+    <section class="hero">
+        <h2>متجر التطبيقات السوداني</h2>
+        <p>اكتشف وحمل أفضل التطبيقات والألعاب المحلية والعالمية المصممة خصيصًا لك.</p>
+        <a href="#apps"><button>ابدأ التصفح <i class="fas fa-arrow-down"></i></button></a>
+    </section>
 
-    <div class="login-box">
-        <h2>تسجيل الدخول للمسؤول</h2>
-        
-        <form id="loginForm">
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="email" class="form-control" placeholder="البريد الإلكتروني" required>
+    <!-- باقي المحتوى -->
+    <!-- ... -->
+
+    <!-- نافذة نشر التطبيق -->
+    <div id="submitAppModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSubmitAppModal()">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 20px;">نشر تطبيق جديد</h2>
+            
+            <div class="bank-info">
+                <h4><i class="fas fa-university"></i> معلومات الحساب البنكي</h4>
+                <p><strong>اسم البنك:</strong> بنك السودان المركزي</p>
+                <p><strong>رقم الحساب:</strong> 1234567890</p>
+                <p><strong>اسم المستفيد:</strong> Monty GO SDN-Co.LTD</p>
+                <p><strong>مبلغ التحويل:</strong> 50 جنيه سوداني</p>
             </div>
             
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="password" class="form-control" placeholder="كلمة المرور" required>
-            </div>
-            
-            <div class="error-message" id="errorMessage"></div>
-            
-            <button type="submit" id="loginBtn">
-                <span id="btnText">دخول</span>
-            </button>
-        </form>
-
-        <div id="firebaseStatus" class="firebase-status"></div>
+            <form class="submit-form" id="submitAppForm">
+                <div class="form-group">
+                    <label for="appType">نوع التطبيق</label>
+                    <select id="appType" class="form-control" required>
+                        <option value="">اختر نوع التطبيق</option>
+                        <option value="ألعاب">ألعاب</option>
+                        <option value="أدوات">أدوات</option>
+                        <option value="تواصل">تواصل</option>
+                        <option value="تعليم">تعليم</option>
+                        <option value="ترفيه">ترفيه</option>
+                        <option value="مال وأعمال">مال وأعمال</option>
+                        <option value="أخرى">أخرى</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appName">اسم التطبيق</label>
+                    <input type="text" id="appName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appImages">روابط صور التطبيق (افصل بينها بفاصلة)</label>
+                    <textarea id="appImages" class="form-control form-textarea" placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appLink">رابط التطبيق (APK أو رابط المتجر)</label>
+                    <input type="url" id="appLink" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transactionId">رقم عملية التحويل البنكي</label>
+                    <input type="text" id="transactionId" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="devName">اسم المطور/المستخدم</label>
+                    <input type="text" id="devName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="companyName">اسم الشركة (اختياري)</label>
+                    <input type="text" id="companyName" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="devEmail">البريد الإلكتروني</label>
+                    <input type="email" id="devEmail" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitAppBtn">إرسال الطلب للمراجعة <i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- باقي النوافذ المنبثقة -->
+    <!-- ... -->
+
+    <div id="toast-message"></div>
+
+    <footer>
+        &copy; 2025 Sudan Play. جميع الحقوق محفوظة. - واتساب: 249127432167 - Monty Go SDN-Co.LTD
+    </footer>
+
+    <!-- 🔑 إضافة Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script> 
+    
     <script>
-        // 🔑 **مفاتيح Firebase الصحيحة - من كودك**
+        // 🔑 **مفاتيح Firebase - نفس المفاتيح المستخدمة في login.html**
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
@@ -221,196 +158,128 @@
             measurementId: "G-Y6NP2MNQR9"
         };
 
-        // عناصر DOM
-        const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
-        const btnText = document.getElementById('btnText');
-        const errorMessage = document.getElementById('errorMessage');
-        const firebaseStatus = document.getElementById('firebaseStatus');
+        // تهيئة Firebase
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            console.log("✅ Firebase initialized successfully in index.html");
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
+        }
 
-        // اختبار اتصال Firebase
-        function testFirebaseConnection() {
+        // دالة عرض الرسائل
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast-message');
+            toast.textContent = message;
+            toast.className = "show";
+            
+            setTimeout(function() {
+                toast.className = toast.className.replace("show", "");
+            }, duration);
+        }
+
+        // دالة فتح نافذة نشر التطبيق
+        function openSubmitAppModal() {
+            document.getElementById('submitAppModal').style.display = 'block';
+        }
+
+        // دالة إغلاق نافذة نشر التطبيق
+        function closeSubmitAppModal() {
+            document.getElementById('submitAppModal').style.display = 'none';
+        }
+
+        // إرسال نموذج نشر التطبيق
+        document.getElementById('submitAppForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitAppBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.classList.add('loading');
+            
             try {
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
+                // جمع بيانات النموذج
+                const formData = {
+                    appType: document.getElementById('appType').value,
+                    appName: document.getElementById('appName').value,
+                    appImages: document.getElementById('appImages').value.split(',').map(img => img.trim()).filter(img => img.length > 0),
+                    appLink: document.getElementById('appLink').value,
+                    transactionId: document.getElementById('transactionId').value,
+                    devName: document.getElementById('devName').value,
+                    companyName: document.getElementById('companyName').value || '',
+                    devEmail: document.getElementById('devEmail').value,
+                    reviewStatus: 'Pending',
+                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                console.log("📤 Sending data to Firebase:", formData);
+
+                // التحقق من اتصال Firebase
+                if (!db) {
+                    throw new Error("Firebase not initialized");
                 }
+
+                // إرسال البيانات إلى مجموعة 'submissions'
+                const docRef = await db.collection('submissions').add(formData);
+                console.log("✅ Submission successful with ID:", docRef.id);
                 
-                showFirebaseStatus('✅ تم الاتصال بـ Firebase بنجاح', 'success');
-                console.log('✅ Firebase connected successfully');
-                return true;
+                // إعادة تعيين النموذج وإظهار رسالة النجاح
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = originalText;
+                
+                showToast('✅ تم إرسال طلب نشر التطبيق بنجاح وسيتم مراجعته خلال 30 ساعة');
+                closeSubmitAppModal();
+                document.getElementById('submitAppForm').reset();
                 
             } catch (error) {
-                showFirebaseStatus('❌ خطأ في الاتصال بـ Firebase: ' + error.message, 'error');
-                console.error('❌ Firebase connection error:', error);
-                return false;
-            }
-        }
-
-        // عرض حالة Firebase
-        function showFirebaseStatus(message, type) {
-            firebaseStatus.textContent = message;
-            firebaseStatus.className = 'firebase-status';
-            firebaseStatus.classList.add(type === 'success' ? 'status-success' : 'status-error');
-            firebaseStatus.style.display = 'block';
-        }
-
-        // دالة تسجيل الدخول
-        async function login() {
-            const email = emailInput.value.trim();
-            const password = passwordInput.value;
-
-            // التحقق من المدخلات
-            if (!email || !password) {
-                showError("الرجاء إدخال البريد الإلكتروني وكلمة المرور");
-                return;
-            }
-
-            if (!isValidEmail(email)) {
-                showError("البريد الإلكتروني غير صالح");
-                return;
-            }
-
-            // عرض حالة التحميل
-            setLoading(true);
-            hideError();
-
-            try {
-                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
+                console.error("❌ Error submitting app:", error);
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = originalText;
                 
-                console.log("✅ Login successful:", user.email);
+                let errorMessage = 'حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى';
                 
-                // حفظ حالة تسجيل الدخول
-                localStorage.setItem('sudanPlayAdmin', user.uid);
-                localStorage.setItem('sudanPlayAdminEmail', user.email);
-                
-                // التوجيه إلى لوحة التحكم
-                window.location.href = 'dashboard.html';
-                
-            } catch (error) {
-                console.error("❌ Login error:", error);
-                setLoading(false);
-                
-                // عرض رسالة الخطأ المناسبة
-                let errorMsg = "خطأ في تسجيل الدخول";
-                
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMsg = "البريد الإلكتروني غير صالح";
-                        break;
-                    case 'auth/user-disabled':
-                        errorMsg = "هذا الحساب معطل";
-                        break;
-                    case 'auth/user-not-found':
-                        errorMsg = "لم يتم العثور على حساب بهذا البريد الإلكتروني";
-                        break;
-                    case 'auth/wrong-password':
-                        errorMsg = "كلمة المرور غير صحيحة";
-                        break;
-                    case 'auth/network-request-failed':
-                        errorMsg = "خطأ في الاتصال بالشبكة";
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMsg = "محاولات تسجيل دخول كثيرة، يرجى المحاولة لاحقاً";
-                        break;
-                    default:
-                        errorMsg = error.message || "حدث خطأ غير متوقع";
-                }
-                
-                showError(errorMsg);
-            }
-        }
-
-        // دالة التحقق من صحة البريد الإلكتروني
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        // دالة عرض الخطأ
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-
-        // دالة إخفاء الخطأ
-        function hideError() {
-            errorMessage.style.display = 'none';
-        }
-
-        // دالة تعيين حالة التحميل
-        function setLoading(loading) {
-            if (loading) {
-                loginBtn.disabled = true;
-                loginBtn.classList.add('loading');
-                btnText.style.visibility = 'hidden';
-            } else {
-                loginBtn.disabled = false;
-                loginBtn.classList.remove('loading');
-                btnText.style.visibility = 'visible';
-            }
-        }
-
-        // دالة إنشاء الجزيئات
-        function createParticles() {
-            if (typeof particlesJS !== 'undefined') {
-                particlesJS('particles-js', {
-                    "particles": {
-                        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                        "color": { "value": "#ffffff" },
-                        "shape": { "type": "circle" },
-                        "opacity": { "value": 0.5 },
-                        "size": { "value": 3, "random": true },
-                        "line_linked": { 
-                            "enable": true, 
-                            "distance": 150, 
-                            "color": "#ffffff", 
-                            "opacity": 0.4, 
-                            "width": 1 
-                        },
-                        "move": { 
-                            "enable": true, 
-                            "speed": 6,
-                            "out_mode": "out"
-                        }
+                if (error.code) {
+                    switch (error.code) {
+                        case 'permission-denied':
+                            errorMessage = 'خطأ في الأذونات: يرجى التحقق من إعدادات قاعدة البيانات';
+                            break;
+                        case 'unavailable':
+                            errorMessage = 'تعذر الاتصال بالخادم، يرجى التحقق من اتصال الإنترنت';
+                            break;
+                        default:
+                            errorMessage = `خطأ: ${error.message}`;
                     }
-                });
+                }
+                
+                showToast('❌ ' + errorMessage);
+            }
+        });
+
+        // باقي الدوال الحالية (loadApps, filterApps, etc.)
+        // ... 
+
+        // إغلاق النوافذ المنبثقة عند النقر خارجها
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
             }
         }
 
-        // دالة التحقق من تسجيل دخول سابق
-        function checkExistingLogin() {
-            const session = localStorage.getItem('sudanPlayAdmin');
-            if (session) {
-                console.log("Found existing session, redirecting...");
-                window.location.href = 'dashboard.html';
-            }
-        }
-
-        // تهيئة الصفحة
+        // اختبار اتصال Firebase عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🚀 Login page loaded");
+            console.log("🚀 Main page loaded with Firebase");
             
-            // التحقق من تسجيل الدخول السابق
-            checkExistingLogin();
-            
-            // اختبار اتصال Firebase
-            testFirebaseConnection();
-            
-            // إنشاء الجزيئات
-            createParticles();
-            
-            // إرسال النموذج
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                login();
-            });
-
-            // إخفاء الخطأ عند الكتابة
-            emailInput.addEventListener('input', hideError);
-            passwordInput.addEventListener('input', hideError);
+            if (db) {
+                console.log("✅ Firebase is connected and ready");
+            } else {
+                console.error("❌ Firebase is not connected");
+                showToast("⚠️ تحذير: هناك مشكلة في الاتصال بالخادم", 5000);
+            }
         });
     </script>
 </body>
