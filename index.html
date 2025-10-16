@@ -59,13 +59,6 @@
             font-weight: bold;
         }
         
-        .logo img {
-            height: 40px;
-            border-radius: 8px;
-            margin-left: 10px; 
-            box-shadow: 0 0 10px rgba(74, 107, 255, 0.5);
-        }
-        
         .logo h1 {
             color: var(--light);
             font-size: 1.5em;
@@ -146,179 +139,7 @@
             transform: translateY(-3px);
         }
 
-        /* --- App Showcase --- */
-        #apps {
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        #apps h2 {
-            text-align: center;
-            color: var(--dark);
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
-
-        .filter-section {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 30px;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .filter-section label {
-            font-weight: bold;
-            color: var(--dark);
-            font-size: 1.1em;
-        }
-
-        #categoryFilter {
-            padding: 10px 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-size: 1em;
-            min-width: 200px;
-            width: 100%;
-            max-width: 250px;
-        }
-
-        #apps-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .app-card {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-
-        .app-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .app-cover {
-            height: 150px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .app-cover img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .app-cover:hover img {
-            transform: scale(1.05);
-        }
-
-        .app-cover .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .app-cover:hover .overlay {
-            opacity: 1;
-        }
-
-        .app-cover .overlay i {
-            color: var(--light);
-            font-size: 2em;
-        }
-
-        .app-info {
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .app-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-            flex-shrink: 0;
-        }
-
-        .app-text {
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        .app-title {
-            font-size: 1.2em;
-            color: var(--dark);
-            margin: 0 0 5px 0;
-            line-height: 1.3;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .app-category {
-            font-size: 0.9em;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .app-rating {
-            font-size: 0.8em;
-            color: #aaa;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .app-rating i {
-            color: #ccc;
-        }
-
-        .app-rating i.filled {
-            color: gold;
-        }
-
-        .download-btn {
-            background: var(--secondary);
-            color: var(--light);
-            border: none;
-            padding: 10px 15px;
-            width: 90%;
-            margin: 0 auto 15px auto;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: opacity 0.3s;
-            text-align: center;
-        }
-
-        .download-btn:hover {
-            opacity: 0.8;
-        }
-
-        /* --- App Details Modal --- */
+        /* --- نافذة نشر التطبيق --- */
         .modal {
             display: none;
             position: fixed;
@@ -338,7 +159,7 @@
             padding: 25px;
             border-radius: 15px;
             width: 90%;
-            max-width: 700px;
+            max-width: 600px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             position: relative;
             max-height: 90vh;
@@ -361,285 +182,6 @@
         .close-btn:focus {
             color: var(--secondary);
             text-decoration: none;
-        }
-
-        .details-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-
-        #detailsIcon {
-            width: 80px;
-            height: 80px;
-            border-radius: 15px;
-            object-fit: cover;
-            border: 4px solid var(--primary);
-            flex-shrink: 0;
-        }
-
-        .details-text {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .details-text h3 {
-            font-size: 1.8em;
-            color: var(--dark);
-            margin: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .details-meta {
-            font-size: 0.9em;
-            color: #777;
-            display: flex;
-            gap: 15px;
-            margin-top: 5px;
-            flex-wrap: wrap;
-        }
-
-        .details-meta span strong {
-            color: var(--primary);
-        }
-
-        .details-description {
-            margin-bottom: 20px;
-            color: #444;
-            line-height: 1.6;
-            white-space: pre-wrap;
-        }
-
-        .details-info {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            background-color: var(--gradient-light);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .details-info div {
-            flex: 1;
-            min-width: 100px;
-            margin: 5px 0;
-        }
-
-        .details-info p {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: var(--dark);
-            margin-bottom: 5px;
-        }
-
-        .details-info span {
-            font-size: 0.9em;
-            color: #555;
-        }
-
-        #detailsScreenshots {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            scrollbar-width: thin;
-        }
-
-        #detailsScreenshots img {
-            width: 200px;
-            height: 350px;
-            object-fit: cover;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            flex-shrink: 0;
-        }
-
-        #detailsScreenshots img:hover {
-            transform: scale(1.03);
-        }
-
-        .download-modal-btn {
-            background: var(--gradient);
-            color: var(--light);
-            border: none;
-            width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.1em;
-            margin-top: 20px;
-            transition: opacity 0.3s;
-        }
-
-        .download-modal-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* Image View Modal */
-        #imageModal .modal-content {
-            margin: 2% auto;
-            max-width: 90%;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            border: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #modalImage {
-            max-width: 100%;
-            max-height: 90vh;
-            display: block;
-            border-radius: 10px;
-            object-fit: contain;
-        }
-
-        /* --- Contact Section --- */
-        #contact {
-            background-color: var(--dark);
-            color: var(--light);
-            padding: 60px 20px;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        #contact h2 {
-            color: var(--accent);
-        }
-
-        #contact p {
-            margin-bottom: 30px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .contact-form {
-            max-width: 500px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--light);
-        }
-
-        .contact-form input::placeholder,
-        .contact-form textarea::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .contact-form button {
-            background: var(--secondary);
-            color: var(--light);
-            border: none;
-            padding: 15px 40px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            transition: opacity 0.3s;
-            width: 100%;
-        }
-
-        .contact-form button:hover {
-            opacity: 0.8;
-        }
-
-        /* --- Footer --- */
-        footer {
-            background-color: var(--dark);
-            color: var(--light);
-            text-align: center;
-            padding: 20px;
-            margin-top: auto;
-        }
-
-        /* --- إضافة تصميم شريط الرسائل التفاعلية (Toast/Snackbar) --- */
-        #toast-message {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: var(--dark);
-            color: var(--light);
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
-            position: fixed;
-            z-index: 3000;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 30px;
-            font-size: 1.1em;
-            box-shadow: var(--shadow);
-            transition: visibility 0s, opacity 0.5s linear;
-            opacity: 0;
-            max-width: 90%;
-        }
-
-        #toast-message.show {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* --- تصميم زر التحميل وتأثير الـ Loader --- */
-        .download-btn.loading {
-            background: var(--dark);
-            pointer-events: none;
-            position: relative;
-            color: transparent !important;
-            min-height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .download-modal-btn.loading {
-            background: var(--dark);
-            pointer-events: none;
-            position: relative;
-            color: transparent !important;
-            min-height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .download-btn.loading::after, 
-        .download-modal-btn.loading::after {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- نافذة نشر التطبيق --- */
-        #submitAppModal .modal-content {
-            max-width: 600px;
         }
 
         .submit-form {
@@ -733,27 +275,38 @@
             transform: translate(-50%, -50%);
         }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- إضافة تصميم شريط الرسائل التفاعلية (Toast/Snackbar) --- */
+        #toast-message {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--dark);
+            color: var(--light);
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 3000;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 30px;
+            font-size: 1.1em;
+            box-shadow: var(--shadow);
+            transition: visibility 0s, opacity 0.5s linear;
+            opacity: 0;
+            max-width: 90%;
+        }
+
+        #toast-message.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
         /* تصميم الاستجابة للهواتف والأجهزة اللوحية */
-        @media (max-width: 1200px) {
-            nav {
-                padding: 0 20px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .hero h2 {
-                font-size: 2em;
-            }
-            
-            .hero p {
-                font-size: 1em;
-            }
-            
-            #apps-container {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-        }
-
         @media (max-width: 768px) {
             header {
                 padding: 12px 15px;
@@ -803,183 +356,15 @@
                 font-size: 1em;
             }
 
-            #apps {
-                padding: 30px 15px;
-            }
-
-            #apps h2 {
-                font-size: 1.8em;
-            }
-
-            .filter-section {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            #categoryFilter {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            #apps-container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .app-info {
-                padding: 12px;
-            }
-
-            .app-icon {
-                width: 50px;
-                height: 50px;
-            }
-
-            .app-title {
-                font-size: 1.1em;
-            }
-
             .modal-content {
                 margin: 10% auto;
                 padding: 20px;
                 width: 95%;
             }
-
-            .details-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-
-            .details-text h3 {
-                margin-top: 10px;
-                font-size: 1.5em;
-            }
-
-            .details-info {
-                flex-wrap: wrap;
-            }
-            
-            .details-info > div {
-                flex-basis: 50%;
-                margin: 10px 0;
-            }
-
-            #detailsScreenshots img {
-                width: 150px;
-                height: 260px;
-            }
-
-            #contact {
-                padding: 50px 15px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .logo {
-                font-size: 1.5em;
-            }
-            
-            .logo img {
-                height: 35px;
-            }
-
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .nav-links a {
-                margin: 0 8px 5px 8px;
-            }
-
-            .hero h2 {
-                font-size: 1.6em;
-            }
-
-            .hero p {
-                font-size: 0.95em;
-            }
-
-            #apps h2 {
-                font-size: 1.6em;
-            }
-
-            .app-card {
-                border-radius: 12px;
-            }
-
-            .app-cover {
-                height: 130px;
-            }
-
-            .app-info {
-                gap: 12px;
-            }
-
-            .modal-content {
-                padding: 15px;
-            }
-
-            .close-btn {
-                top: 10px;
-                left: 15px;
-                font-size: 24px;
-            }
-
-            .details-text h3 {
-                font-size: 1.3em;
-            }
-
-            .details-info p {
-                font-size: 1.3em;
-            }
-
-            #detailsScreenshots img {
-                width: 120px;
-                height: 210px;
-            }
-
-            .download-modal-btn {
-                padding: 12px;
-                font-size: 1em;
-            }
-
-            #contact h2 {
-                font-size: 1.6em;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .logo h1 {
-                font-size: 1.1em;
-            }
-            
-            .nav-links a {
-                font-size: 0.85em;
-            }
-
-            .hero h2 {
-                font-size: 1.4em;
-            }
-
-            #apps h2 {
-                font-size: 1.4em;
-            }
-
-            .details-info > div {
-                flex-basis: 100%;
-            }
-
-            #detailsScreenshots img {
-                width: 100px;
-                height: 175px;
-            }
         }
     </style>
 </head>
-<body onload="loadApps()">
+<body>
     <header>
         <nav>
             <div class="logo">
@@ -1000,45 +385,6 @@
         <h2>متجر التطبيقات السوداني</h2>
         <p>اكتشف وحمل أفضل التطبيقات والألعاب المحلية والعالمية المصممة خصيصًا لك.</p>
         <a href="#apps"><button>ابدأ التصفح <i class="fas fa-arrow-down"></i></button></a>
-    </section>
-
-    <section id="apps">
-        <h2>اكتشف أحدث التطبيقات</h2>
-        
-        <div class="filter-section">
-            <label for="categoryFilter"><i class="fas fa-filter"></i> تصفية حسب الفئة:</label>
-            <select id="categoryFilter" onchange="filterApps(this.value)">
-                <option value="الكل">الكل</option>
-                <option value="ألعاب">ألعاب</option>
-                <option value="أدوات">أدوات</option>
-                <option value="تواصل">تواصل</option>
-                <option value="تعليم">تعليم</option>
-                <option value="ترفيه">ترفيه</option>
-                <option value="مال وأعمال">مال وأعمال</option>
-                <option value="أخرى">أخرى</option>
-            </select>
-        </div>
-
-        <div id="apps-container">
-            </div>
-    </section>
-
-    <section id="about" style="background-color: #f1f1f1; padding: 60px 20px; text-align: center;">
-        <h2>عن Sudan Play</h2>
-        <p style="max-width: 800px; margin: 0 auto; color: #555; line-height: 1.8;">
-            Sudan Play هو بوابتك لاكتشاف المحتوى الرقمي الموثوق والمناسب للمستخدم السوداني. نحن نسعى لتقديم أفضل تجربة تحميل، مع التركيز على دعم المطورين المحليين وضمان جودة التطبيقات المقدمة. مهمتنا هي ربط المستخدم بالتكنولوجيا التي تخدمه تم تطويره بواسطة Monty GO SDN-Co.ltd.
-        </p>
-    </section>
-
-    <section id="contact">
-        <h2>تواصل معنا</h2>
-        <p>الاستفسارات، و نشر تطبيقك، يرجى ملء النموذج أدناه.</p>
-        <form class="contact-form" id="contactForm">
-            <input type="text" placeholder="اسمك الكامل" required>
-            <input type="email" placeholder="بريدك الإلكتروني" required>
-            <textarea placeholder="رسالتك..." rows="5" required></textarea>
-            <button type="submit">إرسال الرسالة <i class="fas fa-paper-plane"></i></button>
-        </form>
     </section>
 
     <!-- نافذة نشر التطبيق -->
@@ -1077,7 +423,7 @@
                 
                 <div class="form-group">
                     <label for="appImages">روابط صور التطبيق (افصل بينها بفاصلة)</label>
-                    <textarea id="appImages" class="form-control form-textarea" placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg" required></textarea>
+                    <textarea id="appImages" class="form-control form-textarea" placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -1110,56 +456,6 @@
         </div>
     </div>
 
-    <div id="appDetailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="document.getElementById('appDetailsModal').style.display='none'">&times;</span>
-            <div class="details-header">
-                <img id="detailsIcon" src="" alt="App Icon">
-                <div class="details-text">
-                    <h3 id="detailsTitle">اسم التطبيق</h3>
-                    <div class="details-meta">
-                        <span><strong>الفئة:</strong> <span id="detailsCategory"></span></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="details-info">
-                <div>
-                    <p id="detailsRating">4.5</p>
-                    <span>التقييم</span>
-                </div>
-                <div>
-                    <p id="detailsDownloads">0</p>
-                    <span>تحميل</span>
-                </div>
-                <div>
-                    <p id="detailsSize">50 ميغابايت</p>
-                    <span>الحجم</span>
-                </div>
-                <div>
-                    <p id="detailsVersion">1.0.0</p>
-                    <span>الإصدار</span>
-                </div>
-            </div>
-
-            <h4 style="color: var(--dark); margin-bottom: 10px;">الوصف</h4>
-            <p id="detailsDescription" class="details-description"></p>
-
-            <h4 style="color: var(--dark); margin-bottom: 10px;">لقطات الشاشة</h4>
-            <div id="detailsScreenshots">
-                </div>
-
-            <button class="download-modal-btn" onclick="downloadApp(window.currentAppId, this)">تحميل التطبيق الآن <i class="fas fa-download"></i></button>
-        </div>
-    </div>
-
-    <div id="imageModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <img id="modalImage" src="" alt="Full Screen Screenshot">
-        </div>
-    </div>
-
     <div id="toast-message"></div>
 
     <footer>
@@ -1169,41 +465,32 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script> 
     <script>
-        // ----------------- مفاتيح مشروعك "sudan play" الصحيحة -----------------
-        const firebaseConfig = {
-          apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
-          authDomain: "sudan-play.firebaseapp.com",
-          projectId: "sudan-play",
-          storageBucket: "sudan-play.firebasestorage.app",
-          messagingSenderId: "981764948623",
-          appId: "1:981764948623:web:00e5c9268198f70e39a6fa",
-          measurementId: "G-Y6NP2MNQR9"
-        };
-        
         // تهيئة Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
+            authDomain: "sudan-play.firebaseapp.com",
+            projectId: "sudan-play",
+            storageBucket: "sudan-play.firebasestorage.app",
+            messagingSenderId: "981764948623",
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa",
+            measurementId: "G-Y6NP2MNQR9"
+        };
+
+        // تهيئة Firebase
+        let db;
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
-            } else {
-                firebase.app(); // إذا كان التطبيق مهيأ مسبقاً
             }
-            const db = firebase.firestore();
-            const submissionsCollection = db.collection('submissions');
-            
-            console.log("Firebase initialized successfully");
+            db = firebase.firestore();
+            console.log("✅ Firebase initialized successfully");
         } catch (error) {
-            console.error("Firebase initialization error:", error);
+            console.error("❌ Firebase initialization error:", error);
         }
 
-        let currentAppId = null;
-
-        // دالة عرض الرسائل الاحترافية (Toast/Snackbar)
+        // دالة عرض الرسائل
         function showToast(message, duration = 3000) {
             const toast = document.getElementById('toast-message');
-            if (!toast) {
-                console.error("Toast element not found");
-                return;
-            }
             toast.textContent = message;
             toast.className = "show";
             
@@ -1222,124 +509,93 @@
             document.getElementById('submitAppModal').style.display = 'none';
         }
 
-        // إرسال نموذج نشر التطبيق - الإصاحات
+        // إرسال نموذج نشر التطبيق
         document.getElementById('submitAppForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitAppBtn');
+            const originalText = submitBtn.innerHTML;
             submitBtn.classList.add('loading');
             
             try {
                 // جمع بيانات النموذج
-                const appData = {
-                    type: document.getElementById('appType').value,
-                    name: document.getElementById('appName').value,
-                    images: document.getElementById('appImages').value.split(',').map(img => img.trim()).filter(img => img.length > 0),
-                    link: document.getElementById('appLink').value,
+                const formData = {
+                    appType: document.getElementById('appType').value,
+                    appName: document.getElementById('appName').value,
+                    appImages: document.getElementById('appImages').value.split(',').map(img => img.trim()).filter(img => img.length > 0),
+                    appLink: document.getElementById('appLink').value,
                     transactionId: document.getElementById('transactionId').value,
-                    developerName: document.getElementById('devName').value,
+                    devName: document.getElementById('devName').value,
                     companyName: document.getElementById('companyName').value || '',
-                    email: document.getElementById('devEmail').value,
-                    status: 'pending', // حالة الطلب: pending, approved, rejected
-                    submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    reviewExpiresAt: new Date(Date.now() + 30 * 60 * 60 * 1000) // 30 ساعة من الآن
+                    devEmail: document.getElementById('devEmail').value,
+                    reviewStatus: 'Pending', // استخدام reviewStatus بدلاً من status
+                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                console.log("Sending data to Firebase:", appData);
+                console.log("📤 Sending data to Firebase:", formData);
 
                 // التحقق من اتصال Firebase
-                if (!firebase.apps.length) {
+                if (!db) {
                     throw new Error("Firebase not initialized");
                 }
 
-                // إرسال البيانات إلى Firebase
-                const result = await submissionsCollection.add(appData);
-                console.log("Submission successful with ID:", result.id);
+                // إرسال البيانات إلى مجموعة 'submissions'
+                const docRef = await db.collection('submissions').add(formData);
+                console.log("✅ Submission successful with ID:", docRef.id);
                 
+                // إعادة تعيين النموذج وإظهار رسالة النجاح
                 submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = originalText;
+                
                 showToast('✅ تم إرسال طلب نشر التطبيق بنجاح وسيتم مراجعته خلال 30 ساعة');
                 closeSubmitAppModal();
                 document.getElementById('submitAppForm').reset();
                 
             } catch (error) {
-                console.error("Error submitting app:", error);
+                console.error("❌ Error submitting app:", error);
                 submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = originalText;
                 
                 let errorMessage = 'حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى';
                 
-                if (error.code === 'permission-denied') {
-                    errorMessage = 'خطأ في الأذونات: يرجى التحقق من إعدادات قاعدة البيانات';
-                } else if (error.code === 'unavailable') {
-                    errorMessage = 'تعذر الاتصال بالخادم، يرجى التحقق من اتصال الإنترنت';
+                if (error.code) {
+                    switch (error.code) {
+                        case 'permission-denied':
+                            errorMessage = 'خطأ في الأذونات: يرجى التحقق من إعدادات قاعدة البيانات';
+                            break;
+                        case 'unavailable':
+                            errorMessage = 'تعذر الاتصال بالخادم، يرجى التحقق من اتصال الإنترنت';
+                            break;
+                        case 'invalid-argument':
+                            errorMessage = 'بيانات غير صالحة، يرجى التحقق من المدخلات';
+                            break;
+                        default:
+                            errorMessage = `خطأ: ${error.message}`;
+                    }
                 }
                 
                 showToast('❌ ' + errorMessage);
             }
         });
 
-        // دالة تحميل التطبيقات من Firebase
-        function loadApps() {
-            // كود تحميل التطبيقات الحالي يبقى كما هو
-            const appsContainer = document.getElementById('apps-container');
-            appsContainer.innerHTML = '<p>جاري تحميل التطبيقات...</p>';
-            
-            // يمكنك إضافة كود تحميل التطبيقات هنا
-        }
-
-        // دالة تصفية التطبيقات حسب الفئة
-        function filterApps(category) {
-            // كود التصفية الحالي يبقى كما هو
-        }
-
-        // دالة فتح تفاصيل التطبيق
-        function openAppDetails(appId) {
-            // كود فتح التفاصيل الحالي يبقى كما هو
-        }
-
-        // دالة تحميل التطبيق
-        function downloadApp(appId, button) {
-            // كود التحميل الحالي يبقى كما هو
-        }
-
-        // دالة فتح الصورة في نافذة منبثقة
-        function openImageModal(src) {
-            document.getElementById('modalImage').src = src;
-            document.getElementById('imageModal').style.display = 'block';
-        }
-
-        // دالة إغلاق النافذة المنبثقة
-        function closeModal() {
-            document.getElementById('appDetailsModal').style.display = 'none';
-            document.getElementById('imageModal').style.display = 'none';
-            document.getElementById('submitAppModal').style.display = 'none';
-        }
-
         // إغلاق النوافذ المنبثقة عند النقر خارجها
         window.onclick = function(event) {
-            const modals = document.getElementsByClassName('modal');
-            for (let modal of modals) {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
+            const modal = document.getElementById('submitAppModal');
+            if (event.target === modal) {
+                modal.style.display = "none";
             }
         }
 
-        // إرسال نموذج الاتصال
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            showToast('تم إرسال رسالتك بنجاح، سنتواصل معك قريبًا!');
-            this.reset();
-        });
-
         // اختبار اتصال Firebase عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("Page loaded, testing Firebase connection...");
+            console.log("🚀 Page loaded");
             
-            if (firebase.apps.length) {
-                console.log("Firebase is connected");
+            if (db) {
+                console.log("✅ Firebase is connected and ready");
+                showToast("✅ النظام جاهز", 2000);
             } else {
-                console.error("Firebase is not connected");
-                showToast("⚠️ تحذير: هناك مشكلة في الاتصال بالخادم");
+                console.error("❌ Firebase is not connected");
+                showToast("⚠️ تحذير: هناك مشكلة في الاتصال بالخادم", 5000);
             }
         });
     </script>
