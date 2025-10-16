@@ -1,4 +1,4 @@
-<!DOCTYPE html>∫
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -166,6 +166,47 @@
             min-width: 200px;
             width: 100%;
             max-width: 250px;
+        }
+
+        /* شريط البحث الجديد */
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid var(--primary);
+            border-radius: 25px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2em;
         }
 
         #apps-container {
@@ -672,7 +713,7 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) { nav { padding: 0 20px; } } @media (max-width: 992px) { .hero h2 { font-size: 2em; } .hero p { font-size: 1em; } #apps-container { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } } @media (max-width: 768px) { header { padding: 12px 15px; } nav { flex-direction: column; align-items: flex-start; } .logo { margin-bottom: 10px; } .logo h1 { font-size: 1.3em; } .nav-links { margin-top: 10px; width: 100%; justify-content: space-between; } .nav-links a { margin-right: 0; font-size: 0.9em; padding: 5px 0; } .hero { padding: 50px 15px; } .hero h2 { font-size: 1.8em; } .hero button { padding: 12px 25px; font-size: 1em; } #apps { padding: 30px 15px; } #apps h2 { font-size: 1.8em; } .filter-section { flex-direction: column; align-items: flex-start; gap: 10px; } #categoryFilter { width: 100%; max-width: 100%; } #apps-container { grid-template-columns: 1fr; gap: 20px; } .app-info { padding: 12px; } .app-icon { width: 50px; height: 50px; } .app-title { font-size: 1.1em; } .modal-content { margin: 10% auto; padding: 20px; width: 95%; } .details-header { flex-direction: column; text-align: center; gap: 15px; } .details-text h3 { margin-top: 10px; font-size: 1.5em; } .details-info { flex-wrap: wrap; } .details-info > div { flex-basis: 50%; margin: 10px 0; } #detailsScreenshots img { width: 150px; height: 260px; } #contact { padding: 50px 15px; } } @media (max-width: 576px) { .logo { font-size: 1.5em; } .logo img { height: 35px; } .nav-links { flex-wrap: wrap; justify-content: center; } .nav-links a { margin: 0 8px 5px 8px; } .hero h2 { font-size: 1.6em; } .hero p { font-size: 0.95em; } #apps h2 { font-size: 1.6em; } .app-card { border-radius: 12px; } .app-cover { height: 130px; } .app-info { gap: 12px; } .modal-content { padding: 15px; } .close-btn { top: 10px; left: 15px; font-size: 24px; } .details-text h3 { font-size: 1.3em; } .details-info p { font-size: 1.3em; } #detailsScreenshots img { width: 120px; height: 210px; } .download-modal-btn { padding: 12px; font-size: 1em; } #contact h2 { font-size: 1.6em; } } @media (max-width: 400px) { .logo h1 { font-size: 1.1em; } .nav-links a { font-size: 0.85em; } .hero h2 { font-size: 1.4em; } #apps h2 { font-size: 1.4em; } .details-info > div { flex-basis: 100%; } #detailsScreenshots img { width: 100px; height: 175px; } } </style>
+        @media (max-width: 1200px) { nav { padding: 0 20px; } } @media (max-width: 992px) { .hero h2 { font-size: 2em; } .hero p { font-size: 1em; } #apps-container { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } } @media (max-width: 768px) { header { padding: 12px 15px; } nav { flex-direction: column; align-items: flex-start; } .logo { margin-bottom: 10px; } .logo h1 { font-size: 1.3em; } .nav-links { margin-top: 10px; width: 100%; justify-content: space-between; } .nav-links a { margin-right: 0; font-size: 0.9em; padding: 5px 0; } .hero { padding: 50px 15px; } .hero h2 { font-size: 1.8em; } .hero button { padding: 12px 25px; font-size: 1em; } #apps { padding: 30px 15px; } #apps h2 { font-size: 1.8em; } .filter-section { flex-direction: column; align-items: flex-start; gap: 10px; } #categoryFilter { width: 100%; max-width: 100%; } .search-section { flex-direction: column; } .search-box { max-width: 100%; } #apps-container { grid-template-columns: 1fr; gap: 20px; } .app-info { padding: 12px; } .app-icon { width: 50px; height: 50px; } .app-title { font-size: 1.1em; } .modal-content { margin: 10% auto; padding: 20px; width: 95%; } .details-header { flex-direction: column; text-align: center; gap: 15px; } .details-text h3 { margin-top: 10px; font-size: 1.5em; } .details-info { flex-wrap: wrap; } .details-info > div { flex-basis: 50%; margin: 10px 0; } #detailsScreenshots img { width: 150px; height: 260px; } #contact { padding: 50px 15px; } } @media (max-width: 576px) { .logo { font-size: 1.5em; } .logo img { height: 35px; } .nav-links { flex-wrap: wrap; justify-content: center; } .nav-links a { margin: 0 8px 5px 8px; } .hero h2 { font-size: 1.6em; } .hero p { font-size: 0.95em; } #apps h2 { font-size: 1.6em; } .app-card { border-radius: 12px; } .app-cover { height: 130px; } .app-info { gap: 12px; } .modal-content { padding: 15px; } .close-btn { top: 10px; left: 15px; font-size: 24px; } .details-text h3 { font-size: 1.3em; } .details-info p { font-size: 1.3em; } #detailsScreenshots img { width: 120px; height: 210px; } .download-modal-btn { padding: 12px; font-size: 1em; } #contact h2 { font-size: 1.6em; } } @media (max-width: 400px) { .logo h1 { font-size: 1.1em; } .nav-links a { font-size: 0.85em; } .hero h2 { font-size: 1.4em; } #apps h2 { font-size: 1.4em; } .details-info > div { flex-basis: 100%; } #detailsScreenshots img { width: 100px; height: 175px; } } </style>
 </head>
 <body onload="loadApps()">
     <header>
@@ -699,6 +740,14 @@
 
         <section id="apps">
             <h2>تطبيقات مقترحة لك</h2>
+            
+            <!-- شريط البحث الجديد -->
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="ابحث عن تطبيق...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
             
             <div class="filter-section">
                 <label for="categoryFilter">تصفية حسب الفئة:</label>
@@ -863,6 +912,8 @@
             return stars;
         }
 
+        let allApps = []; // لتخزين جميع التطبيقات للبحث
+
         function loadApps() {
             const appsContainer = document.getElementById('apps-container');
             const categoryFilter = document.getElementById('categoryFilter');
@@ -874,12 +925,19 @@
             db.collection('apps').onSnapshot(snapshot => {
                 appsContainer.innerHTML = '';
                 const categories = new Set(['الكل']);
+                allApps = []; // إعادة تعيين المصفوفة
                 let appCardsHtml = '';
                 let appsFound = 0;
                 
                 snapshot.forEach(doc => {
                     const app = doc.data();
                     const appId = doc.id;
+                    
+                    // تخزين التطبيق في المصفوفة للبحث
+                    allApps.push({
+                        id: appId,
+                        ...app
+                    });
                     
                     if (app.category) {
                         categories.add(app.category.trim());
@@ -889,12 +947,12 @@
                     const downloadsText = (app.downloads || 0).toLocaleString('ar-EG');
                     
                     appCardsHtml += `
-                        <div class="app-card" data-category="${app.category || ''}" onclick="showAppDetails('${appId}')">
-                            <div class="app-cover">
+                        <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" data-description="${app.fullDescription || ''}">
+                            <div class="app-cover" onclick="showAppDetails('${appId}')">
                                 <img src="${app.screenshotsPaths && app.screenshotsPaths.length > 0 ? app.screenshotsPaths[0] : 'placeholder.jpg'}" alt="App Cover">
                                 <div class="overlay"><i class="fas fa-eye"></i></div>
                             </div>
-                            <div class="app-info">
+                            <div class="app-info" onclick="showAppDetails('${appId}')">
                                 <img src="${app.iconPath || 'placeholder-icon.png'}" alt="App Icon" class="app-icon">
                                 <div class="app-text">
                                     <h4 class="app-title">${app.name || 'غير متوفر'}</h4>
@@ -925,6 +983,9 @@
                     categoryFilter.appendChild(option);
                 });
                 
+                // إضافة حدث البحث
+                document.getElementById('searchInput').addEventListener('input', searchApps);
+                
                 filterApps(); // إعادة تصفية التطبيقات بعد التحميل إذا كان هناك فلتر محدد
                 
                 if (appsFound === 0) {
@@ -938,14 +999,26 @@
             });
         }
 
-        function filterApps() {
+        // دالة البحث عن التطبيقات
+        function searchApps() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const category = document.getElementById('categoryFilter').value;
             const appCards = document.querySelectorAll('.app-card');
             let visibleCount = 0;
             const noAppsMessage = document.getElementById('noAppsMessage');
 
             appCards.forEach(card => {
-                if (category === 'الكل' || card.getAttribute('data-category') === category) {
+                const appName = card.getAttribute('data-name').toLowerCase();
+                const appCategory = card.getAttribute('data-category');
+                const appDescription = card.getAttribute('data-description').toLowerCase();
+                
+                const matchesSearch = searchTerm === '' || 
+                    appName.includes(searchTerm) || 
+                    appDescription.includes(searchTerm);
+                
+                const matchesCategory = category === 'الكل' || appCategory === category;
+                
+                if (matchesSearch && matchesCategory) {
                     card.style.display = 'flex';
                     visibleCount++;
                 } else {
@@ -953,7 +1026,40 @@
                 }
             });
 
-            if (visibleCount === 0 && appCards.length > 0) {
+            if (visibleCount === 0) {
+                noAppsMessage.style.display = 'block';
+            } else {
+                noAppsMessage.style.display = 'none';
+            }
+        }
+
+        function filterApps() {
+            const category = document.getElementById('categoryFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const appCards = document.querySelectorAll('.app-card');
+            let visibleCount = 0;
+            const noAppsMessage = document.getElementById('noAppsMessage');
+
+            appCards.forEach(card => {
+                const appName = card.getAttribute('data-name').toLowerCase();
+                const appCategory = card.getAttribute('data-category');
+                const appDescription = card.getAttribute('data-description').toLowerCase();
+                
+                const matchesSearch = searchTerm === '' || 
+                    appName.includes(searchTerm) || 
+                    appDescription.includes(searchTerm);
+                
+                const matchesCategory = category === 'الكل' || appCategory === category;
+                
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (visibleCount === 0) {
                 noAppsMessage.style.display = 'block';
             } else {
                 noAppsMessage.style.display = 'none';
