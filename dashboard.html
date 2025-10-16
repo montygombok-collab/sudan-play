@@ -62,16 +62,22 @@
             background: rgb(200, 70, 95);
         }
 
-        .container {
+        /* تعديل: هذا هو الحاوية الرئيسية الآن */
+        .content-section {
             flex-grow: 1;
             padding: 20px;
-            display: flex;
+            /* للتأكد من أن الأقسام تأخذ كامل العرض عند التبديل */
+            width: 100%;
+        }
+        
+        #apps-management-section {
+            display: flex; /* لضمان بقاء اللوحات جنباً إلى جنب */
             gap: 20px;
             flex-wrap: wrap;
         }
-        
+
         @media (min-width: 1024px) {
-            .container {
+            #apps-management-section {
                 flex-wrap: nowrap;
             }
         }
@@ -349,10 +355,34 @@
         @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
         @-webkit-keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
         @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
-
+        
+        /* === أنماط قسم طلبات النشر الجديدة === */
+        .submission-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .submission-details {
+            flex-grow: 1;
+        }
+        .submission-actions button {
+            margin-right: 10px;
+            padding: 8px 15px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .btn-approve { background-color: #28a745; color: white; }
+        .btn-reject { background-color: #dc3545; color: white; }
     </style>
 
-    <!-- مكتبات Firebase الأساسية (الإصدار 8) -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
@@ -361,7 +391,6 @@
 
     <div id="toast" class="toast"></div>
 
-    <!-- Modal للحذف -->
     <div id="deleteModal" class="modal">
         <div class="modal-content">
             <h3>تأكيد الحذف</h3>
@@ -380,334 +409,380 @@
         </button>
     </div>
 
-    <div class="container">
-        <!-- لوحة إضافة/تعديل التطبيق -->
-        <div class="app-form-panel">
-            <h2 id="formTitle">إضافة تطبيق جديد</h2>
-            <form id="appForm" data-editing-id="">
-                <!-- حقل اسم التطبيق -->
-                <div class="form-group">
-                    <label for="name">اسم التطبيق</label>
-                    <input type="text" id="name" name="name" class="form-control" required>
-                </div>
-                
-                <!-- حقل فئة التطبيق -->
-                <div class="form-group">
-                    <label for="category">الفئة</label>
-                    <input type="text" id="category" name="category" class="form-control" required placeholder="مثل: ألعاب، أدوات، تواصل">
-                </div>
-                
-                <!-- حقل رابط الأيقونة -->
-                <div class="form-group">
-                    <label for="iconPath">رابط الأيقونة (URL)</label>
-                    <input type="url" id="iconPath" name="iconPath" class="form-control" required>
-                </div>
+    <section id="apps-management-section" class="content-section">
+        <div class="container" style="display: flex; gap: 20px; flex-wrap: wrap;"> 
+            <div class="app-form-panel">
+                <h2 id="formTitle">إضافة تطبيق جديد</h2>
+                <form id="appForm" data-editing-id="">
+                    <div class="form-group">
+                        <label for="name">اسم التطبيق</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">الفئة</label>
+                        <input type="text" id="category" name="category" class="form-control" required placeholder="مثل: ألعاب، أدوات، تواصل">
+                    </div>
+                    <div class="form-group">
+                        <label for="iconPath">رابط الأيقونة (URL)</label>
+                        <input type="url" id="iconPath" name="iconPath" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shortDescription">وصف مختصر</label>
+                        <textarea id="shortDescription" name="shortDescription" class="form-textarea" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullDescription">الوصف الكامل</label>
+                        <textarea id="fullDescription" name="fullDescription" class="form-textarea" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="downloadLink">رابط ملف التحميل (APK/متجر)</label>
+                        <input type="url" id="downloadLink" name="downloadLink" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="size">الحجم (بالميجابايت)</label>
+                        <input type="number" step="0.1" id="size" name="size" class="form-control" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rating">التقييم (من 5)</label>
+                        <input type="number" step="0.1" max="5" min="0" id="rating" name="rating" class="form-control" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="downloads">عدد التنزيلات (رقم صحيح)</label>
+                        <input type="number" id="downloads" name="downloads" class="form-control" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="screenshotsPaths">روابط صور الشاشة (افصل بينها بفاصلة)</label>
+                        <textarea id="screenshotsPaths" name="screenshotsPaths" class="form-textarea" rows="2" placeholder="URL1, URL2, URL3"></textarea>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn-primary" id="submitButton">حفظ التطبيق</button>
+                        <button type="button" class="btn-secondary" id="resetButton">إعادة ضبط</button>
+                    </div>
+                </form>
+            </div>
 
-                <!-- حقل وصف مختصر -->
-                <div class="form-group">
-                    <label for="shortDescription">وصف مختصر</label>
-                    <textarea id="shortDescription" name="shortDescription" class="form-textarea" rows="2" required></textarea>
-                </div>
-
-                <!-- حقل الوصف الكامل -->
-                <div class="form-group">
-                    <label for="fullDescription">الوصف الكامل</label>
-                    <textarea id="fullDescription" name="fullDescription" class="form-textarea" rows="4" required></textarea>
-                </div>
-                
-                <!-- حقل رابط ملف التحميل -->
-                <div class="form-group">
-                    <label for="downloadLink">رابط ملف التحميل (APK/متجر)</label>
-                    <input type="url" id="downloadLink" name="downloadLink" class="form-control" required>
-                </div>
-
-                <!-- حقل حجم التطبيق -->
-                <div class="form-group">
-                    <label for="size">الحجم (بالميجابايت)</label>
-                    <input type="number" step="0.1" id="size" name="size" class="form-control" value="0" required>
-                </div>
-
-                <!-- حقل التقييم -->
-                <div class="form-group">
-                    <label for="rating">التقييم (من 5)</label>
-                    <input type="number" step="0.1" max="5" min="0" id="rating" name="rating" class="form-control" value="0" required>
-                </div>
-
-                <!-- حقل عدد التنزيلات -->
-                <div class="form-group">
-                    <label for="downloads">عدد التنزيلات (رقم صحيح)</label>
-                    <input type="number" id="downloads" name="downloads" class="form-control" value="0" required>
-                </div>
-                
-                <!-- حقل صور الشاشة (Screenshots) -->
-                <div class="form-group">
-                    <label for="screenshotsPaths">روابط صور الشاشة (افصل بينها بفاصلة)</label>
-                    <textarea id="screenshotsPaths" name="screenshotsPaths" class="form-textarea" rows="2" placeholder="URL1, URL2, URL3"></textarea>
-                </div>
-
-                <!-- أزرار الإرسال وإعادة الضبط -->
-                <div class="form-buttons">
-                    <button type="submit" class="btn-primary" id="submitButton">حفظ التطبيق</button>
-                    <button type="button" class="btn-secondary" id="resetButton">إلغاء/إضافة جديد</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- لوحة عرض قائمة التطبيقات -->
-        <div class="app-list-panel">
-            <h2>قائمة التطبيقات</h2>
-            <div id="appsList">
-                <!-- قائمة التطبيقات سيتم ملؤها بواسطة JavaScript -->
-                <div style="text-align: center; padding: 20px; color: #777;">جاري تحميل التطبيقات...</div>
+            <div class="app-list-panel">
+                <h2>قائمة التطبيقات المنشورة</h2>
+                <div id="appsList">
+                    </div>
             </div>
         </div>
-    </div>
+    </section>
+    
+    <section id="submissions-section" class="content-section" style="display: none;">
+        <h2>طلبات نشر التطبيقات الجديدة</h2>
+        <div class="submissions-list">
+            </div>
+    </section>
 
     <script>
-        // ** إعدادات Firebase **
-        var firebaseConfig = {
-            apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
-            authDomain: "sudan-play.firebaseapp.com",
-            projectId: "sudan-play",
-            storageBucket: "sudan-play.firebasestorage.app",
-            messagingSenderId: "981764948623",
-            appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
+        // إعدادات Firebase (يجب تغييرها ببيانات مشروعك الحقيقية)
+        const firebaseConfig = {
+             apiKey: "YOUR_API_KEY",
+             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+             projectId: "YOUR_PROJECT_ID",
+             storageBucket: "YOUR_PROJECT_ID.appspot.com",
+             messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+             appId: "YOUR_APP_ID"
         };
         
         // تهيئة Firebase
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
-        const auth = firebase.auth();
-        const appsCollection = db.collection('apps');
 
-        // *******************************************
-        //              دوال واجهة المستخدم
-        // *******************************************
-
-        // 1. دالة عرض إشعار (Toast)
+        // ----------------------------------------------------
+        // الدوال المشتركة
+        // ----------------------------------------------------
         function showToast(message, duration = 3000) {
             const toast = document.getElementById("toast");
+            if (!toast) return; // تأكد من وجود العنصر
             toast.textContent = message;
-            toast.className = "toast show";
-            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, duration);
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, duration);
         }
 
-        // 2. دوال الـ Modal المخصص للحذف
-        let currentAppIdToDelete = null;
-        let currentAppNameToDelete = '';
-
-        function showDeleteModal(appId, appName) {
-            currentAppIdToDelete = appId;
-            currentAppNameToDelete = appName;
+        let currentDeleteId = null;
+        function openDeleteModal(appId, appName) {
+            currentDeleteId = appId;
             document.getElementById('appNamePlaceholder').textContent = appName;
             document.getElementById('deleteModal').style.display = 'flex';
         }
 
         function closeDeleteModal() {
+            currentDeleteId = null;
             document.getElementById('deleteModal').style.display = 'none';
-            currentAppIdToDelete = null;
-            currentAppNameToDelete = '';
         }
 
-        document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-            if (currentAppIdToDelete) {
-                deleteApp(currentAppIdToDelete, currentAppNameToDelete);
-            }
-            closeDeleteModal();
-        });
+        document.getElementById('confirmDeleteBtn').addEventListener('click', deleteApp);
 
-
-        // 3. دالة تسجيل الخروج
-        function logout() {
-            auth.signOut().then(() => {
-                localStorage.removeItem('sudanPlayAdmin');
-                window.location.href = '/login.html';
-            }).catch(error => {
-                showToast(`خطأ في تسجيل الخروج: ${error.message}`);
-                console.error("Logout Error:", error);
-            });
-        }
-        
-        // 4. دالة إعادة تعيين النموذج (Form)
-        function resetForm() {
-            document.getElementById('appForm').reset();
-            document.getElementById('appForm').dataset.editingId = '';
-            document.getElementById('formTitle').textContent = 'إضافة تطبيق جديد';
-            document.getElementById('submitButton').textContent = 'حفظ التطبيق';
-            document.getElementById('resetButton').textContent = 'إلغاء/إضافة جديد';
-        }
-        
-        // 5. دالة ملء النموذج للتعديل
-        function editApp(app) {
-            document.getElementById('name').value = app.name || '';
-            document.getElementById('category').value = app.category || '';
-            document.getElementById('iconPath').value = app.iconPath || '';
-            document.getElementById('shortDescription').value = app.shortDescription || '';
-            document.getElementById('fullDescription').value = app.fullDescription || '';
-            document.getElementById('downloadLink').value = app.downloadLink || '';
-            document.getElementById('size').value = app.size || 0;
-            document.getElementById('rating').value = app.rating || 0;
-            document.getElementById('downloads').value = app.downloads || 0;
-            document.getElementById('screenshotsPaths').value = (app.screenshotsPaths && Array.isArray(app.screenshotsPaths)) ? app.screenshotsPaths.join(', ') : '';
-
-            // حفظ ID المستند في بيانات النموذج
-            document.getElementById('appForm').dataset.editingId = app.id;
-            document.getElementById('formTitle').textContent = `تعديل التطبيق: ${app.name}`;
-            document.getElementById('submitButton').textContent = 'تعديل وحفظ';
-            document.getElementById('resetButton').textContent = 'إلغاء التعديل';
+        function deleteApp() {
+            if (!currentDeleteId) return;
             
-            // التمرير إلى أعلى الصفحة للبدء بالتعديل
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-
-        // 6. دالة عرض قائمة التطبيقات
-        function renderAppsList(apps) {
-            const listElement = document.getElementById('appsList');
-            listElement.innerHTML = ''; 
-
-            if (apps.length === 0) {
-                listElement.innerHTML = '<div style="text-align: center; padding: 20px; color: #777;">لا توجد تطبيقات لعرضها بعد.</div>';
-                return;
-            }
-
-            apps.forEach(app => {
-                const item = document.createElement('div');
-                item.className = 'app-item';
-                item.innerHTML = `
-                    <div class="app-icon">
-                        <img src="${app.iconPath}" alt="${app.name} icon" onerror="this.src='https://placehold.co/60x60/888/fff?text=?';">
-                    </div>
-                    <div class="app-details">
-                        <h3>${app.name}</h3>
-                        <p>الفئة: ${app.category} | التقييم: ${app.rating}</p>
-                    </div>
-                    <div class="app-actions">
-                        <button class="action-btn edit-btn" data-id="${app.id}" title="تعديل"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete delete-btn" data-id="${app.id}" data-name="${app.name}" title="حذف"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                listElement.appendChild(item);
-            });
-
-            // ربط أزرار التعديل والحذف بالدوال الخاصة بها
-            listElement.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const appId = e.currentTarget.dataset.id;
-                    const appToEdit = apps.find(a => a.id === appId);
-                    if (appToEdit) {
-                        editApp(appToEdit);
-                    }
-                });
-            });
-
-            listElement.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const appId = e.currentTarget.dataset.id;
-                    const appName = e.currentTarget.dataset.name;
-                    showDeleteModal(appId, appName);
-                });
-            });
-        }
-        
-        
-        // *******************************************
-        //              دوال Firebase
-        // *******************************************
-
-        // 7. دالة الحذف (المعدلة)
-        function deleteApp(appId, appName) {
-            if (!appId) {
-                showToast('❌ خطأ: لم يتم تحديد معرف التطبيق.', 4000);
-                return;
-            }
-
-            appsCollection.doc(appId).delete()
+            db.collection('apps').doc(currentDeleteId).delete()
                 .then(() => {
-                    showToast(`✅ تم حذف التطبيق "${appName}" بنجاح!`, 4000);
+                    showToast('✅ تم حذف التطبيق بنجاح!', 4000);
+                    closeDeleteModal();
+                    loadApps(); 
                 })
                 .catch(error => {
-                    // هذه هي الرسالة التي ستظهر إذا كانت الأذونات غير كافية
+                    showToast(`❌ خطأ في حذف التطبيق: ${error.message}`, 5000);
                     console.error("Error removing document: ", error);
-                    showToast(`❌ خطأ في الحذف: ${error.message}. (تحقق من قواعد أمان Firestore).`, 7000);
                 });
         }
-
-
-        // 8. دالة جلب التطبيقات (استماع في الوقت الفعلي)
+        
+        // ----------------------------------------------------
+        // دوال إدارة التطبيقات (القديمة)
+        // ----------------------------------------------------
         function loadApps() {
-            appsCollection.onSnapshot(snapshot => {
-                const appsArray = [];
+            const appsList = document.getElementById('appsList');
+            appsList.innerHTML = '<h3>جاري تحميل التطبيقات...</h3>';
+            
+            db.collection('apps').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                appsList.innerHTML = '';
+                if (snapshot.empty) {
+                    appsList.innerHTML = '<p>لا توجد تطبيقات منشورة حاليًا.</p>';
+                    return;
+                }
+                
                 snapshot.forEach(doc => {
-                    // تحويل بيانات المستند إلى كائن JS مع إضافة id
-                    const appData = doc.data();
-                    appsArray.push({
-                        id: doc.id, 
-                        ...appData,
-                        // التأكد من أن حقل التنزيلات رقمي للعرض
-                        downloads: appData.downloads ? parseInt(appData.downloads) : 0 
-                    });
+                    const app = doc.data();
+                    const appId = doc.id;
+                    
+                    const appItem = document.createElement('div');
+                    appItem.className = 'app-item';
+                    
+                    appItem.innerHTML = `
+                        <div class="app-icon">
+                            <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name} Icon">
+                        </div>
+                        <div class="app-details">
+                            <h3>${app.name}</h3>
+                            <p>الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()}</p>
+                        </div>
+                        <div class="app-actions">
+                            <button class="action-btn" title="تعديل" onclick="editApp('${appId}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    appsList.appendChild(appItem);
                 });
-
-                // فرز التطبيقات حسب تاريخ الإنشاء (الأحدث أولاً)
-                appsArray.sort((a, b) => (b.createdAt?.toDate() || 0) - (a.createdAt?.toDate() || 0));
-
-                renderAppsList(appsArray);
             }, error => {
-                console.error("Error listening to apps collection:", error);
-                showToast(`❌ خطأ في جلب البيانات: ${error.message}`, 5000);
+                showToast(`❌ خطأ في تحميل قائمة التطبيقات: ${error.message}`);
+                console.error("Error loading apps: ", error);
             });
         }
 
+        function editApp(appId) {
+            db.collection('apps').doc(appId).get().then(doc => {
+                if (doc.exists) {
+                    const app = doc.data();
+                    document.getElementById('formTitle').textContent = 'تعديل التطبيق: ' + app.name;
+                    document.getElementById('appForm').setAttribute('data-editing-id', appId);
+                    document.getElementById('name').value = app.name || '';
+                    document.getElementById('category').value = app.category || '';
+                    document.getElementById('iconPath').value = app.iconPath || '';
+                    document.getElementById('shortDescription').value = app.shortDescription || '';
+                    document.getElementById('fullDescription').value = app.fullDescription || '';
+                    document.getElementById('downloadLink').value = app.downloadLink || '';
+                    document.getElementById('size').value = app.size || 0;
+                    document.getElementById('rating').value = app.rating || 0;
+                    document.getElementById('downloads').value = app.downloads || 0;
+                    
+                    const screenshotsPaths = Array.isArray(app.screenshotsPaths) ? app.screenshotsPaths.join(', ') : (app.screenshotsPaths || '');
+                    document.getElementById('screenshotsPaths').value = screenshotsPaths;
+                    
+                    document.getElementById('submitButton').textContent = 'حفظ التعديلات';
+                }
+            }).catch(error => {
+                showToast(`❌ خطأ في جلب بيانات التطبيق للتعديل: ${error.message}`);
+                console.error("Error editing app: ", error);
+            });
+        }
         
-        // *******************************************
-        //              التهيئة والبدء
-        // *******************************************
+        function resetForm() {
+            document.getElementById('formTitle').textContent = 'إضافة تطبيق جديد';
+            document.getElementById('appForm').removeAttribute('data-editing-id');
+            document.getElementById('appForm').reset();
+            document.getElementById('submitButton').textContent = 'حفظ التطبيق';
+        }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // التحقق من تسجيل الدخول عند تحميل الصفحة
-            const isAdminLoggedIn = localStorage.getItem('sudanPlayAdmin');
-            if (!isAdminLoggedIn) {
-                window.location.href = '/login.html';
-                return;
+        // ----------------------------------------------------
+        // دوال طلبات النشر (الجديدة)
+        // ----------------------------------------------------
+
+        // 1. دالة جلب وعرض طلبات النشر
+        function loadSubmissions() {
+            const submissionsList = document.querySelector('.submissions-list');
+            if (!submissionsList) return; 
+            
+            submissionsList.innerHTML = '<h3>جاري تحميل الطلبات...</h3>';
+            
+            // جلب الطلبات التي حالتها 'Pending'
+            db.collection('submissions').where('reviewStatus', '==', 'Pending').onSnapshot(snapshot => {
+                submissionsList.innerHTML = ''; 
+                const pendingCount = snapshot.size;
+                const pendingSubmissionsCount = document.getElementById('pendingSubmissionsCount');
+                if(pendingSubmissionsCount) pendingSubmissionsCount.textContent = pendingCount;
+
+                if (pendingCount === 0) {
+                    submissionsList.innerHTML = '<p>لا توجد طلبات نشر جديدة قيد الانتظار.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const submission = doc.data();
+                    const submissionId = doc.id;
+                    
+                    const card = document.createElement('div');
+                    card.className = 'submission-card';
+                    
+                    // تحويل البيانات إلى سلسلة نصية آمنة لتمريرها إلى الدالة
+                    const submissionDataString = JSON.stringify(submission).replace(/"/g, '&quot;'); 
+
+                    const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
+
+                    card.innerHTML = `
+                        <div class="submission-details">
+                            <h4>${submission.appName} - ${submission.appType}</h4>
+                            <p>المطور: <strong>${submission.devName}</strong> (${submission.companyName || 'لا توجد شركة'})</p>
+                            <p>البريد: ${submission.devEmail}</p>
+                            <p>رقم التحويل: <code>${submission.transactionId}</code></p>
+                            <p>رابط التطبيق: <a href="${submission.appLink}" target="_blank">اضغط للتحميل/المعاينة</a></p>
+                            <p>تاريخ الإرسال: ${dateString}</p>
+                        </div>
+                        <div class="submission-actions">
+                            <button class="btn-approve" onclick="reviewSubmission('${submissionId}', 'Approved', '${submissionDataString}')">موافقة ونشر</button>
+                            <button class="btn-reject" onclick="reviewSubmission('${submissionId}', 'Rejected')">رفض</button>
+                        </div>
+                    `;
+                    submissionsList.appendChild(card);
+                });
+            }, error => {
+                showToast(`❌ خطأ في تحميل الطلبات: ${error.message}`);
+                console.error("Error loading submissions: ", error);
+            });
+        }
+
+        // 2. دالة مراجعة الطلب (موافقة / رفض)
+        function reviewSubmission(submissionId, status, submissionDataString) {
+            
+            // 1. تحديث حالة الطلب في مجموعة submissions
+            db.collection('submissions').doc(submissionId).update({
+                reviewStatus: status,
+                reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                if (status === 'Approved') {
+                    const submissionData = JSON.parse(submissionDataString);
+                    
+                    // 2. إذا تمت الموافقة، قم بنسخ بيانات التطبيق إلى مجموعة 'apps'
+                    const appData = {
+                        name: submissionData.appName,
+                        category: submissionData.appType, 
+                        downloadLink: submissionData.appLink,
+                        screenshotsPaths: submissionData.appImages,
+                        developerName: submissionData.devName,
+                        shortDescription: `تطبيق مقدم بواسطة ${submissionData.devName}.`,
+                        fullDescription: `تطبيق تم تقديمه بواسطة ${submissionData.devName}. (يرجى تعديل هذا الوصف).`,
+                        
+                        // قيم مبدئية
+                        size: 0,
+                        rating: 0,
+                        downloads: 0,
+                        iconPath: 'placeholder-icon.png',
+                        
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    };
+
+                    return db.collection('apps').add(appData);
+
+                } else if (status === 'Rejected') {
+                    showToast('✅ تم رفض الطلب بنجاح.', 4000);
+                    return Promise.resolve();
+                }
+            })
+            .then(() => {
+                if (status === 'Approved') {
+                    showToast('🎉 تم نشر التطبيق بنجاح وإضافته إلى قائمة التطبيقات!', 5000);
+                }
+                loadSubmissions(); // إعادة تحميل قائمة الطلبات بعد المراجعة
+                // loadApps(); // يمكنك استدعاء loadApps هنا إذا كنت في قسم إدارة التطبيقات
+            })
+            .catch(error => {
+                showToast(`❌ فشلت عملية مراجعة/نشر الطلب: ${error.message}`, 5000);
+                console.error("Error reviewing submission: ", error);
+            });
+        }
+        
+        // ----------------------------------------------------
+        // دالة التبديل بين الأقسام (المضافة)
+        // ----------------------------------------------------
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'flex'; // استخدام flex للحاوية الرئيسية
             }
-
-            // البدء بالاستماع للتطبيقات بعد التأكد من تسجيل الدخول
-            loadApps();
-
-            const appForm = document.getElementById('appForm');
-            const resetButton = document.getElementById('resetButton');
-
-            // دالة جلب بيانات النموذج
-            function getFormData() {
-                return {
-                    name: document.getElementById('name').value,
-                    category: document.getElementById('category').value,
-                    iconPath: document.getElementById('iconPath').value,
-                    shortDescription: document.getElementById('shortDescription').value,
-                    fullDescription: document.getElementById('fullDescription').value,
-                    downloadLink: document.getElementById('downloadLink').value,
-                    size: document.getElementById('size').value,
-                    rating: document.getElementById('rating').value,
-                    downloads: document.getElementById('downloads').value,
-                    screenshotsPaths: document.getElementById('screenshotsPaths').value
-                };
+            
+            // استدعاء دالة تحميل البيانات المناسبة
+            if (sectionId === 'submissions-section') {
+                loadSubmissions(); 
+            } else if (sectionId === 'apps-management-section') {
+                 loadApps();
             }
+        }
 
-            // معالجة إرسال النموذج (إضافة/تعديل)
-            appForm.addEventListener('submit', function(e) {
+        // ----------------------------------------------------
+        // دالة تسجيل الخروج (القديمة)
+        // ----------------------------------------------------
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                localStorage.removeItem('sudanPlayAdmin');
+                window.location.href = '/login.html'; // يفترض وجود صفحة تسجيل الدخول
+            }).catch((error) => {
+                showToast('❌ خطأ في تسجيل الخروج: ' + error.message);
+                console.error("Logout error: ", error);
+            });
+        }
+        
+        // ----------------------------------------------------
+        // إعداد النموذج (القديمة)
+        // ----------------------------------------------------
+        function setupAppForm() {
+             document.getElementById('appForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-
-                const formData = getFormData();
-                const editingId = appForm.dataset.editingId;
-
-                const screenshotsArray = formData.screenshotsPaths.split(',').map(s => s.trim()).filter(s => s.length > 0);
+                
+                const form = e.target;
+                const editingId = form.getAttribute('data-editing-id');
+                const appsCollection = db.collection('apps');
+                
+                const formData = {
+                    name: form.name.value,
+                    category: form.category.value,
+                    iconPath: form.iconPath.value,
+                    shortDescription: form.shortDescription.value,
+                    fullDescription: form.fullDescription.value,
+                    downloadLink: form.downloadLink.value,
+                    developerName: 'Admin', // افتراض اسم المطور هو "Admin" ما لم يتم تعديله
+                };
+                
+                const screenshotsArray = form.screenshotsPaths.value.split(',').map(s => s.trim()).filter(s => s.length > 0);
                 
                 const appData = {
                     ...formData,
-                    size: parseFloat(formData.size) || 0,
-                    rating: parseFloat(formData.rating) || 0,
-                    downloads: parseInt(formData.downloads) || 0,
+                    size: parseFloat(form.size.value) || 0,
+                    rating: parseFloat(form.rating.value) || 0,
+                    downloads: parseInt(form.downloads.value) || 0,
                     screenshotsPaths: screenshotsArray,
                     // إذا كنا نعدل، نحافظ على التاريخ الأصلي، وإلا نضيف تاريخ جديد
                     createdAt: editingId ? (appData.createdAt || firebase.firestore.FieldValue.serverTimestamp()) : firebase.firestore.FieldValue.serverTimestamp() 
@@ -732,9 +807,29 @@
                 });
             });
             
+            const resetButton = document.getElementById('resetButton');
             if(resetButton) {
                  resetButton.addEventListener('click', resetForm);
             }
+        }
+
+
+        // ----------------------------------------------------
+        // دالة تهيئة الصفحة (المعدلة)
+        // ----------------------------------------------------
+        document.addEventListener('DOMContentLoaded', function() {
+            // التحقق من حالة تسجيل الدخول أولاً
+            firebase.auth().onAuthStateChanged(user => {
+                if (!user && !localStorage.getItem('sudanPlayAdmin')) {
+                    // window.location.href = '/login.html'; // يفترض وجود صفحة تسجيل الدخول
+                } else {
+                    // إعداد النموذج
+                    setupAppForm();
+                    
+                    // عرض القسم الافتراضي وتحميل البيانات
+                    showSection('apps-management-section');
+                }
+            });
         });
     </script>
 </body>
