@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudan Play - متجر التطبيقات السوداني</title>
-    <link rel="stylesheet" href="https://www.appcreator24.com/srv/imgs/gen/3452925_splash.png?ts=1760606192">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -977,7 +977,8 @@
             </div>
 
             <div id="apps-container">
-                </div>
+                <!-- سيتم تحميل التطبيقات هنا -->
+            </div>
             
             <p id="noAppsMessage" style="text-align: center; color: #777; display: none;">لا توجد تطبيقات مطابقة لمعايير البحث حاليًا.</p>
         </section>
@@ -1071,3 +1072,358 @@
                 </fieldset>
 
                 <fieldset>
+                    <legend>معلومات المطور والدفع</legend>
+                    <input type="text" id="devName" placeholder="اسمك الكامل (المستخدم)" required>
+                    <input type="text" id="companyName" placeholder="اسم الشركة (اختياري)">
+                    <input type="email" id="devEmail" placeholder="البريد الإلكتروني للتواصل" required>
+                    <input type="text" id="transactionId" placeholder="رقم عملية التحويل البنكي (بنكك)" required>
+                </fieldset>
+
+                <button type="submit" class="btn btn-primary">إرسال للمراجعة</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="toast-message"></div>
+
+    <!-- إضافة Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    
+    <script>
+        // إعدادات Firebase الحقيقية
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
+            authDomain: "sudan-play.firebaseapp.com",
+            projectId: "sudan-play",
+            storageBucket: "sudan-play.firebasestorage.app",
+            messagingSenderId: "981764948623",
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa",
+            measurementId: "G-Y6NP2MNQR9"
+        };
+        
+        // تهيئة Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // إذا كان موجودًا بالفعل
+        }
+        const db = firebase.firestore();
+
+        // ----------------------------------------------------
+        // الدوال المشتركة (Toast, Rating, Fetch)
+        // ----------------------------------------------------
+        let toastTimeout;
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById("toast-message");
+            toast.textContent = message;
+            toast.classList.add("show");
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(function(){
+                toast.classList.remove("show");
+            }, duration);
+        }
+
+        function getStarRating(rating) {
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            
+            let stars = '';
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star filled"></i>';
+            }
+            if (halfStar) {
+                stars += '<i class="fas fa-star-half-alt filled"></i>';
+            }
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            return stars;
+        }
+
+        let allApps = []; // لتخزين جميع التطبيقات للبحث
+
+        function loadApps() {
+            const appsContainer = document.getElementById('apps-container');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const noAppsMessage = document.getElementById('noAppsMessage');
+            
+            appsContainer.innerHTML = '<h3 style="text-align: center; grid-column: 1/-1;">جاري تحميل التطبيقات...</h3>';
+            noAppsMessage.style.display = 'none';
+
+            db.collection('apps').get().then(snapshot => {
+                appsContainer.innerHTML = '';
+                const categories = new Set(['الكل']);
+                allApps = []; // إعادة تعيين المصفوفة
+                let appCardsHtml = '';
+                let appsFound = 0;
+                
+                if (snapshot.empty) {
+                    appsContainer.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: #777;">لا توجد تطبيقات متاحة حاليًا.</p>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const app = doc.data();
+                    const appId = doc.id;
+                    
+                    // تخزين التطبيق في المصفوفة للبحث
+                    allApps.push({
+                        id: appId,
+                        ...app
+                    });
+                    
+                    if (app.category) {
+                        categories.add(app.category.trim());
+                    }
+
+                    const ratingStars = getStarRating(app.rating || 0);
+                    const downloadsText = (app.downloads || 0).toLocaleString('ar-EG');
+                    
+                    appCardsHtml += `
+                        <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" data-description="${app.fullDescription || ''}">
+                            <div class="app-cover" onclick="showAppDetails('${appId}')">
+                                <img src="${app.screenshotsPaths && app.screenshotsPaths.length > 0 ? app.screenshotsPaths[0] : 'https://via.placeholder.com/300x150?text=No+Image'}" alt="App Cover">
+                                <div class="overlay"><i class="fas fa-eye"></i></div>
+                            </div>
+                            <div class="app-info" onclick="showAppDetails('${appId}')">
+                                <img src="${app.iconPath || 'https://via.placeholder.com/60x60?text=Icon'}" alt="App Icon" class="app-icon">
+                                <div class="app-text">
+                                    <h4 class="app-title">${app.name || 'غير متوفر'}</h4>
+                                    <p class="app-category">${app.category || 'عام'}</p>
+                                    <div class="app-rating">
+                                        ${ratingStars} (${(app.rating || 0).toFixed(1)})
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="download-btn" onclick="event.stopPropagation(); window.open('${app.downloadLink || '#'}', '_blank');">تنزيل</button>
+                        </div>
+                    `;
+                    appsFound++;
+                });
+
+                appsContainer.innerHTML = appCardsHtml;
+                
+                // تحديث قائمة الفلاتر
+                const currentFilter = categoryFilter.value;
+                categoryFilter.innerHTML = '';
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    if (category === currentFilter) {
+                        option.selected = true;
+                    }
+                    categoryFilter.appendChild(option);
+                });
+                
+                // إضافة حدث البحث
+                document.getElementById('searchInput').addEventListener('input', searchApps);
+                
+                filterApps(); // إعادة تصفية التطبيقات بعد التحميل إذا كان هناك فلتر محدد
+                
+                if (appsFound === 0) {
+                    appsContainer.innerHTML = '';
+                    noAppsMessage.style.display = 'block';
+                }
+                
+            }).catch(error => {
+                appsContainer.innerHTML = '<p style="color:red; text-align:center; grid-column: 1/-1;">تعذر تحميل التطبيقات. يرجى مراجعة إعدادات Firebase.</p>';
+                console.error("Error fetching apps: ", error);
+                showToast('خطأ في تحميل التطبيقات', 3000);
+            });
+        }
+
+        // دالة البحث عن التطبيقات
+        function searchApps() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const category = document.getElementById('categoryFilter').value;
+            const appCards = document.querySelectorAll('.app-card');
+            let visibleCount = 0;
+            const noAppsMessage = document.getElementById('noAppsMessage');
+
+            appCards.forEach(card => {
+                const appName = card.getAttribute('data-name').toLowerCase();
+                const appCategory = card.getAttribute('data-category');
+                const appDescription = card.getAttribute('data-description').toLowerCase();
+                
+                const matchesSearch = searchTerm === '' || 
+                    appName.includes(searchTerm) || 
+                    appDescription.includes(searchTerm);
+                
+                const matchesCategory = category === 'الكل' || appCategory === category;
+                
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (visibleCount === 0) {
+                noAppsMessage.style.display = 'block';
+            } else {
+                noAppsMessage.style.display = 'none';
+            }
+        }
+
+        function filterApps() {
+            const category = document.getElementById('categoryFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const appCards = document.querySelectorAll('.app-card');
+            let visibleCount = 0;
+            const noAppsMessage = document.getElementById('noAppsMessage');
+
+            appCards.forEach(card => {
+                const appName = card.getAttribute('data-name').toLowerCase();
+                const appCategory = card.getAttribute('data-category');
+                const appDescription = card.getAttribute('data-description').toLowerCase();
+                
+                const matchesSearch = searchTerm === '' || 
+                    appName.includes(searchTerm) || 
+                    appDescription.includes(searchTerm);
+                
+                const matchesCategory = category === 'الكل' || appCategory === category;
+                
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (visibleCount === 0) {
+                noAppsMessage.style.display = 'block';
+            } else {
+                noAppsMessage.style.display = 'none';
+            }
+        }
+        
+        function showAppDetails(appId) {
+            db.collection('apps').doc(appId).get().then(doc => {
+                if (doc.exists) {
+                    const app = doc.data();
+                    
+                    document.getElementById('detailsTitle').textContent = app.name || 'غير متوفر';
+                    document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/80x80?text=Icon';
+                    
+                    document.getElementById('detailsCategory').innerHTML = `الفئة: <strong>${app.category || 'عام'}</strong>`;
+                    document.getElementById('detailsDeveloper').innerHTML = `المطور: <strong>${app.developerName || 'غير معروف'}</strong>`;
+                    document.getElementById('detailsSize').innerHTML = `الحجم: <strong>${app.size ? app.size + ' MB' : 'غير محدد'}</strong>`;
+                    
+                    document.getElementById('detailsRating').textContent = (app.rating || 0).toFixed(1);
+                    document.getElementById('detailsDownloads').textContent = (app.downloads || 0).toLocaleString('ar-EG') + '+';
+                    
+                    document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
+                    
+                    document.getElementById('detailsDownloadLink').href = app.downloadLink || '#';
+                    
+                    // صور الشاشة
+                    const screenshotsContainer = document.getElementById('detailsScreenshots');
+                    screenshotsContainer.innerHTML = '';
+                    if (app.screenshotsPaths && app.screenshotsPaths.length > 0) {
+                        app.screenshotsPaths.forEach(src => {
+                            const img = document.createElement('img');
+                            img.src = src;
+                            img.alt = 'App Screenshot';
+                            img.onclick = () => openModal(src);
+                            screenshotsContainer.appendChild(img);
+                        });
+                    } else {
+                        screenshotsContainer.innerHTML = '<p>لا توجد صور شاشة متاحة.</p>';
+                    }
+
+                    document.getElementById('appDetailsModal').style.display = 'block';
+                } else {
+                    showToast('التطبيق المطلوب غير موجود.', 3000);
+                }
+            }).catch(error => {
+                showToast('خطأ في جلب التفاصيل.', 3000);
+                console.error("Error fetching app details: ", error);
+            });
+        }
+
+        // وظيفة عرض الصورة في وضع ملء الشاشة
+        function openModal(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageModal').style.display = 'block';
+        }
+
+        // وظيفة إغلاق نافذة الصورة
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+        
+        // ----------------------------------------------------
+        // دوال تقديم التطبيق (الجديدة)
+        // ----------------------------------------------------
+        function openSubmissionModal() {
+            document.getElementById('submissionModal').style.display = 'block';
+        }
+
+        function closeSubmissionModal() {
+            document.getElementById('submissionModal').style.display = 'none';
+            document.getElementById('submissionForm').reset();
+        }
+        
+        // دالة إرسال الطلب إلى Firestore
+        document.getElementById('submissionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submissionData = {
+                appType: document.getElementById('appType').value,
+                appName: document.getElementById('appName').value,
+                appLink: document.getElementById('appLink').value,
+                appImages: document.getElementById('appImages').value.split(',').map(s => s.trim()).filter(s => s.length > 0), 
+                devName: document.getElementById('devName').value,
+                companyName: document.getElementById('companyName').value,
+                devEmail: document.getElementById('devEmail').value,
+                transactionId: document.getElementById('transactionId').value,
+                
+                submissionDate: firebase.firestore.FieldValue.serverTimestamp(),
+                reviewStatus: 'Pending', 
+            };
+
+            db.collection('submissions').add(submissionData)
+                .then(() => {
+                    closeSubmissionModal();
+                    showToast('✅ تم إرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 6000);
+                })
+                .catch(error => {
+                    showToast('❌ حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.', 5000);
+                    console.error("Error submitting application: ", error);
+                });
+        });
+
+        // ----------------------------------------------------
+        // إغلاق النوافذ المنبثقة عند النقر خارجها (المعدلة)
+        // ----------------------------------------------------
+        window.onclick = function(event) {
+            const appModal = document.getElementById('appDetailsModal');
+            const imageModal = document.getElementById('imageModal');
+            const submissionModal = document.getElementById('submissionModal');
+            
+            if (event.target === appModal) {
+                appModal.style.display = 'none';
+            }
+            if (event.target === imageModal) {
+                imageModal.style.display = 'none';
+            }
+            if (event.target === submissionModal) { 
+                submissionModal.style.display = 'none';
+            }
+        }
+
+        // إرسال نموذج الاتصال
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('تم إرسال رسالتك بنجاح! سنتواصل معك قريبًا.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
