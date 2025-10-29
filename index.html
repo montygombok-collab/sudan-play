@@ -932,6 +932,9 @@
             .company-logo { width: 50px; } /* تصغير نهائي للشعار */
         } 
     </style>
+    
+    <meta name="google-site-verification" content="3bdicImX4ybIsv_8xPJO-GhAS3h34XpqJQfQYXSU338" />
+
 </head>
 <body onload="loadApps()">
     <header>
@@ -961,7 +964,6 @@
         <section id="apps">
             <h2>تطبيقات مقترحة لك</h2>
             
-            <!-- شريط البحث الجديد -->
             <div class="search-section">
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="ابحث عن تطبيق...">
@@ -977,8 +979,7 @@
             </div>
 
             <div id="apps-container">
-                <!-- سيتم تحميل التطبيقات هنا -->
-            </div>
+                </div>
             
             <p id="noAppsMessage" style="text-align: center; color: #777; display: none;">لا توجد تطبيقات مطابقة لمعايير البحث حاليًا.</p>
         </section>
@@ -1086,7 +1087,6 @@
     
     <div id="toast-message"></div>
 
-    <!-- إضافة Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
@@ -1425,6 +1425,5 @@
             this.reset();
         });
     </script>
-    <meta name="google-site-verification" content="3bdicImX4ybIsv_8xPJO-GhAS3h34XpqJQfQYXSU338" />
 </body>
 </html>
