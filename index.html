@@ -88,6 +88,29 @@
             color: var(--secondary);
         }
 
+        /* --- نمط زر تطبيقات الآيفون الجديد --- */
+        .btn-ios {
+            /* تطبيق الألوان المميزة لـ iOS */
+            background-color: rgb(150, 150, 150); /* لون رمادي أو فضي */
+            color: var(--dark) !important; /* النص داكن */
+            border: 2px solid rgb(150, 150, 150);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-left: 15px; /* مسافة عن باقي الروابط */
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+        }
+
+        .btn-ios:hover {
+            background-color: #fff !important;
+            color: var(--primary) !important; /* تغيير اللون الأساسي عند التحويم */
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
         /* --- Hero Section --- */
         .hero {
             background: var(--gradient);
@@ -808,6 +831,13 @@
             .logo h1 { font-size: 1.3em; } 
             .nav-links { margin-top: 10px; width: 100%; justify-content: space-between; } 
             .nav-links a { margin-right: 0; font-size: 0.9em; padding: 5px 0; } 
+            .btn-ios { /* تعديل الزر الجديد على الهواتف */
+                padding: 6px 10px;
+                font-size: 0.8em;
+                margin: 5px 0 5px 10px; 
+                white-space: nowrap;
+                display: inline-block;
+            }
             .hero { padding: 60px 15px; } 
             .hero h2 { font-size: 1.8em; } 
             .hero button { padding: 12px 25px; font-size: 1em; } 
@@ -935,7 +965,15 @@
     
     <meta name="google-site-verification" content="3bdicImX4ybIsv_8xPJO-GhAS3h34XpqJQfQYXSU338" />
 
-</head>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sudan Play">
+    
+    <link rel="apple-touch-icon" href="https://www.appcreator24.com/srv/imgs/gen/3625531_splash.png?ts=1760605054">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://www.appcreator24.com/srv/imgs/gen/3625531_splash.png?ts=1760605054">
+
+    <link href="https://www.appcreator24.com/srv/imgs/gen/3452925_splash.png?ts=1760606192" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+    </head>
 <body onload="loadApps()">
     <header>
         <nav>
@@ -944,6 +982,10 @@
             </div>
             <div class="nav-links">
                 <a href="#apps"><i class="fas fa-th"></i> التطبيقات</a>
+                
+                <a href="https://your-separate-ios-store-link.com" target="_blank" class="btn btn-ios">
+                    <i class="fab fa-apple"></i> تطبيقات الآيفون
+                </a>
                 <a href="#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
                 <a href="#" class="btn btn-primary" onclick="openSubmissionModal()">
                     <i class="fas fa-cloud-upload-alt"></i> نشر تطبيقك
@@ -1066,6 +1108,12 @@
             <form id="submissionForm">
                 <fieldset>
                     <legend>تفاصيل التطبيق</legend>
+                    
+                    <select id="appPlatform" required style="width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                        <option value="">-- اختر منصة التطبيق --</option>
+                        <option value="Android">Android (ملف APK)</option>
+                        <option value="iOS">iOS (رابط متجر Apple)</option>
+                    </select>
                     <input type="text" id="appType" placeholder="نوع التطبيق (لعبة/أداة/تعليمي)" required>
                     <input type="text" id="appName" placeholder="اسم التطبيق" required>
                     <input type="text" id="appLink" placeholder="رابط ملف التطبيق (APK/IPA/رابط تحميل)" required>
@@ -1359,7 +1407,7 @@
         }
         
         // ----------------------------------------------------
-        // دوال تقديم التطبيق (الجديدة)
+        // دوال تقديم التطبيق (المعدلة)
         // ----------------------------------------------------
         function openSubmissionModal() {
             document.getElementById('submissionModal').style.display = 'block';
@@ -1375,6 +1423,9 @@
             e.preventDefault();
             
             const submissionData = {
+                // تم إضافة حقل platform الجديد هنا لتحديد ما إذا كان التطبيق لنظام Android أو iOS
+                platform: document.getElementById('appPlatform').value, 
+                
                 appType: document.getElementById('appType').value,
                 appName: document.getElementById('appName').value,
                 appLink: document.getElementById('appLink').value,
@@ -1387,6 +1438,12 @@
                 submissionDate: firebase.firestore.FieldValue.serverTimestamp(),
                 reviewStatus: 'Pending', 
             };
+
+            // التحقق من أن المستخدم اختار منصة
+            if (!submissionData.platform) {
+                showToast('❌ يرجى اختيار منصة التطبيق (Android أو iOS).', 5000);
+                return; 
+            }
 
             db.collection('submissions').add(submissionData)
                 .then(() => {
