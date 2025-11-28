@@ -721,4 +721,261 @@
                 updateCategoryFilter(categories, selectedCategory);
                 
                 // عرض رسالة عدم وجود تطبيقات
-                if (matchingApps ===
+                if (matchingApps === 0) {
+                    appsContainer.innerHTML = '';
+                    noAppsMessage.textContent = userPlatform === 'iOS' 
+                        ? 'لا توجد تطبيقات آيفون (iOS) منشورة حاليًا.'
+                        : 'لا توجد تطبيقات أندرويد منشورة حاليًا.';
+                    noAppsMessage.style.display = 'block';
+                }
+                
+            }).catch(error => {
+                showToast(`❌ خطأ في تحميل التطبيقات: ${error.message}`);
+                console.error("Error loading apps: ", error);
+            });
+        }
+        
+        // تحديث فلتر الفئات
+        function updateCategoryFilter(categories, selectedCategory) {
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            // تخزين القيمة المحددة حاليًا
+            const currentSelectedValue = selectedCategory;
+
+            // مسح الخيارات القديمة باستثناء خيار "الكل"
+            while (categoryFilter.children.length > 1) {
+                categoryFilter.removeChild(categoryFilter.lastChild);
+            }
+
+            // إضافة الفئات الجديدة
+            categories.forEach(category => {
+                if (category) {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryFilter.appendChild(option);
+                }
+            });
+            
+            // إعادة تعيين القيمة المحددة
+            categoryFilter.value = currentSelectedValue;
+        }
+
+        // تصفية التطبيقات (تستدعي loadApps)
+        function filterApps() {
+            // يتم تمرير القيم من حقول الإدخال إلى دالة loadApps
+            loadApps();
+        }
+
+        // دالة إنشاء نجوم التقييم
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            let starsHtml = '';
+            
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    starsHtml += '<i class="fas fa-star"></i>'; // نجمة كاملة
+                } else if (i === fullStars && halfStar) {
+                    starsHtml += '<i class="fas fa-star-half-alt"></i>'; // نصف نجمة
+                } else {
+                    starsHtml += '<i class="far fa-star"></i>'; // نجمة فارغة
+                }
+            }
+            return starsHtml;
+        }
+
+        // فتح نافذة تفاصيل التطبيق (تم التعديل على زر التحميل)
+        function openAppDetailsModal(appId) {
+            db.collection('apps').doc(appId).get().then(doc => {
+                if (doc.exists) {
+                    const app = doc.data();
+                    const modal = document.getElementById('appDetailsModal');
+                    const userPlatform = getDevicePlatform();
+
+                    // تحديث محتوى النافذة
+                    document.getElementById('app-icon-modal').src = app.iconPath;
+                    document.getElementById('app-name-modal').textContent = app.name;
+                    document.getElementById('app-category-modal').textContent = app.category;
+                    document.getElementById('app-developer-modal').textContent = app.developerName || 'غير متوفر';
+                    document.getElementById('app-size-modal').textContent = (app.size || 0).toFixed(1);
+                    document.getElementById('app-downloads-modal').textContent = (app.downloads || 0).toLocaleString();
+                    document.getElementById('app-description-modal').textContent = app.fullDescription;
+                    document.getElementById('app-rating-modal').innerHTML = `${generateStars(app.rating)} (${(app.rating || 0).toFixed(1)})`;
+                    document.getElementById('app-platform-modal').textContent = `المنصة: ${app.platform || 'Android'}`;
+                    
+                    const downloadBtn = document.getElementById('download-link-modal');
+                    downloadBtn.href = app.downloadLink;
+
+                    // تخصيص زر التحميل بناءً على المنصة
+                    const downloadTextSpan = document.getElementById('download-text');
+                    if (userPlatform === 'iOS') {
+                        downloadTextSpan.textContent = 'الانتقال إلى موقع التطبيق';
+                        downloadBtn.style.backgroundColor = '#007aff'; // لون أزرق لـ iOS
+                    } else {
+                        downloadTextSpan.textContent = 'تنزيل ملف APK';
+                        downloadBtn.style.backgroundColor = var(--accent); // اللون الافتراضي (الأخضر/الأزرق)
+                    }
+
+                    // صور الشاشة
+                    const screenshotsContainer = document.getElementById('screenshots-container-modal');
+                    screenshotsContainer.innerHTML = '';
+                    if (app.screenshotsPaths && Array.isArray(app.screenshotsPaths)) {
+                        app.screenshotsPaths.forEach(path => {
+                            const img = document.createElement('img');
+                            img.src = path;
+                            img.className = 'screenshot-img';
+                            img.setAttribute('onclick', `openImageModal('${path}')`);
+                            screenshotsContainer.appendChild(img);
+                        });
+                    }
+
+                    // عرض النافذة
+                    modal.style.display = 'block';
+                    
+                    // زيادة عداد التنزيلات بمجرد فتح صفحة التفاصيل (يمكن تعديله ليتم عند النقر على زر التحميل)
+                    incrementDownloads(appId, app.downloads || 0);
+
+                } else {
+                    showToast('❌ لم يتم العثور على التطبيق.');
+                }
+            }).catch(error => {
+                showToast(`❌ خطأ في جلب تفاصيل التطبيق: ${error.message}`);
+                console.error("Error fetching app details: ", error);
+            });
+        }
+
+        // إغلاق نافذة تفاصيل التطبيق
+        function closeAppDetailsModal() {
+            document.getElementById('appDetailsModal').style.display = 'none';
+        }
+        
+        // زيادة عداد التنزيلات
+        function incrementDownloads(appId, currentDownloads) {
+            db.collection('apps').doc(appId).update({
+                downloads: currentDownloads + 1
+            }).catch(error => {
+                console.error("Error incrementing downloads: ", error);
+            });
+        }
+
+        // ----------------------------------------------------
+        // دوال إرسال التطبيق (Submission)
+        // ----------------------------------------------------
+        function openSubmissionModal() {
+            document.getElementById('submissionModal').style.display = 'block';
+        }
+
+        function closeSubmissionModal() {
+            document.getElementById('submissionModal').style.display = 'none';
+            document.getElementById('submissionForm').reset();
+        }
+
+        // معالجة نموذج إرسال التطبيق
+        document.getElementById('submissionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const appImagesFiles = form.appImages.files;
+            
+            if (appImagesFiles.length === 0) {
+                showToast('الرجاء إرفاق صور التطبيق والأيقونة.', 4000);
+                return;
+            }
+
+            showToast('جاري رفع الصور وإرسال الطلب، يرجى الانتظار...', 10000);
+
+            try {
+                // 1. رفع الصور
+                const storageRef = storage.ref();
+                const imagePromises = [];
+                const imageUrls = [];
+
+                for (let i = 0; i < appImagesFiles.length; i++) {
+                    const file = appImagesFiles[i];
+                    const fileName = `${Date.now()}-${file.name}`;
+                    const fileRef = storageRef.child(`submission_images/${fileName}`);
+                    
+                    const uploadTask = fileRef.put(file);
+                    imagePromises.push(uploadTask);
+                }
+
+                const snapshots = await Promise.all(imagePromises);
+                for (const snapshot of snapshots) {
+                    const url = await snapshot.ref.getDownloadURL();
+                    imageUrls.push(url);
+                }
+
+                // 2. حفظ البيانات في Firestore
+                const submissionData = {
+                    appName: form.appName.value,
+                    appType: form.appType.value,
+                    platform: form.platformSelect.value, // <<< حفظ قيمة المنصة
+                    appLink: form.appLink.value,
+                    appImages: imageUrls,
+                    devName: form.devName.value,
+                    devEmail: form.devEmail.value,
+                    companyName: form.companyName.value,
+                    transactionId: form.transactionId.value,
+                    reviewStatus: 'Pending',
+                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('submissions').add(submissionData);
+                
+                closeSubmissionModal();
+                showToast('✅ تم إرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 6000);
+
+            } catch (error) {
+                showToast('❌ حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.', 5000);
+                console.error("Error submitting application: ", error);
+            }
+        });
+
+        // ----------------------------------------------------
+        // دوال الصور المنبثقة
+        // ----------------------------------------------------
+        function openImageModal(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageModal').style.display = 'block';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // ----------------------------------------------------
+        // الدوال المساعدة
+        // ----------------------------------------------------
+        
+        // إغلاق النوافذ المنبثقة عند النقر خارجها
+        window.onclick = function(event) {
+            const appModal = document.getElementById('appDetailsModal');
+            const imageModal = document.getElementById('imageModal');
+            const submissionModal = document.getElementById('submissionModal');
+            
+            if (event.target === appModal) {
+                appModal.style.display = 'none';
+            }
+            if (event.target === imageModal) {
+                imageModal.style.display = 'none';
+            }
+            if (event.target === submissionModal) { 
+                submissionModal.style.display = 'none';
+            }
+        }
+
+        // إرسال نموذج الاتصال (وهمي)
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('تم إرسال رسالتك بنجاح! سنتواصل معك قريبًا.');
+            this.reset();
+        });
+        
+        // عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApps();
+        });
+    </script>
+</body>
+</html>
