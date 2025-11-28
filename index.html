@@ -589,7 +589,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="appLink">رابط ملف التطبيق (APK أو رابط الويب)</label>
+                    <label for="appLink">رابط ملف التطبيق (APK لـ Android أو URL لـ iOS)</label>
                     <input type="url" id="appLink" name="appLink" class="form-control" required>
                 </div>
                 <div class="form-group">
@@ -669,10 +669,10 @@
         }
 
         // ----------------------------------------------------
-        // دوال المتجر
+        // دوال المتجر (تم التعديل لفلترة التطبيقات محليًا)
         // ----------------------------------------------------
 
-        // تحميل التطبيقات (تم التعديل للتصفية حسب المنصة)
+        // تحميل التطبيقات
         function loadApps() {
             const appsContainer = document.getElementById('apps-container');
             const noAppsMessage = document.getElementById('noAppsMessage');
@@ -684,10 +684,9 @@
             appsContainer.innerHTML = '<h3>جاري تحميل التطبيقات...</h3>';
             noAppsMessage.style.display = 'none';
 
-            // بناء الاستعلام: فلترة حسب المنصة أولاً
-            let query = db.collection('apps')
-                .where('platform', '==', userPlatform) // <<< فلترة التطبيقات حسب المنصة
-                .orderBy('downloads', 'desc');
+            // نقوم بجلب جميع التطبيقات (أو عدد كبير منها) لضمان تضمين البيانات القديمة
+            // ملاحظة: هذا الحل أقل كفاءة للبيانات الكبيرة، والأفضل هو تحديث البيانات القديمة في Firebase.
+            let query = db.collection('apps').orderBy('downloads', 'desc');
 
             query.get().then(snapshot => {
                 appsContainer.innerHTML = '';
@@ -701,7 +700,25 @@
                     const nameMatch = app.name.toLowerCase().includes(searchInput);
                     const categoryMatch = selectedCategory === 'All' || app.category === selectedCategory;
 
-                    if (nameMatch && categoryMatch) {
+                    const appPlatform = app.platform; // قيمة المنصة المخزنة (قد تكون غير موجودة/Undefined)
+                    let platformMatch = false;
+
+                    // منطق التصفية حسب المنصة والجهاز:
+                    if (userPlatform === 'iOS') {
+                        // لمستخدمي الآيفون: نعرض فقط التطبيقات المحددة كـ 'iOS'
+                        platformMatch = (appPlatform === 'iOS');
+                    } else if (userPlatform === 'Android') {
+                        // لمستخدمي الأندرويد: نعرض التطبيقات المحددة كـ 'Android' أو التطبيقات التي ليس لها قيمة (البيانات القديمة)
+                        platformMatch = (appPlatform === 'Android' || !appPlatform);
+                    }
+                    
+                    // افتراض المنصة لأي جهاز آخر
+                    else {
+                        platformMatch = (appPlatform === 'Android' || !appPlatform);
+                    }
+
+
+                    if (nameMatch && categoryMatch && platformMatch) {
                         matchingApps++;
                         const appCard = document.createElement('div');
                         appCard.className = 'app-card';
@@ -711,7 +728,7 @@
                             <div class="app-icon"><img src="${app.iconPath}" alt="${app.name} Icon"></div>
                             <h3>${app.name}</h3>
                             <p>${app.category}</p>
-                            <div class="rating">${generateStars(app.rating)} (${app.rating.toFixed(1)})</div>
+                            <div class="rating">${generateStars(app.rating)} (${(app.rating || 0).toFixed(1)})</div>
                         `;
                         appsContainer.appendChild(appCard);
                     }
@@ -792,6 +809,7 @@
                     const app = doc.data();
                     const modal = document.getElementById('appDetailsModal');
                     const userPlatform = getDevicePlatform();
+                    const appPlatform = app.platform || 'Android'; // المنصة الافتراضية للبيانات القديمة
 
                     // تحديث محتوى النافذة
                     document.getElementById('app-icon-modal').src = app.iconPath;
@@ -802,21 +820,23 @@
                     document.getElementById('app-downloads-modal').textContent = (app.downloads || 0).toLocaleString();
                     document.getElementById('app-description-modal').textContent = app.fullDescription;
                     document.getElementById('app-rating-modal').innerHTML = `${generateStars(app.rating)} (${(app.rating || 0).toFixed(1)})`;
-                    document.getElementById('app-platform-modal').textContent = `المنصة: ${app.platform || 'Android'}`;
+                    
+                    // عرض المنصة الفعلية للتطبيق
+                    document.getElementById('app-platform-modal').textContent = `المنصة: ${appPlatform === 'iOS' ? 'آيفون (iOS)' : 'أندرويد'}`;
                     
                     const downloadBtn = document.getElementById('download-link-modal');
                     downloadBtn.href = app.downloadLink;
 
-                    // تخصيص زر التحميل بناءً على المنصة
+                    // تخصيص زر التحميل بناءً على منصة التطبيق المخزنة
                     const downloadTextSpan = document.getElementById('download-text');
-                    if (userPlatform === 'iOS') {
+                    if (appPlatform === 'iOS') {
                         downloadTextSpan.textContent = 'الانتقال إلى موقع التطبيق';
                         downloadBtn.style.backgroundColor = '#007aff'; // لون أزرق لـ iOS
                     } else {
                         downloadTextSpan.textContent = 'تنزيل ملف APK';
-                        downloadBtn.style.backgroundColor = var(--accent); // اللون الافتراضي (الأخضر/الأزرق)
+                        downloadBtn.style.backgroundColor = 'var(--accent)'; // اللون الافتراضي
                     }
-
+                    
                     // صور الشاشة
                     const screenshotsContainer = document.getElementById('screenshots-container-modal');
                     screenshotsContainer.innerHTML = '';
@@ -833,7 +853,7 @@
                     // عرض النافذة
                     modal.style.display = 'block';
                     
-                    // زيادة عداد التنزيلات بمجرد فتح صفحة التفاصيل (يمكن تعديله ليتم عند النقر على زر التحميل)
+                    // زيادة عداد التنزيلات بمجرد فتح صفحة التفاصيل
                     incrementDownloads(appId, app.downloads || 0);
 
                 } else {
