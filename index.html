@@ -22,7 +22,7 @@
             --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             --gradient-light: linear-gradient(135deg, rgba(74, 107, 255, 0.1) 0%, rgba(255, 94, 125, 0.1) 100%);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --radius: 12px; /* تم إضافة Radius هنا للمساعدة في الأزرار الجديدة */
+            --radius: 12px;
         }
 
         body {
@@ -33,7 +33,7 @@
         }
 
         /* ------------------------------------------------ */
-        /* --- شريط التعرف على الجهاز (جديد) --- */
+        /* --- شريط التعرف على الجهاز --- */
         /* ------------------------------------------------ */
         #device-detection-banner {
             background: var(--accent);
@@ -46,7 +46,7 @@
             z-index: 2000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             transition: all 0.5s ease-out;
-            opacity: 0; /* يبدأ مخفياً */
+            opacity: 0;
             height: 0;
             overflow: hidden;
             display: flex;
@@ -403,7 +403,7 @@
         }
         
         /* ------------------------------------------------ */
-        /* --- أزرار التنزيل المنفصلة في البطاقة (جديد) --- */
+        /* --- أزرار التنزيل المنفصلة في البطاقة --- */
         /* ------------------------------------------------ */
         .download-buttons-container {
             display: flex;
@@ -446,9 +446,14 @@
             transform: translateY(-1px);
         }
 
-        .download-btn-split.hidden-link {
+        /* ------------------------------------------------ */
+        /* --- كلاس لإخفاء الروابط إذا كانت غير متوفرة أو غير مناسبة للجهاز (جديد) --- */
+        /* ------------------------------------------------ */
+        .hidden-link,
+        .hidden-by-device {
             display: none !important;
         }
+
 
         /* --- App Details Modal --- */
         .modal {
@@ -602,7 +607,7 @@
         }
         
         /* ------------------------------------------------ */
-        /* --- أزرار التنزيل المنفصلة في المودال (جديد) --- */
+        /* --- أزرار التنزيل المنفصلة في المودال --- */
         /* ------------------------------------------------ */
         .download-buttons-container-modal {
             display: flex;
@@ -617,7 +622,8 @@
         }
         
         .download-buttons-container-modal a.hidden-link {
-            display: none;
+            /* سيتم استخدام هذا الكلاس في JS لإخفاء الروابط */
+            display: none; 
         }
 
         .download-modal-btn {
@@ -628,7 +634,7 @@
             border-radius: 10px;
             cursor: pointer;
             font-size: 1.1em;
-            margin-top: 0; /* تم إزالة الـ margin-top القديم */
+            margin-top: 0;
             transition: all 0.3s;
             font-weight: 600;
             box-shadow: 0 4px 12px rgba(74, 107, 255, 0.3);
@@ -770,7 +776,7 @@
         }
 
         .company-logo {
-            width: 80px; /* تم تصغير الشعار من 120px إلى 80px */
+            width: 80px;
             height: auto;
             opacity: 0.9;
             margin-bottom: 10px;
@@ -809,11 +815,6 @@
         }
 
         /* --- Loading Buttons --- */
-        .download-btn.loading {
-            /* تم إزالة هذا الـ CSS لأنه لم يعد مستخدماً في البطاقات */
-            /* سيتم استخدام أزرار الـ split الجديدة */
-        }
-        
         .download-modal-btn.loading {
             background: var(--dark);
             pointer-events: none;
@@ -887,7 +888,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            text-align: right; /* تم إضافة محاذاة لليمين */
+            text-align: right;
         }
         .review-note {
             color: red;
@@ -918,14 +919,14 @@
             .search-section { flex-direction: column; } 
             .search-box { max-width: 100%; } 
             #apps-container { 
-                grid-template-columns: repeat(3, 1fr); /* 3 تطبيقات في الصف على الهواتف */
+                grid-template-columns: repeat(3, 1fr); 
                 gap: 15px; 
             }
             .app-card {
                 min-height: auto;
             }
             .app-cover {
-                height: 120px; /* تصغير ارتفاع الصورة */
+                height: 120px;
             }
             .app-info { 
                 padding: 10px; 
@@ -938,8 +939,8 @@
                 height: 50px; 
             } 
             .app-title { 
-                font-size: 0.9em; /* تصغير حجم النص */
-                white-space: normal; /* السماح بتكرار النص على سطرين */
+                font-size: 0.9em; 
+                white-space: normal;
                 line-height: 1.2;
                 max-height: 2.4em;
                 overflow: hidden;
@@ -951,7 +952,7 @@
                 font-size: 0.75em;
                 justify-content: center;
             }
-            .download-buttons-container { /* تعديل الهواتف لأزرار الـ split */
+            .download-buttons-container {
                 padding: 0 5px 10px 5px;
                 gap: 5px;
             }
@@ -966,7 +967,7 @@
             .details-info > div { flex-basis: 50%; margin: 10px 0; } 
             #detailsScreenshots img { width: 150px; height: 260px; } 
             #contact { padding: 40px 15px; } 
-            .company-logo { width: 70px; } /* تصغير الشعار في الهواتف */
+            .company-logo { width: 70px; } 
             .download-buttons-container-modal { flex-direction: column; }
             .download-modal-btn { font-size: 1em; }
         } 
@@ -979,14 +980,14 @@
             .hero p { font-size: 0.95em; } 
             #apps h2 { font-size: 1.6em; } 
             #apps-container { 
-                grid-template-columns: repeat(3, 1fr); /* الحفاظ على 3 تطبيقات في الصف */
+                grid-template-columns: repeat(3, 1fr); 
                 gap: 10px;
             }
             .app-card { 
                 border-radius: 10px; 
             } 
             .app-cover { 
-                height: 100px; /* تصغير أكثر للهواتف الصغيرة */
+                height: 100px; 
             } 
             .app-info { 
                 gap: 8px; 
@@ -1006,7 +1007,7 @@
             #detailsScreenshots img { width: 120px; height: 210px; } 
             .download-modal-btn { padding: 12px; font-size: 1em; } 
             #contact h2 { font-size: 1.6em; } 
-            .company-logo { width: 60px; } /* تصغير الشعار في الهواتف */
+            .company-logo { width: 60px; } 
             .copyright { font-size: 0.8em; } 
         } 
         @media (max-width: 400px) { 
@@ -1015,7 +1016,7 @@
             .hero h2 { font-size: 1.4em; } 
             #apps h2 { font-size: 1.4em; } 
             #apps-container { 
-                grid-template-columns: repeat(3, 1fr); /* الحفاظ على 3 تطبيقات في الصف */
+                grid-template-columns: repeat(3, 1fr); 
                 gap: 8px;
             }
             .app-cover {
@@ -1034,7 +1035,7 @@
             }
             .details-info > div { flex-basis: 100%; } 
             #detailsScreenshots img { width: 100px; height: 175px; } 
-            .company-logo { width: 50px; } /* تصغير نهائي للشعار */
+            .company-logo { width: 50px; } 
         } 
     </style>
     
@@ -1152,11 +1153,11 @@
                 </div>
             
             <div class="download-buttons-container-modal">
-                <a id="detailsAndroidLink" href="#" target="_blank">
-                    <button class="download-modal-btn download-modal-android"><i class="fab fa-android"></i> تنزيل للأندرويد</button>
+                <a id="detailsAndroidLink" href="#" target="_blank" class="hidden-link">
+                    <button class="download-modal-btn download-modal-android"><i class="fab fa-android"></i> تنزيل فقط</button>
                 </a>
-                <a id="detailsIosLink" href="#" target="_blank">
-                    <button class="download-modal-btn download-modal-ios"><i class="fab fa-apple"></i> تنزيل للآيفون</button>
+                <a id="detailsIosLink" href="#" target="_blank" class="hidden-link">
+                    <button class="download-modal-btn download-modal-ios"><i class="fab fa-apple"></i> آيفون</button>
                 </a>
             </div>
 
@@ -1188,8 +1189,7 @@
                     <input type="text" id="appType" placeholder="نوع التطبيق (لعبة/أداة/تعليمي)" required>
                     <input type="text" id="appName" placeholder="اسم التطبيق" required>
                     <input type="text" id="appAndroidLink" placeholder="رابط تنزيل الأندرويد (APK/Play Store)" required> 
-                    <input type="text" id="appIosLink" placeholder="رابط تنزيل الآيفون (اختياري/App Store)">
-                    <textarea id="appImages" placeholder="روابط صور التطبيق (افصل بينها بفاصلة: رابط1,رابط2,...)" required></textarea>
+                    <input type="text" id="appIosLink" placeholder="رابط تنزيل الآيفون (اختياري/App Store)" required> <textarea id="appImages" placeholder="روابط صور التطبيق (افصل بينها بفاصلة: رابط1,رابط2,...)" required></textarea>
                 </fieldset>
 
                 <fieldset>
@@ -1227,12 +1227,12 @@
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         } else {
-            firebase.app(); // إذا كان موجودًا بالفعل
+            firebase.app();
         }
         const db = firebase.firestore();
 
         // ----------------------------------------------------
-        // 1. دوال التعرف على الجهاز (جديدة)
+        // 1. دوال التعرف على الجهاز
         // ----------------------------------------------------
         let isAndroidDevice = false;
         let isIOSDevice = false;
@@ -1304,7 +1304,7 @@
         let allApps = []; // لتخزين جميع التطبيقات للبحث
 
         // ----------------------------------------------------
-        // 3. دالة تحميل التطبيقات (loadApps)
+        // 3. دالة تحميل التطبيقات (loadApps) - مُعدلة بمنطق الأزرار الذكية
         // ----------------------------------------------------
         function loadApps() {
             const appsContainer = document.getElementById('apps-container');
@@ -1338,10 +1338,13 @@
 
                     const ratingStars = getStarRating(app.rating || 0);
                     
-                    // تحديد الروابط الجديدة
-                    // إذا لم يتوفر androidLink أو iosLink، نستخدم downloadLink القديم كخيار أندرويد افتراضي
                     const androidLink = app.androidLink || app.downloadLink || '#';
                     const iosLink = app.iosLink || '#';
+
+                    // منطق إخفاء الأزرار على مستوى البطاقة (جديد)
+                    let androidHiddenClass = (androidLink === '#' || isIOSDevice) ? 'hidden-link' : '';
+                    let iosHiddenClass = (iosLink === '#' || isAndroidDevice) ? 'hidden-link' : '';
+
 
                     appCardsHtml += `
                         <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" data-description="${app.fullDescription || ''}" onclick="showAppDetails('${appId}')">
@@ -1361,11 +1364,11 @@
                             </div>
                             
                             <div class="download-buttons-container">
-                                <button class="download-btn-split download-btn-android ${androidLink === '#' ? 'hidden-link' : ''}" 
+                                <button class="download-btn-split download-btn-android ${androidHiddenClass}" 
                                         onclick="event.stopPropagation(); window.open('${androidLink}', '_blank');">
-                                    <i class="fab fa-android"></i> أندرويد
+                                    <i class="fab fa-android"></i> تنزيل فقط
                                 </button>
-                                <button class="download-btn-split download-btn-ios ${iosLink === '#' ? 'hidden-link' : ''}" 
+                                <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
                                         onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
                                     <i class="fab fa-apple"></i> آيفون
                                 </button>
@@ -1444,12 +1447,11 @@
         }
 
         function filterApps() {
-            // يتم استدعاء searchApps لتطبيق كل من البحث والتصفية معاً
             searchApps(); 
         }
         
         // ----------------------------------------------------
-        // 5. دالة عرض التفاصيل (showAppDetails)
+        // 5. دالة عرض التفاصيل (showAppDetails) - مُعدلة بمنطق الأزرار الذكية
         // ----------------------------------------------------
         function showAppDetails(appId) {
             db.collection('apps').doc(appId).get().then(doc => {
@@ -1468,24 +1470,29 @@
                     
                     document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
                     
-                    // تحديد الروابط المنفصلة وتحديث أزرار المودال (جديد)
+                    // تحديد الروابط المنفصلة
                     const androidLink = app.androidLink || app.downloadLink || '#';
                     const iosLink = app.iosLink || '#';
                     
                     const androidLinkElement = document.getElementById('detailsAndroidLink');
                     const iosLinkElement = document.getElementById('detailsIosLink');
                     
+                    // منطق إخفاء الأزرار على مستوى المودال (جديد)
+                    const isAndroidLinkHiddenByDevice = isIOSDevice;
+                    const isIosLinkHiddenByDevice = isAndroidDevice;
+                    
+                    // تعيين الروابط
                     androidLinkElement.href = androidLink;
                     iosLinkElement.href = iosLink;
                     
-                    // إظهار أو إخفاء الأزرار بناءً على توفر الرابط
-                    if (androidLink === '#') {
+                    // تطبيق الإخفاء بناءً على التوفر ونوع الجهاز
+                    if (androidLink === '#' || isAndroidLinkHiddenByDevice) {
                         androidLinkElement.classList.add('hidden-link');
                     } else {
                         androidLinkElement.classList.remove('hidden-link');
                     }
 
-                    if (iosLink === '#') {
+                    if (iosLink === '#' || isIosLinkHiddenByDevice) {
                         iosLinkElement.classList.add('hidden-link');
                     } else {
                         iosLinkElement.classList.remove('hidden-link');
@@ -1544,12 +1551,11 @@
         document.getElementById('submissionForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // تم تحديث الحصول على الروابط المنفصلة من الحقول الجديدة
             const submissionData = {
                 appType: document.getElementById('appType').value,
                 appName: document.getElementById('appName').value,
-                appAndroidLink: document.getElementById('appAndroidLink').value, // جديد
-                appIosLink: document.getElementById('appIosLink').value, // جديد
+                appAndroidLink: document.getElementById('appAndroidLink').value,
+                appIosLink: document.getElementById('appIosLink').value, 
                 appImages: document.getElementById('appImages').value.split(',').map(s => s.trim()).filter(s => s.length > 0), 
                 devName: document.getElementById('devName').value,
                 companyName: document.getElementById('companyName').value,
