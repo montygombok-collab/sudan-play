@@ -199,7 +199,7 @@
             cursor: pointer;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* لتحسين محاذاة الأزرار */
+            justify-content: space-between;
         }
 
         .app-card:hover {
@@ -511,7 +511,7 @@
             font-weight: 700;
             transition: all 0.3s;
             box-shadow: 0 4px 12px rgba(74, 107, 255, 0.4);
-            width: 100%; /* مهم ليتمدد داخل flex */
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -912,7 +912,6 @@
         // const submissionsCollection = db.collection("submissions");
         
         // ** ملاحظة: تم التعليق على كود Firebase لعدم توفر مفاتيحك **
-        // ** يجب إزالة التعليق وتعبئة البيانات ليعمل التطبيق **
         
         // ------------------------------------------------
         // 2. دالة عرض إشعارات (Toast)
@@ -997,10 +996,10 @@
             }, 4000); 
             
             // بعد التعرف على الجهاز، يتم تحميل التطبيقات (نقلت الاستدعاء من body onload)
-            // loadApps(); // ** سيتم استدعاؤها هنا بعد تفعيل كود Firebase **
+            loadApps(); 
             
             // ** في حالة عدم تفعيل Firebase، يمكن استدعاء دالة وهمية هنا لاختبار الواجهة **
-            document.getElementById('loading-spinner').style.display = 'none'; // إخفاء علامة التحميل الوهمية
+            // document.getElementById('loading-spinner').style.display = 'none'; 
         }
 
         window.addEventListener('load', detectAndShowDevice); 
@@ -1010,20 +1009,22 @@
         // 5. دالة تحميل التطبيقات (loadApps)
         // ------------------------------------------------
         // **********************************************
-        // ملاحظة: هذه الدالة تعتمد على Firebase.
-        // يجب إزالة التعليق عن كود Firebase في الأعلى لتشغيلها.
+        // ملاحظة: هذه الدالة تعتمد على Firebase. 
+        // سيتم استخدام بيانات وهمية مؤقتاً لضمان عمل الواجهة إذا كان Firebase غير مفعل.
         // **********************************************
         async function loadApps() {
             const appsContainer = document.getElementById('apps-container');
             appsContainer.innerHTML = document.getElementById('loading-spinner').outerHTML; // إعادة عرض علامة التحميل
             
             try {
-                // const snapshot = await appsCollection.get(); // كود حقيقي
+                // // الكود الحقيقي:
+                // const snapshot = await appsCollection.get(); 
+                
                 // ** كود وهمي للاختبار في حالة عدم تفعيل Firebase **
                 const mockApps = [
-                    { id: '1', name: 'بنكك', category: 'مالية', rating: 4.5, iconPath: 'https://cdn.example.com/banqak.png', downloadLink: '#', androidLink: 'https://play.google.com/banqak', iosLink: '#', screenshotsPaths: ['https://cdn.example.com/ss1.png', 'https://cdn.example.com/ss2.png'], fullDescription: 'تطبيق بنكك للهواتف الذكية...' },
-                    { id: '2', name: 'سودانيز أون لاين', category: 'أخبار', rating: 4.8, iconPath: 'https://cdn.example.com/sol.png', downloadLink: 'https://example.com/sol-app', androidLink: 'https://play.google.com/sol', iosLink: 'https://apps.apple.com/sol', screenshotsPaths: ['https://cdn.example.com/ss3.png'], fullDescription: 'أخبار السودان لحظة بلحظة...' },
-                    { id: '3', name: 'تطبيق تعليمي', category: 'تعليم', rating: 3.9, iconPath: 'https://cdn.example.com/edu.png', downloadLink: 'https://example.com/edu-app', androidLink: '#', iosLink: 'https://apps.apple.com/edu', screenshotsPaths: ['https://cdn.example.com/ss4.png', 'https://cdn.example.com/ss5.png', 'https://cdn.example.com/ss6.png'], fullDescription: 'منصة تعليمية للمناهج السودانية...' }
+                    { id: '1', name: 'بنكك', category: 'مالية', rating: 4.5, iconPath: 'https://via.placeholder.com/60x60?text=Bank', downloadLink: '#', androidLink: 'https://play.google.com/banqak', iosLink: '#', screenshotsPaths: ['https://via.placeholder.com/300x500?text=Banqak+SS1', 'https://via.placeholder.com/300x500?text=Banqak+SS2'], fullDescription: 'تطبيق بنكك للهواتف الذكية يوفر خدمات مصرفية آمنة ومريحة.' },
+                    { id: '2', name: 'سودانيز أون لاين', category: 'أخبار', rating: 4.8, iconPath: 'https://via.placeholder.com/60x60?text=News', downloadLink: 'https://example.com/sol-app', androidLink: 'https://play.google.com/sol', iosLink: 'https://apps.apple.com/sol', screenshotsPaths: ['https://via.placeholder.com/300x500?text=SOL+SS1'], fullDescription: 'أخبار السودان لحظة بلحظة وتغطية شاملة للأحداث.' },
+                    { id: '3', name: 'منصة دراسة', category: 'تعليم', rating: 3.9, iconPath: 'https://via.placeholder.com/60x60?text=Edu', downloadLink: 'https://example.com/edu-app', androidLink: '#', iosLink: 'https://apps.apple.com/edu', screenshotsPaths: ['https://via.placeholder.com/300x500?text=Derasah+SS1', 'https://via.placeholder.com/300x500?text=Derasah+SS2', 'https://via.placeholder.com/300x500?text=Derasah+SS3'], fullDescription: 'منصة تعليمية متكاملة للمناهج السودانية لجميع المراحل.' }
                 ];
                 const snapshot = { forEach: (callback) => mockApps.forEach(app => callback({ id: app.id, data: () => app })) };
                 // -------------------------------------------
@@ -1036,7 +1037,7 @@
                     const app = doc.data();
 
                     const ratingStars = getStarRating(app.rating || 0);
-                    // const downloadsText = (app.downloads || 0).toLocaleString('ar-EG'); // إذا كان موجوداً في البيانات
+                    // const downloadsText = (app.downloads || 0).toLocaleString('ar-EG'); 
                     
                     // تحديد الروابط الجديدة
                     const androidLink = app.androidLink || app.downloadLink || '#';
@@ -1100,14 +1101,13 @@
                 const category = card.dataset.category.toLowerCase();
 
                 if (name.includes(searchTerm) || category.includes(searchTerm)) {
-                    card.style.display = 'flex'; // استخدام flex لأنه تم تغيير العرض في CSS
+                    card.style.display = 'flex';
                     foundCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
 
-            // عرض رسالة إذا لم يتم العثور على نتائج (اختياري)
             const appsContainer = document.getElementById('apps-container');
             let noResults = document.getElementById('no-results-message');
             if (foundCount === 0 && appCards.length > 0) {
@@ -1130,21 +1130,12 @@
         // ------------------------------------------------
 
         // أ. عرض تفاصيل التطبيق (App Details)
-        // ** تم تعديل وسيطات الدالة لقبول بيانات وهمية للاختبار **
-        // في الكود الحقيقي ستحتاج فقط لـ appId
-        // يجب تحديث استدعاء الدالة في loadApps بما يتناسب مع طريقة تخزين بياناتك.
         async function showAppDetails(appId, appData) {
             const appModal = document.getElementById('appDetailsModal');
             
             try {
-                let app;
-                // if (appData) { // كود وهمي
-                    app = appData;
-                // } else { // كود حقيقي
-                //     const doc = await appsCollection.doc(appId).get();
-                //     if (!doc.exists) throw new Error("Application not found");
-                //     app = doc.data();
-                // }
+                let app = appData; 
+                // في الكود الحقيقي، يجب استرجاع البيانات من Firebase باستخدام appId
                 
                 // تحديث المحتوى
                 document.getElementById('detailsName').textContent = app.name || 'اسم غير متوفر';
@@ -1235,29 +1226,13 @@
             e.preventDefault();
             
             // ** ملاحظة: كود إرسال Firebase غير مفعل **
-            showToast('⚠️ لا يمكن إرسال الطلب، كود Firebase غير مفعل.', 6000);
-
-            // const formData = {
-            //     name: document.getElementById('appName').value,
-            //     category: document.getElementById('appCategory').value,
-            //     fullDescription: document.getElementById('appDescription').value,
-            //     androidLink: document.getElementById('appAndroidLink').value,
-            //     iosLink: document.getElementById('appIosLink').value,
-            //     iconPath: document.getElementById('appIcon').value,
-            //     screenshotsPaths: document.getElementById('appScreenshots').value.split(',').map(s => s.trim()).filter(s => s.length > 0),
-            //     submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            //     status: 'Pending'
-            // };
-
+            showToast('⚠️ لا يمكن إرسال الطلب، كود Firebase غير مفعل. قم بتفعيله لإرسال البيانات.', 6000);
+            
+            // الكود الحقيقي:
+            // const formData = { ... };
             // submissionsCollection.add(formData)
-            //     .then(() => {
-            //         closeSubmissionModal();
-            //         showToast('✅ تم إرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 6000);
-            //     })
-            //     .catch(error => {
-            //         showToast('❌ حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.', 5000);
-            //         console.error("Error submitting application: ", error);
-            //     });
+            //     .then(() => { ... })
+            //     .catch(error => { ... });
         });
 
         // ------------------------------------------------
