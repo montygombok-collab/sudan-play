@@ -933,22 +933,15 @@
             .logo h1 {
                 font-size: 1.3em;
             }
-            /* تم تعديل هذا الجزء لضمان ظهور الروابط بشكل واضح على شاشات الهواتف الصغيرة */
-            nav {
-                flex-direction: column; /* جعل الشعار والروابط تتكدس عمودياً */
-                align-items: center;
-            }
             .nav-links {
-                width: 100%; 
                 justify-content: center;
                 margin-top: 10px;
-                flex-wrap: wrap; 
             }
             .nav-links a {
                 font-size: 0.9em;
-                margin: 5px 8px; /* تقليل الهوامش لتناسب أكبر عدد من الروابط */
+                margin-right: 10px;
+                margin-left: 10px;
             }
-            /* نهاية التعديل */
             .hero h2 {
                 font-size: 1.6em;
             }
@@ -1289,7 +1282,7 @@
         let allApps = []; // لتخزين جميع التطبيقات للبحث
 
         // ----------------------------------------------------
-        // 4. دالة تحميل التطبيقات (loadApps) - (تم تعديل نص زر الأندرويد)
+        // 4. دالة تحميل التطبيقات (loadApps) - (بدون تغيير)
         // ----------------------------------------------------
         function loadApps() {
             const appsContainer = document.getElementById('apps-container');
@@ -1336,11 +1329,11 @@
                     const isIosAvailable = iosLink !== '#';
                     const iosHiddenClass = (isAndroidDevice && isIosAvailable) ? 'hidden-by-device' : (isIosAvailable ? '' : 'unavailable');
 
-                    // زر الأندرويد (تم تغيير "تنزيل فقط" إلى "تنزيل")
+                    // زر الأندرويد
                     androidButtonHtml = `
                         <button class="download-btn-split download-btn-android ${androidHiddenClass}" 
                                 onclick="event.stopPropagation(); window.open('${androidLink}', '_blank');">
-                            <i class="fab fa-android"></i> تنزيل
+                            <i class="fab fa-android"></i> تنزيل فقط
                         </button>
                     `;
                     
@@ -1554,7 +1547,7 @@
              document.getElementById('submissionForm').reset();
         }
 
-        // دالة إرسال الطلب إلى Firestore (بدون تغيير في المنطق)
+        // دالة إرسال الطلب إلى Firestore (التعديل تم هنا)
         document.getElementById('submissionForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -1578,7 +1571,7 @@
                 devEmail: document.getElementById('devEmail').value,
                 transactionId: document.getElementById('transactionId').value,
                 submissionDate: firebase.firestore.FieldValue.serverTimestamp(),
-                reviewStatus: 'pending', 
+                reviewStatus: 'Pending', // 🌟 تم التعديل من 'pending' إلى 'Pending' لحل مشكلة الداشبورد
             };
 
             db.collection('submissions').add(submissionData)
