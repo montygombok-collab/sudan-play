@@ -867,52 +867,60 @@
         // دوال طلبات النشر (المُحدثة)
         // ----------------------------------------------------
 
-        // 1. دالة جلب وعرض طلبات النشر
+        // 1. دالة جلب وعرض طلبات النشر - (تم إزالة الفلتر وعرض Pending فقط)
         function loadSubmissions() {
             const submissionsList = document.getElementById('submissionsList');
             if (!submissionsList) return; 
             
             submissionsList.innerHTML = '<h3>جاري تحميل الطلبات...</h3>';
             
-            // جلب الطلبات التي حالتها 'Pending' فقط (تم إعادة تفعيل الفلتر)
-            db.collection('submissions').where('reviewStatus', '==', 'Pending').onSnapshot(snapshot => {
+            // التعديل: جلب جميع الطلبات بدون فلترة
+            db.collection('submissions').onSnapshot(snapshot => {
                 submissionsList.innerHTML = ''; 
-                const pendingCount = snapshot.size;
                 
-                // تحديث العداد في شريط التنقل
-                const pendingSubmissionsCount = document.getElementById('pendingSubmissionsCount');
-                if(pendingSubmissionsCount) pendingSubmissionsCount.textContent = pendingCount;
+                let pendingCount = 0;
                 
-                // تحديث العداد في قسم الإحصائيات 
-                const pendingSubmissionsStat = document.getElementById('pendingSubmissions');
-                if(pendingSubmissionsStat) pendingSubmissionsStat.textContent = pendingCount;
+                if (snapshot.empty) {
+                    // تحديث عداد قيد المراجعة إلى صفر
+                    const pendingSubmissionsCount = document.getElementById('pendingSubmissionsCount');
+                    if(pendingSubmissionsCount) pendingSubmissionsCount.textContent = 0;
+                    const pendingSubmissionsStat = document.getElementById('pendingSubmissions');
+                    if(pendingSubmissionsStat) pendingSubmissionsStat.textContent = 0;
 
-                if (pendingCount === 0) {
                     submissionsList.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-inbox"></i>
-                            <h3>لا توجد طلبات نشر جديدة</h3>
-                            <p>جميع الطلبات تمت مراجعتها</p>
+                            <h3>لا توجد طلبات نشر حاليًا</h3>
+                            <p>أرسل طلب نشر جديد باستخدام صفحة نشر التطبيق.</p>
                         </div>
                     `;
                     return;
                 }
-
+                
                 snapshot.forEach(doc => {
                     const submission = doc.data();
                     const submissionId = doc.id;
                     
+                    const status = submission.reviewStatus || 'Pending'; // نعتبر الطلب الذي لا يحمل حالة هو 'قيد المراجعة'
+                    
+                    if (status === 'Pending') {
+                        pendingCount++;
+                    }
+
+                    // فقط عرض الطلبات التي هي 'Pending' للمراجعة
+                    if (status !== 'Pending') {
+                        return; 
+                    }
+                    
+                    // ------------------------------------------------------------------
+                    // بدء بناء بطاقة الطلب (لطلبات Pending فقط)
+                    // ------------------------------------------------------------------
                     const card = document.createElement('div');
                     card.className = 'submission-card';
                     
-                    // تم إبقاء هذا السطر لـ 'submissionDataString' ولكنه لن يستخدم في زر القبول/الرفض
-                    const submissionDataString = JSON.stringify(submission).replace(/"/g, '&quot;'); 
-
                     const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
                     
-                    // تحديد حالة الطلب للعرض
-                    const status = submission.reviewStatus || 'Pending';
-                    const statusClass = status === 'Pending' ? 'status-pending' : (status === 'approved' ? 'status-approved' : (status === 'rejected' ? 'status-rejected' : 'status-pending'));
+                    const statusClass = 'status-pending'; // بما أننا نعرض Pending فقط
                     
                     // معالجة الصور
                     let imagesHTML = '';
@@ -931,7 +939,7 @@
                     card.innerHTML = `
                         <div class="submission-header">
                             <h3 class="submission-title">${submission.appName || 'غير متوفر'}</h3>
-                            <span class="status-badge ${statusClass}">${status}</span>
+                            <span class="status-badge ${statusClass}">قيد المراجعة</span>
                         </div>
                         
                         <div class="submission-details">
@@ -957,6 +965,26 @@
                     `;
                     submissionsList.appendChild(card);
                 });
+
+                // تحديث العدادات بناءً على الطلبات التي وجدناها
+                const pendingSubmissionsCount = document.getElementById('pendingSubmissionsCount');
+                if(pendingSubmissionsCount) pendingSubmissionsCount.textContent = pendingCount;
+                
+                const pendingSubmissionsStat = document.getElementById('pendingSubmissions');
+                if(pendingSubmissionsStat) pendingSubmissionsStat.textContent = pendingCount;
+
+                // إذا كان هناك طلبات ولكن ليس هناك طلبات "قيد المراجعة"، أظهر رسالة مناسبة
+                if (pendingCount === 0 && !snapshot.empty) {
+                     submissionsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-check-circle" style="color: ${getComputedStyle(document.documentElement).getPropertyValue('--accent')};"></i>
+                            <h3>لا توجد طلبات نشر قيد المراجعة حاليًا</h3>
+                            <p>جميع الطلبات تمت مراجعتها بالفعل.</p>
+                        </div>
+                    `;
+                }
+
+
             }, error => {
                 showToast(`❌ خطأ في تحميل الطلبات: ${error.message}`);
                 console.error("Error loading submissions: ", error);
@@ -1088,7 +1116,7 @@
                 document.getElementById('approvedSubmissions').textContent = snapshot.size;
             });
             
-            // يجب تحديث عداد "قيد المراجعة" بشكل تلقائي في دالة loadSubmissions()
+            // عداد "قيد المراجعة" يتم تحديثه في دالة loadSubmissions()
         }
 
         // ----------------------------------------------------
@@ -1112,7 +1140,6 @@
             }
             
             // إضافة النشاط للزر المحدد
-            // هذا التعديل لضمان أن الزر الصحيح يتلقى class='active'
             const activeBtn = document.querySelector(`.nav-btn[onclick*="${sectionId}"]`);
             if(activeBtn) activeBtn.classList.add('active');
 
@@ -1211,7 +1238,7 @@
             // التحقق من حالة تسجيل الدخول أولاً
             firebase.auth().onAuthStateChanged(user => {
                 if (!user && !localStorage.getItem('sudanPlayAdmin')) {
-                    // window.location.href = '/login.html'; // إعادة التوجيه لصفحة الدخول
+                    // window.location.href = '/login.html'; // يمكنك تفعيل هذا السطر لإعادة التوجيه لصفحة الدخول
                 } else {
                     // إعداد النموذج
                     setupAppForm();
