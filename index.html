@@ -27,7 +27,7 @@
 
         body {
             background-color: var(--light);
-            min-height: 10vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
@@ -785,6 +785,22 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: auto; /* لضمان بقائه في الأسفل */
         }
+        
+        .footer-branding { /* New style to align logo and text */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between logo and text */
+            margin-top: 10px; /* Space from social links */
+            margin-bottom: 5px;
+        }
+
+        .footer-logo { /* Style for the small logo */
+            height: 25px; 
+            width: 25px;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(74, 107, 255, 0.5);
+        }
 
         .social-links {
             margin: 10px 0;
@@ -984,6 +1000,10 @@
             .download-modal-btn {
                 font-size: 1em;
             }
+            .footer-logo {
+                height: 20px;
+                width: 20px;
+            }
         }
         
         @media (max-width: 400px) {
@@ -1043,6 +1063,7 @@
     <header>
         <nav>
             <div class="logo">
+                <img src="https://www.appcreator24.com/srv/imgs/gen/3452925_splash.png?ts=1760606192" alt="Sudan Play Logo">
                 <h1>Sudan Play</h1>
             </div>
             <div class="nav-links">
@@ -1102,17 +1123,20 @@
                 <textarea placeholder="رسالتك" rows="5" required></textarea>
                 <button type="submit">إرسال الرسالة</button>
             </form>
-            <div class="social-links">
-                <a href="#" target="_blank" title="تواصل عبر واتساب"><i class="fab fa-whatsapp"></i></a>
-                <a href="#" target="_blank" title="تابعنا على إنستجرام"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank" title="تابعنا على فيسبوك"><i class="fab fa-facebook-f"></i></a>
-            </div>
-        </section>
+            </section>
 
     </main>
     
     <footer>
-        <p>&copy; 2024 Sudan Play. جميع الحقوق محفوظة.</p>
+        <div class="social-links">
+            <a href="#" target="_blank" title="تواصل عبر واتساب"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" target="_blank" title="تابعنا على إنستجرام"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank" title="تابعنا على فيسبوك"><i class="fab fa-facebook-f"></i></a>
+        </div>
+        <div class="footer-branding">
+            <img src="https://www.appcreator24.com/srv/imgs/gen/3452925_splash.png?ts=1760606192" alt="Sudan Play Logo" class="footer-logo">
+            <p>&copy; 2024 Sudan Play. جميع الحقوق محفوظة.</p>
+        </div>
     </footer>
 
     <div id="appDetailsModal" class="modal">
