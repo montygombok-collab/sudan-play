@@ -772,7 +772,7 @@
         }
         
         // ----------------------------------------------------
-        // دوال إدارة التطبيقات 
+        // دوال إدارة التطبيقات (القديمة)
         // ----------------------------------------------------
         function loadApps() {
             const appsList = document.getElementById('appsList');
@@ -840,7 +840,9 @@
                     document.getElementById('shortDescription').value = app.shortDescription || '';
                     document.getElementById('fullDescription').value = app.fullDescription || '';
                     document.getElementById('downloadLink').value = app.downloadLink || '';
+                    // **** تم إضافة هذا السطر لتعبئة حقل رابط الآيفون ****
                     document.getElementById('iphoneDownloadLink').value = app.iphoneDownloadLink || '';
+                    // **********************************************
                     document.getElementById('size').value = app.size || 0;
                     document.getElementById('rating').value = app.rating || 0;
                     document.getElementById('downloads').value = app.downloads || 0;
@@ -864,7 +866,7 @@
         }
 
         // ----------------------------------------------------
-        // دوال طلبات النشر (المُحدثة)
+        // دوال طلبات النشر (المصححة)
         // ----------------------------------------------------
 
         // 1. دالة جلب وعرض طلبات النشر
@@ -872,7 +874,7 @@
             const submissionsList = document.getElementById('submissionsList');
             if (!submissionsList) return; 
             
-            submissionsList.innerHTML = '<h3>جاري تحميل الطلبات... <i class="fas fa-spinner fa-spin"></i></h3>';
+            submissionsList.innerHTML = '<h3>جاري تحميل الطلبات...</h3>';
             
             // جلب الطلبات التي حالتها 'Pending' 
             db.collection('submissions').where('reviewStatus', '==', 'Pending').onSnapshot(snapshot => {
@@ -922,20 +924,19 @@
                         `;
                     }
 
-                    // *** هنا تم إضافة فحص لكل حقل لضمان عرض "غير متوفر" بدلاً من ترك الحقل فارغاً ***
                     card.innerHTML = `
                         <div class="submission-header">
-                            <h3 class="submission-title">${submission.appName || 'تطبيق بدون اسم'}</h3>
+                            <h3 class="submission-title">${submission.appName}</h3>
                             <span class="status-badge status-pending">قيد المراجعة</span>
                         </div>
                         
                         <div class="submission-details">
-                            <p><strong>نوع التطبيق:</strong> ${submission.appType || 'غير محدد'}</p>
-                            <p><strong>المطور:</strong> ${submission.devName || 'غير متوفر'}</p>
+                            <p><strong>نوع التطبيق:</strong> ${submission.appType}</p>
+                            <p><strong>المطور:</strong> ${submission.devName}</p>
                             <p><strong>الشركة:</strong> ${submission.companyName || 'لا توجد شركة'}</p>
-                            <p><strong>البريد الإلكتروني:</strong> ${submission.devEmail || 'غير متوفر'}</p>
-                            <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code></p>
-                            <p><strong>رابط التطبيق:</strong> <a href="${submission.appLink || '#'}" target="_blank">${submission.appLink ? 'اضغط للتحميل/المعاينة' : 'غير متوفر'}</a></p>
+                            <p><strong>البريد الإلكتروني:</strong> ${submission.devEmail}</p>
+                            <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId}</code></p>
+                            <p><strong>رابط التطبيق:</strong> <a href="${submission.appLink}" target="_blank">اضغط للتحميل/المعاينة</a></p>
                             <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
                         </div>
                         
@@ -958,7 +959,7 @@
             });
         }
 
-        // 2. دالة مراجعة الطلب (موافقة / رفض) - تم إصلاحها لضمان اختفاء الطلب عند الرفض
+        // 2. دالة مراجعة الطلب (موافقة / رفض)
         function reviewSubmission(submissionId, status, submissionDataString) {
             
             // 1. تحديث حالة الطلب في مجموعة submissions
@@ -970,6 +971,8 @@
                 if (status === 'rejected') {
                     // 🟢 FIX: عند الرفض، نعرض الرسالة ونقوم بإنهاء العملية
                     showToast('✅ تم رفض الطلب بنجاح.', 4000);
+                    // بما أن onSnapshot تستمع للتغييرات، فالمفترض أن الطلب يختفي
+                    // لكن لضمان تحديث الواجهة فوراً، نعيد تحميل القائمة يدوياً هنا.
                     loadSubmissions(); 
                     loadStats(); 
                     return; // إنهاء تسلسل الـ promises لمنع استمرارها
@@ -980,13 +983,13 @@
                     
                     // 2. إذا تمت الموافقة، قم بنسخ بيانات التطبيق إلى مجموعة 'apps'
                     const appData = {
-                        name: submissionData.appName || 'تطبيق غير مسمى',
-                        category: submissionData.appType || 'عام', 
-                        downloadLink: submissionData.appLink || '#',
+                        name: submissionData.appName,
+                        category: submissionData.appType, 
+                        downloadLink: submissionData.appLink,
                         screenshotsPaths: submissionData.appImages || [],
-                        developerName: submissionData.devName || 'غير متوفر',
-                        shortDescription: `تطبيق مقدم بواسطة ${submissionData.devName || 'مطور خارجي'}.`,
-                        fullDescription: `تطبيق ${submissionData.appName || 'غير محدد'} تم تقديمه بواسطة ${submissionData.devName || 'مطور خارجي'}.`,
+                        developerName: submissionData.devName,
+                        shortDescription: `تطبيق مقدم بواسطة ${submissionData.devName}.`,
+                        fullDescription: `تطبيق ${submissionData.appName} تم تقديمه بواسطة ${submissionData.devName}.`,
                         
                         // قيم مبدئية
                         size: 0,
@@ -1004,7 +1007,7 @@
                             showToast('🎉 تم نشر التطبيق بنجاح وإضافته إلى قائمة التطبيقات!', 5000);
                             loadSubmissions(); 
                             loadStats(); 
-                            loadApps(); 
+                            loadApps(); // 🟢 تم إضافة تحديث قائمة التطبيقات
                         });
                 }
             })
@@ -1140,7 +1143,9 @@
                     shortDescription: form.shortDescription.value,
                     fullDescription: form.fullDescription.value,
                     downloadLink: form.downloadLink.value,
+                    // **** تم إضافة هذا السطر لحفظ رابط الآيفون ****
                     iphoneDownloadLink: form.iphoneDownloadLink.value,
+                    // **********************************************
                     developerName: 'Admin',
                 };
                 
@@ -1188,17 +1193,19 @@
         }
 
         // ----------------------------------------------------
-        // دالة تهيئة الصفحة (تحتوي على شرط التحقق من المصادقة)
+        // دالة تهيئة الصفحة
         // ----------------------------------------------------
         document.addEventListener('DOMContentLoaded', function() {
             // التحقق من حالة تسجيل الدخول أولاً
             firebase.auth().onAuthStateChanged(user => {
                 if (!user && !localStorage.getItem('sudanPlayAdmin')) {
-                    // في حال عدم تسجيل الدخول، اعرض رسالة بدلاً من التحميل
-                    document.body.innerHTML = '<h1>يجب عليك تسجيل الدخول للوصول إلى لوحة التحكم.</h1>'; 
+                    // window.location.href = '/login.html';
+                    document.body.innerHTML = '<h1>يجب عليك تسجيل الدخول للوصول إلى لوحة التحكم.</h1>'; // إضافة رسالة للمستخدم غير المصرح له
                 } else {
-                    // إعداد النموذج وتحميل البيانات الأولية
+                    // إعداد النموذج
                     setupAppForm();
+                    
+                    // تحميل البيانات الأولية
                     loadApps();
                     loadSubmissions();
                     loadStats();
