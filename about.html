@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudan Play - عن الشركة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: rgb(74, 107, 255);
+            --secondary: rgb(255, 94, 125);
+            --accent: rgb(46, 196, 182);
+            --dark: rgb(30, 30, 45);
+            --light: rgb(248, 249, 254);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+        }
+
+        body {
+            background-color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header / Navigation (Shared Styles) --- */
+        header {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        .logo h1 {
+            color: var(--light);
+            font-size: 1.5em;
+        }
+        
+        /* قد تحتاج إلى إضافة هذه الصورة إذا كانت مستخدمة في ملفك الأصلي */
+        .logo img {
+            height: 40px;
+            border-radius: 8px;
+            margin-left: 10px; 
+            box-shadow: 0 0 10px rgba(74, 107, 255, 0.5);
+        }
+
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 1em;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+        
+        /* لزر "نشر تطبيقك" */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--light) !important;
+            box-shadow: 0 2px 10px rgba(74, 107, 255, 0.4);
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            color: var(--light) !important;
+        }
+
+
+        /* ------------------------------------------------ */
+        /* --- قسم عن الشركة (About Us) - CSS خاص بالقسم --- */
+        /* ------------------------------------------------ */
+        #about {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+            background-color: var(--light);
+            flex-grow: 1; /* لجعل القسم يأخذ المساحة المتبقية */
+        }
+
+        #about h2 {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            position: relative;
+        }
+
+        #about h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            text-align: right;
+        }
+
+        .about-content > p {
+            font-size: 1.2em;
+            color: #555;
+            line-height: 1.8;
+            max-width: 90%;
+            margin: 0 auto 30px auto;
+            text-align: center;
+        }
+
+        .feature-box {
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid var(--primary);
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-box i {
+            font-size: 2.8em;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .feature-box h4 {
+            font-size: 1.4em;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-box p {
+            font-size: 1em;
+            color: #777;
+            line-height: 1.6;
+            text-align: right;
+        }
+        
+        /* --- Footer (Shared Styles) --- */
+        footer {
+            background-color: var(--dark);
+            color: var(--light);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .company-logo {
+            width: 80px;
+            height: auto;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .copyright {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) { 
+            header { padding: 12px 15px; } 
+            nav { flex-direction: column; align-items: flex-start; } 
+            .logo { margin-bottom: 10px; } 
+            .logo h1 { font-size: 1.3em; } 
+            .nav-links { margin-top: 10px; width: 100%; justify-content: space-between; } 
+            .nav-links a { margin-right: 0; font-size: 0.9em; padding: 5px 0; } 
+            
+            #about { padding: 60px 15px; }
+            #about h2 { font-size: 2em; }
+            .about-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .feature-box {
+                max-width: 100%;
+                margin: 0 auto;
+            }
+        } 
+        
+        @media (max-width: 576px) { 
+            .nav-links { flex-wrap: wrap; justify-content: center; } 
+            .nav-links a { margin: 0 8px 5px 8px; } 
+            #about h2 { font-size: 1.8em; } 
+            .company-logo { width: 60px; } 
+        } 
+
+    </style>
+</head>
+<body> 
+    
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Sudan Play</h1>
+            </div>
+            <div class="nav-links">
+                <a href="about.html"><i class="fas fa-info-circle"></i> عن الشركة</a> <a href="index (65).html#apps"><i class="fas fa-th"></i> التطبيقات</a>
+                <a href="index (65).html#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
+                <a href="index (65).html#submissionModal" class="btn btn-primary">
+                    <i class="fas fa-cloud-upload-alt"></i> نشر تطبيقك
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="about">
+            <h2>من نحن - رؤيتنا وقيمنا</h2>
+            <div class="about-content">
+                <p>
+                    تأسست Sudan Play بواسطة Monty Go SDN-Co.Ltd لتكون المنصة الرائدة لتطبيقات الهاتف المحمول في السودان. 
+                    نحن نؤمن بأهمية دعم الابتكار المحلي وتوفير جسر يربط المطورين السودانيين بجمهور واسع، مع تقديم أفضل التطبيقات العالمية للمستخدمين السودانيين.
+                </p>
+                <div class="feature-box">
+                    <i class="fas fa-eye"></i>
+                    <h4>رؤيتنا</h4>
+                    <p>أن نصبح البوابة الرقمية الأولى للتطبيقات في السودان وأفريقيا، وأن نكون محفزًا للنمو الاقتصادي الرقمي.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-handshake"></i>
+                    <h4>قيمنا</h4>
+                    <p>النزاهة، دعم المطورين، الجودة في الاختيار، وتوفير تجربة مستخدم موثوقة ومحلية.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-layer-group"></i>
+                    <h4>هدفنا</h4>
+                    <p>تجميع أفضل التطبيقات السودانية والعالمية في مكان واحد، وتسهيل عملية التنزيل والدفع محليًا.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <img src="https://www.appcreator24.com/srv/imgs/gen/3625531_splash.png?ts=1760605054" class="company-logo">
+            <div class="copyright">
+                <p>&copy; 2024 Sudan Play. جميع الحقوق محفوظة</p>
+                <p>Monty Go SDN-Co.Ltd - 249127432167 - WhatsApp</p>
+            </div>
+        </div>
+    </footer>
+    
+</body>
+</html>
