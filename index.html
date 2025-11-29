@@ -1431,16 +1431,16 @@
                         iosButtonHtml = `
                             <button class="download-btn-split download-btn-ios unavailable ${iosHiddenClass}" 
                                     onclick="event.stopPropagation();">
-                                <i class="fab fa-apple"></i> آيفون (غير متوفر)
+                                <i class="fab fa-apple"></i> غير متوفر
                             </button>
                         `;
                     } else {
-                        // حالة توفر الرابط: إظهار زر عادي (يتم إخفاؤه لو كان الجهاز أندرويد)
+                        // حالة توفر الرابط: إظهار زر "فتح" (يتم إخفاؤه لو كان الجهاز أندرويد)
                         let iosHiddenClass = isAndroidDevice ? 'hidden-link' : '';
                         iosButtonHtml = `
                             <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
                                     onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
-                                <i class="fab fa-apple"></i> آيفون
+                                <i class="fab fa-apple"></i> فتح
                             </button>
                         `;
                     }
@@ -1595,13 +1595,12 @@
                         androidButtonElement.classList.remove('unavailable');
                     }
 
-                    // --- START: منطق زر الآيفون (تعديل) ---
-                    iosButtonElement.textContent = 'آيفون'; // إعادة النص الأصلي
+                    // --- START: منطق زر الآيفون (التعديل المطلوب) ---
                     iosButtonElement.classList.remove('unavailable');
-                    
+
                     if (iosLink === '#') {
                         // 1. الرابط غير متوفر: يظهر كـ "غير متوفر" وممنوع النقر
-                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> ❌ آيفون (غير متوفر)';
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> غير متوفر'; // تم التعديل
                         iosButtonElement.classList.add('unavailable');
                         iosLinkElement.classList.remove('hidden-link'); 
                         iosLinkElement.href = '#'; 
@@ -1612,15 +1611,15 @@
                         }
                         
                     } else if (isIosLinkHiddenByDevice) {
-                        // 2. الرابط متوفر، لكن الجهاز غير مناسب (أندرويد): إخفاء
-                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> آيفون';
+                        // 2. الرابط متوفر، لكن الجهاز غير مناسب (أندرويد): إظهار "فتح" وإخفاء الرابط
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> فتح'; // تم التعديل
                         iosLinkElement.classList.add('hidden-link');
                     } else {
-                        // 3. الرابط متوفر والجهاز مناسب (iOS أو غير محدد): إظهار
-                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> آيفون';
+                        // 3. الرابط متوفر والجهاز مناسب (iOS أو غير محدد): إظهار "فتح"
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> فتح'; // تم التعديل
                         iosLinkElement.classList.remove('hidden-link');
                     }
-                    // --- END: منطق زر الآيفون (تعديل) ---
+                    // --- END: منطق زر الآيفون (التعديل المطلوب) ---
 
 
                     // صور الشاشة
