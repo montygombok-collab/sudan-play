@@ -445,6 +445,20 @@
             background: #006AC4;
             transform: translateY(-1px);
         }
+        
+        /* --- START: التعديل الجديد لإظهار حالة عدم التوفر --- */
+        .download-btn-split.unavailable {
+            background: #ccc !important; /* لون رمادي */
+            color: #666 !important;
+            cursor: not-allowed;
+            pointer-events: none; /* لمنع النقر نهائيًا */
+            box-shadow: none;
+        }
+        .download-btn-split.unavailable:hover {
+            transform: none;
+        }
+        /* --- END: التعديل الجديد لإظهار حالة عدم التوفر --- */
+
 
         /* ------------------------------------------------ */
         /* --- كلاس لإخفاء الروابط إذا كانت غير متوفرة أو غير مناسبة للجهاز (جديد) --- */
@@ -663,6 +677,20 @@
             background: #006AC4 !important;
             transform: translateY(-2px);
         }
+
+        /* --- START: التعديل الجديد لإظهار حالة عدم التوفر في المودال --- */
+        .download-modal-ios.unavailable {
+            background: #ccc !important; /* لون رمادي */
+            color: #666 !important;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none !important;
+        }
+        .download-modal-ios.unavailable:hover {
+            transform: none;
+            background: #ccc !important;
+        }
+        /* --- END: التعديل الجديد لإظهار حالة عدم التوفر في المودال --- */
 
 
         /* Image View Modal */
@@ -1387,9 +1415,30 @@
                     const androidLink = app.androidLink || app.downloadLink || '#';
                     const iosLink = app.iosLink || '#';
 
-                    // منطق إخفاء الأزرار على مستوى البطاقة (جديد)
+                    // منطق إخفاء زر الأندرويد (يبقى كما هو)
                     let androidHiddenClass = (androidLink === '#' || isIOSDevice) ? 'hidden-link' : '';
-                    let iosHiddenClass = (iosLink === '#' || isAndroidDevice) ? 'hidden-link' : '';
+                    
+                    // --- START: منطق زر الآيفون في البطاقة (تعديل) ---
+                    let iosButtonHtml;
+                    if (iosLink === '#') {
+                        // حالة عدم توفر الرابط: إظهار زر رمادي "غير متوفر"
+                        iosButtonHtml = `
+                            <button class="download-btn-split download-btn-ios unavailable" 
+                                    onclick="event.stopPropagation();">
+                                <i class="fab fa-apple"></i> آيفون (غير متوفر)
+                            </button>
+                        `;
+                    } else {
+                        // حالة توفر الرابط: إظهار زر عادي (يتم إخفاؤه لو كان الجهاز أندرويد)
+                        let iosHiddenClass = isAndroidDevice ? 'hidden-link' : '';
+                        iosButtonHtml = `
+                            <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
+                                    onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
+                                <i class="fab fa-apple"></i> آيفون
+                            </button>
+                        `;
+                    }
+                    // --- END: منطق زر الآيفون في البطاقة (تعديل) ---
 
 
                     appCardsHtml += `
@@ -1414,10 +1463,7 @@
                                         onclick="event.stopPropagation(); window.open('${androidLink}', '_blank');">
                                     <i class="fab fa-android"></i> تنزيل فقط
                                 </button>
-                                <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
-                                        onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
-                                    <i class="fab fa-apple"></i> آيفون
-                                </button>
+                                ${iosButtonHtml} 
                             </div>
 
                         </div>
@@ -1522,8 +1568,10 @@
                     
                     const androidLinkElement = document.getElementById('detailsAndroidLink');
                     const iosLinkElement = document.getElementById('detailsIosLink');
+                    const iosButtonElement = iosLinkElement.querySelector('button'); // الوصول لزر الآيفون
+                    const androidButtonElement = androidLinkElement.querySelector('button');
                     
-                    // منطق إخفاء الأزرار على مستوى المودال (جديد)
+                    // منطق إخفاء الأزرار على مستوى المودال
                     const isAndroidLinkHiddenByDevice = isIOSDevice;
                     const isIosLinkHiddenByDevice = isAndroidDevice;
                     
@@ -1531,18 +1579,43 @@
                     androidLinkElement.href = androidLink;
                     iosLinkElement.href = iosLink;
                     
-                    // تطبيق الإخفاء بناءً على التوفر ونوع الجهاز
+                    // --- منطق زر الأندرويد ---
+                    androidButtonElement.textContent = 'تنزيل فقط'; // إعادة النص الأصلي
                     if (androidLink === '#' || isAndroidLinkHiddenByDevice) {
                         androidLinkElement.classList.add('hidden-link');
+                        androidButtonElement.classList.remove('unavailable');
                     } else {
                         androidLinkElement.classList.remove('hidden-link');
+                        androidButtonElement.classList.remove('unavailable');
                     }
 
-                    if (iosLink === '#' || isIosLinkHiddenByDevice) {
+                    // --- START: منطق زر الآيفون (تعديل) ---
+                    iosButtonElement.textContent = 'آيفون'; // إعادة النص الأصلي
+                    iosButtonElement.classList.remove('unavailable');
+                    
+                    if (iosLink === '#') {
+                        // 1. الرابط غير متوفر: يظهر كـ "غير متوفر" وممنوع النقر
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> ❌ آيفون (غير متوفر)';
+                        iosButtonElement.classList.add('unavailable');
+                        iosLinkElement.classList.remove('hidden-link'); 
+                        iosLinkElement.href = '#'; 
+                        
+                        // إخفاؤه بالكامل إذا كان المستخدم أندرويد لتبسيط المودال
+                        if (isIosLinkHiddenByDevice) {
+                            iosLinkElement.classList.add('hidden-link');
+                        }
+                        
+                    } else if (isIosLinkHiddenByDevice) {
+                        // 2. الرابط متوفر، لكن الجهاز غير مناسب: إخفاء
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> آيفون';
                         iosLinkElement.classList.add('hidden-link');
                     } else {
+                        // 3. الرابط متوفر والجهاز مناسب (أو غير محدد): إظهار
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> آيفون';
                         iosLinkElement.classList.remove('hidden-link');
                     }
+                    // --- END: منطق زر الآيفون (تعديل) ---
+
 
                     // صور الشاشة
                     const screenshotsContainer = document.getElementById('detailsScreenshots');
