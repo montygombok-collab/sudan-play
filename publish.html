@@ -444,14 +444,33 @@
         <p><i class="fas fa-copyright"></i> 2025 Sudan Play. جميع الحقوق محفوظة.</p>
         <p> .</p>
     </footer>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 
     <script>
+        // إعدادات Firebase (يجب أن تكون مطابقة لـ dashboard.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
+            authDomain: "sudan-play.firebaseapp.com",
+            projectId: "sudan-play",
+            storageBucket: "sudan-play.firebasestorage.app",
+            messagingSenderId: "981764948623",
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa",
+            measurementId: "G-Y6NP2MNQR9"
+        };
+        
+        // تهيئة Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
         // دالة لعرض رسالة تفاعلية (Toast)
-        function showToast(message, duration = 4000) { // زيادة مدة العرض قليلاً
+        function showToast(message, duration = 4000) { 
             const toast = document.getElementById('toast-message');
             toast.textContent = message;
             toast.classList.add('show');
-            // إضافة مؤقت لاختفاء الرسالة
             setTimeout(() => {
                 toast.classList.remove('show');
             }, duration);
@@ -460,9 +479,46 @@
         // إرسال نموذج نشر التطبيق
         document.getElementById('publishAppForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            // بما أننا نعدل على HTML فقط، سنعرض رسالة نجاح وهمية
-            showToast('✅ تم استلام طلب نشر تطبيقك بنجاح! سيتم مراجعته خلال 30 ساعة بعد التحقق من الدفع.', 7000);
-            this.reset();
+            
+            const form = e.target;
+            const submitButton = form.querySelector('.submit-publish-btn');
+            
+            // 1. تعطيل الزر وعرض حالة التحميل
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-left: 5px;"></i> جاري الإرسال...';
+            
+            // 2. تحويل روابط الصور من نص مفصول بفاصلة إلى مصفوفة (هذا هو الحل لمشكلة عدم ظهور الصور)
+            const screenshotsText = form.appScreenshots.value;
+            const appImagesArray = screenshotsText.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            
+            const submissionData = {
+                appName: form.appName.value,
+                appLink: form.appLink.value,
+                devName: form.developerName.value,
+                devEmail: form.developerEmail.value,
+                companyName: form.companyName.value || '', // اختياري
+                transactionId: form.transactionID.value,
+                
+                appImages: appImagesArray, // مصفوفة الروابط
+                reviewStatus: 'Pending', // تعيين الحالة كـ "قيد المراجعة"
+                appType: 'Application', // قيمة افتراضية يمكن تعديلها لاحقاً
+                submissionDate: firebase.firestore.FieldValue.serverTimestamp() // تاريخ الإرسال
+            };
+
+            // 3. إرسال البيانات إلى مجموعة 'submissions'
+            db.collection('submissions').add(submissionData)
+                .then(() => {
+                    showToast('✅ تم استلام طلب نشر تطبيقك بنجاح! سيتم مراجعته خلال 30 ساعة بعد التحقق من الدفع.', 7000);
+                    form.reset();
+                })
+                .catch(error => {
+                    showToast('❌ حدث خطأ أثناء إرسال الطلب: ' + error.message, 5000);
+                    console.error("Error submitting application: ", error);
+                })
+                .finally(() => {
+                     submitButton.disabled = false;
+                     submitButton.innerHTML = '<i class="fas fa-paper-plane" style="margin-left: 8px;"></i> إرسال وطلب مراجعة التطبيق';
+                });
         });
     </script>
 </body>
