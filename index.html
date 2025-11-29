@@ -703,7 +703,7 @@
             justify-content: center;
             align-items: center;
         }
-
+        
         #modalImage {
             max-width: 100%;
             max-height: 90vh;
@@ -733,89 +733,88 @@
             margin-right: auto;
         }
 
-        #contact form {
+        .contact-form {
             max-width: 600px;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            text-align: right;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
         }
 
-        #contact input, #contact textarea {
-            padding: 12px 15px;
+        .contact-form input[type="text"],
+        .contact-form input[type="email"],
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
-            border: 1px solid #555;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.2);
             color: var(--light);
             font-size: 1em;
-            transition: border-color 0.3s;
         }
 
-        #contact input::placeholder, #contact textarea::placeholder {
-            color: #aaa;
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        #contact input:focus, #contact textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-
-        #contact button {
-            background-color: var(--primary);
+        .contact-form button {
+            background: var(--secondary);
             color: var(--light);
             border: none;
-            padding: 15px;
+            padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1em;
+            font-weight: 600;
             transition: background 0.3s;
-            font-weight: bold;
         }
 
-        #contact button:hover {
-            background-color: #5a7fff;
+        .contact-form button:hover {
+            background: rgb(200, 70, 95);
         }
 
         /* --- Footer --- */
         footer {
             background-color: var(--dark);
-            color: #aaa;
-            padding: 20px 20px;
+            color: var(--light);
+            padding: 20px;
             text-align: center;
-            border-top: 1px solid #333;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto; /* لضمان بقائه في الأسفل */
         }
 
         .social-links {
-            margin-bottom: 15px;
+            margin: 10px 0;
         }
 
         .social-links a {
-            color: #aaa;
+            color: var(--light);
+            margin: 0 15px;
             font-size: 1.5em;
-            margin: 0 10px;
             transition: color 0.3s;
         }
 
         .social-links .fa-whatsapp:hover {
             color: #25D366; /* WhatsApp Green */
         }
-        .social-links .fa-telegram:hover {
-            color: #0088CC; /* Telegram Blue */
-        }
-        .social-links .fa-instagram:hover { 
+        
+        .social-links .fa-instagram:hover {
             /* Instagram Gradient simulation using text fill */
             background: -webkit-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .social-links .fa-facebook-f:hover {
             color: #1877F2; /* Facebook Blue */
         }
 
         /* --- Toast Message --- */
         #toast-message {
-            visibility: hidden;
+            visibility: hidden; 
             min-width: 250px;
             background-color: var(--dark);
             color: var(--light);
@@ -845,10 +844,8 @@
             pointer-events: none;
             position: relative;
             color: transparent !important;
-            min-height: 48px; 
-            min-width: 150px;
+            min-height: 50px;
         }
-
         .download-modal-btn.loading::after {
             content: "";
             position: absolute;
@@ -859,23 +856,22 @@
             right: 0;
             bottom: 0;
             margin: auto;
-            border: 4px solid transparent;
-            border-top-color: #fff;
+            border: 4px solid #fff;
             border-radius: 50%;
-            animation: button-spin 1s ease infinite;
+            border-top-color: var(--secondary);
+            animation: spin 1s ease-in-out infinite;
         }
-
-        @keyframes button-spin {
+        @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* --- Responsive Design --- */
+        /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
             .nav-links {
-                display: none; /* إخفاء الروابط في القائمة العلوية الصغيرة */
+                display: none; /* إخفاء الروابط في القائمة العلوية */
             }
-            .logo {
-                font-size: 1.5em;
+            header {
+                padding: 10px 15px;
             }
             .hero {
                 padding: 60px 15px;
@@ -909,7 +905,7 @@
                 max-width: 100%;
             }
             #apps-container {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 15px;
             }
             .app-card {
@@ -958,21 +954,38 @@
             .details-header {
                 flex-direction: column;
                 text-align: center;
+                gap: 10px;
             }
             #detailsIcon {
-                margin: 0 auto;
+                width: 60px;
+                height: 60px;
+            }
+            .details-text h3 {
+                font-size: 1.4em;
             }
             .details-meta {
                 justify-content: center;
+                font-size: 0.8em;
             }
-            .details-info div {
-                flex-basis: 45%;
+            .details-info {
+                padding: 10px;
+                flex-direction: column;
+            }
+            .details-info p {
+                font-size: 1.2em;
+            }
+            #detailsScreenshots img {
+                width: 150px;
+                height: 250px;
             }
             .download-buttons-container-modal {
                 flex-direction: column;
             }
+            .download-modal-btn {
+                font-size: 1em;
+            }
         }
-
+        
         @media (max-width: 400px) {
             .logo h1 {
                 font-size: 1.1em;
@@ -987,7 +1000,7 @@
                 font-size: 1.4em;
             }
             #apps-container {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
             .app-cover {
@@ -1017,6 +1030,8 @@
         }
     </style>
     <meta name="google-site-verification" content="3bdicImX4ybIsv_8xPJO-GhAS3h34XpqJQfQYXSU338" />
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
 <body onload="detectAndShowDevice()">
     <div id="device-detection-banner">
@@ -1025,7 +1040,6 @@
             <span id="detection-text">جاري التعرف على نوع الجهاز...</span>
         </div>
     </div>
-
     <header>
         <nav>
             <div class="logo">
@@ -1056,78 +1070,89 @@
 
             <div class="search-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="ابحث عن تطبيق بالاسم أو الوصف...">
+                    <input type="text" id="searchInput" placeholder="ابحث باسم التطبيق أو الوصف..." aria-label="البحث عن التطبيق">
                     <i class="fas fa-search"></i>
                 </div>
-                <div class="filter-section">
-                    <label for="categoryFilter">تصفية حسب الفئة:</label>
-                    <select id="categoryFilter">
-                        </select>
-                </div>
+            </div>
+            
+            <div class="filter-section">
+                <label for="categoryFilter">تصفية حسب الفئة:</label>
+                <select id="categoryFilter" onchange="filterApps()">
+                    <option value="الكل">الكل</option>
+                </select>
             </div>
 
-            <p id="noAppsMessage" style="text-align: center; color: #cc0000; font-weight: bold; margin-top: 30px; display: none;">لا توجد تطبيقات تطابق معايير البحث أو التصفية.</p>
-
             <div id="apps-container">
-                </div>
+                <h3 style="text-align: center; grid-column: 1/-1;">جاري تحميل التطبيقات...</h3>
+            </div>
+            
+            <div id="noAppsMessage" style="text-align: center; grid-column: 1/-1; color: #777; display: none; margin-top: 50px;">
+                <i class="fas fa-frown" style="font-size: 40px; margin-bottom: 15px;"></i>
+                <h3>عذراً، لم يتم العثور على أي تطبيقات مطابقة.</h3>
+                <p>يرجى تعديل مصطلح البحث أو اختيار فئة مختلفة.</p>
+            </div>
         </section>
-
+        
         <section id="contact">
             <h2>تواصل معنا</h2>
-            <p>لأي استفسار أو اقتراح أو مساعدة، يرجى ملء النموذج أدناه.</p>
-            <form id="contactForm">
-                <input type="text" id="contactName" placeholder="اسمك" required>
-                <input type="email" id="contactEmail" placeholder="بريدك الإلكتروني" required>
-                <textarea id="contactMessage" rows="5" placeholder="رسالتك" required></textarea>
+            <p>للاستفسارات، الدعم الفني، أو الشراكة، تواصل معنا عبر النموذج التالي:</p>
+            <form class="contact-form" id="contactForm">
+                <input type="text" placeholder="اسمك الكامل" required>
+                <input type="email" placeholder="بريدك الإلكتروني" required>
+                <textarea placeholder="رسالتك" rows="5" required></textarea>
                 <button type="submit">إرسال الرسالة</button>
             </form>
+            <div class="social-links">
+                <a href="#" target="_blank" title="تواصل عبر واتساب"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" target="_blank" title="تابعنا على إنستجرام"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank" title="تابعنا على فيسبوك"><i class="fab fa-facebook-f"></i></a>
+            </div>
         </section>
-    </main>
 
+    </main>
+    
     <footer>
-        <div class="social-links">
-            <a href="https://wa.me/249911961556" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://t.me/Montgygoteam" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
-            <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        </div>
-        <p>&copy; 2024 Sudan Play. جميع الحقوق محفوظة لـ Monty Go Sdn trading works.</p>
+        <p>&copy; 2024 Sudan Play. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <div id="appDetailsModal" class="modal" onclick="closeModal(event)">
+    <div id="appDetailsModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <div class="details-header">
                 <img id="detailsIcon" src="" alt="App Icon">
                 <div class="details-text">
-                    <h3 id="detailsName"></h3>
+                    <h3 id="detailsTitle"></h3>
                     <div class="details-meta">
-                        <span id="detailsCategory"></span>
-                        <span id="detailsDeveloper"></span>
+                        <span id="detailsCategory">الفئة: <strong>غير محدد</strong></span>
+                        <span id="detailsSize">الحجم: <strong>0 MB</strong></span>
                     </div>
                 </div>
             </div>
-
+            
             <div class="details-info">
-                <div><p id="detailsSize"></p><span>الحجم</span></div>
-                <div><p id="detailsRating"></p><span>التقييم</span></div>
-                <div><p id="detailsDownloads"></p><span>التنزيلات</span></div>
+                <div>
+                    <p id="detailsRating"></p>
+                    <span>التقييم</span>
+                </div>
+                <div>
+                    <p id="detailsDownloads"></p>
+                    <span>عمليات التنزيل</span>
+                </div>
             </div>
 
-            <div class="details-description">
-                <p id="detailsDescription"></p>
-            </div>
-
-            <h4>صور من التطبيق</h4>
+            <h4>الوصف الكامل</h4>
+            <div class="details-description" id="detailsDescription"></div>
+            
+            <h4>صور التطبيق</h4>
             <div id="detailsScreenshots">
-            </div>
+                </div>
 
             <div class="download-buttons-container-modal">
                 <a id="detailsAndroidLink" href="#" target="_blank" class="hidden-link">
-                    <button class="download-modal-btn download-modal-android"><i class="fab fa-android"></i> تنزيل فقط</button>
+                    <button class="download-modal-btn download-modal-android"><i class="fab fa-android"></i> تنزيل للأندرويد</button>
                 </a>
                 <a id="detailsIosLink" href="#" target="_blank" class="hidden-link">
-                    <button class="download-modal-btn download-modal-ios"><i class="fab fa-apple"></i> آيفون</button>
+                    <button class="download-modal-btn download-modal-ios"><i class="fab fa-apple"></i> تنزيل للآيفون</button>
                 </a>
             </div>
         </div>
@@ -1143,50 +1168,57 @@
     <div id="submissionModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeSubmissionModal()">&times;</span>
-            <h2>تقديم طلب نشر تطبيق- سعر نشر التطبيق 25الف جنيه سوداني</h2>
+            <h2>تقديم طلب نشر تطبيق - سعر نشر التطبيق 25 ألف جنيه سوداني</h2>
+            
             <div class="payment-info">
                 <p>يرجى إتمام عملية التحويل المصرفي قبل التقديم عبر خدمة بنكك.</p>
                 <p><strong>رقم الحساب لاستلام التحويل:</strong> <code>8437856</code></p>
                 <p><strong>اسم الحساب:</strong> Monty Go Sdn trading works</p>
-                <p class="review-note">مدة المراجعة المتوقعة: 30 ساعة لن يتم نشر التطبيق اذا لم يتم دفع الرسوم كاملة.</p>
+                <p class="review-note">مدة المراجعة المتوقعة: 30 ساعة. لن يتم نشر التطبيق إذا لم يتم دفع الرسوم كاملة.</p>
             </div>
+            
             <form id="submissionForm">
                 <fieldset>
                     <legend>تفاصيل التطبيق</legend>
                     <input type="text" id="appType" placeholder="نوع التطبيق (لعبة/أداة/تعليمي)" required>
                     <input type="text" id="appName" placeholder="اسم التطبيق" required>
-                    <input type="text" id="appAndroidLink" placeholder="رابط تنزيل الأندرويد (APK/Play Store)" required>
-                    <input type="text" id="appIosLink" placeholder="رابط تنزيل الآيفون (اختياري/App Store)" required>
-                    <textarea id="appImages" placeholder="روابط صور التطبيق (افصل بينها بفاصلة، مثال: url1, url2)" rows="3" required></textarea>
+                    <input type="url" id="appAndroidLink" placeholder="رابط تنزيل الأندرويد (APK/Play Store)" required>
+                    <input type="url" id="appIosLink" placeholder="رابط تنزيل الآيفون (اختياري/App Store)">
+                    <input type="url" id="appIconLink" placeholder="رابط أيقونة التطبيق (URL)">
+                    <textarea id="appImages" placeholder="روابط صور الشاشة للتطبيق (افصل بينها بفاصلة)" rows="2"></textarea>
+                    <textarea id="appDescription" placeholder="وصف قصير للتطبيق (يستخدم في القائمة)" rows="3" maxlength="100" required></textarea>
                 </fieldset>
-
+                
                 <fieldset>
-                    <legend>تفاصيل المطور</legend>
-                    <input type="text" id="devName" placeholder="اسم المطور/الناشر" required>
-                    <input type="text" id="companyName" placeholder="اسم الشركة (اختياري)">
-                    <input type="email" id="devEmail" placeholder="البريد الإلكتروني" required>
-                    <input type="text" id="transactionId" placeholder="رقم عملية التحويل البنكي (للمراجعة)" required>
+                    <legend>تفاصيل المطور والدفع</legend>
+                    <input type="text" id="devName" placeholder="اسم المطور/المؤسسة" required>
+                    <input type="text" id="companyName" placeholder="اسم الشركة/الموقع (اختياري)">
+                    <input type="email" id="devEmail" placeholder="بريد المطور للتواصل" required>
+                    <input type="text" id="transactionId" placeholder="رقم عملية التحويل المصرفي (المقابل 25 ألف ج.س)" required>
                 </fieldset>
 
-                <button type="submit" id="submitSubmissionBtn">إرسال طلب النشر</button>
+                <button type="submit" class="download-modal-btn">إرسال الطلب للمراجعة</button>
             </form>
         </div>
     </div>
 
     <div id="toast-message"></div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-
     <script>
-        // إعدادات Firebase (يجب تغييرها ببيانات مشروعك الحقيقية)
+        let isIOSDevice = false;
+        let isAndroidDevice = false;
+        
+        // ----------------------------------------------------
+        // 1. إعدادات وبدء تشغيل Firebase
+        // ----------------------------------------------------
+        // إعدادات Firebase المحدثة
         const firebaseConfig = {
-            apiKey: "...", // استبدلها
-            authDomain: "...", // استبدلها
-            projectId: "...", // استبدلها
-            storageBucket: "...", // استبدلها
-            messagingSenderId: "...", // استبدلها
-            appId: "..." // استبدلها
+            apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
+            authDomain: "sudan-play.firebaseapp.com",
+            projectId: "sudan-play",
+            storageBucket: "sudan-play.firebasestorage.app",
+            messagingSenderId: "981764948623",
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
         };
 
         if (!firebase.apps.length) {
@@ -1194,33 +1226,49 @@
         }
         const db = firebase.firestore();
 
-        let isAndroidDevice = false;
-        let isIOSDevice = false;
-
         // ----------------------------------------------------
-        // 1. دالة الكشف عن الجهاز
+        // 2. دوال كشف الجهاز وشريط التنبيه
         // ----------------------------------------------------
-        function detectAndShowDevice() {
+        function detectDevice() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            const banner = document.getElementById('device-detection-banner');
-            const detectionText = document.getElementById('detection-text');
-
+            
+            // iOS detection
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                isIOSDevice = true;
+                isAndroidDevice = false;
+                return 'iOS';
+            }
+            // Android detection
             if (/android/i.test(userAgent)) {
                 isAndroidDevice = true;
-                detectionText.innerHTML = '<i class="fab fa-android"></i> أنت تتصفح من جهاز أندرويد. سنعرض لك روابط تنزيل الأندرويد.';
-            } else if (/ipad|iphone|ipod/i.test(userAgent) && !window.MSStream) {
-                isIOSDevice = true;
-                detectionText.innerHTML = '<i class="fab fa-apple"></i> أنت تتصفح من جهاز آيفون/آيباد. سنعرض لك روابط تنزيل الآيفون.';
-            } else {
-                detectionText.innerHTML = '<i class="fas fa-desktop"></i> أنت تتصفح من جهاز كمبيوتر. سنعرض لك جميع الروابط.';
+                isIOSDevice = false;
+                return 'Android';
             }
-            banner.classList.add('show');
-            // بعد الكشف عن الجهاز، يتم تحميل التطبيقات
+            return 'Desktop';
+        }
+
+        function detectAndShowDevice() {
+            const device = detectDevice();
+            const banner = document.getElementById('device-detection-banner');
+            const textElement = document.getElementById('detection-text');
+            
+            if (device === 'iOS') {
+                textElement.innerHTML = `<i class="fab fa-apple"></i> تم كشف جهاز آيفون/آيباد. سيتم إظهار روابط الآيفون أولاً.`;
+                banner.classList.add('show');
+            } else if (device === 'Android') {
+                textElement.innerHTML = `<i class="fab fa-android"></i> تم كشف جهاز أندرويد. سيتم إظهار روابط الأندرويد أولاً.`;
+                banner.classList.add('show');
+            } else {
+                textElement.innerHTML = `<i class="fas fa-desktop"></i> تم كشف جهاز سطح مكتب/غير محدد.`;
+                banner.classList.add('show');
+            }
+            
+            // بعد التعرف على الجهاز، يتم تحميل التطبيقات
             loadApps();
         }
 
         // ----------------------------------------------------
-        // 2. الدوال المشتركة (Toast, Rating)
+        // 3. الدوال المشتركة (Toast, Rating)
         // ----------------------------------------------------
         let toastTimeout;
         function showToast(message, duration = 3000) {
@@ -1228,8 +1276,8 @@
             toast.textContent = message;
             toast.classList.add("show");
             if (toastTimeout) clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(function(){
-                toast.classList.remove("show");
+            toastTimeout = setTimeout(function(){ 
+                toast.classList.remove("show"); 
             }, duration);
         }
 
@@ -1253,7 +1301,7 @@
         let allApps = []; // لتخزين جميع التطبيقات للبحث
 
         // ----------------------------------------------------
-        // 3. دالة تحميل التطبيقات (loadApps) - مُعدلة بمنطق الأزرار الذكية
+        // 4. دالة تحميل التطبيقات (loadApps) - مُعدلة بمنطق الأزرار الذكية
         // ----------------------------------------------------
         function loadApps() {
             const appsContainer = document.getElementById('apps-container');
@@ -1277,64 +1325,70 @@
                 snapshot.forEach(doc => {
                     const app = doc.data();
                     const appId = doc.id;
-                    
-                    // --- START: تعديل منطق الروابط ليتضمن الرابط الجديد من لوحة التحكم ---
-                    const iosLink = app.iphoneDownloadLink || app.iosLink || '#'; // Modified: check both fields
-                    const androidLink = app.downloadLink || '#';
-                    // --- END: تعديل منطق الروابط ---
-                    
                     const ratingStars = getStarRating(app.rating || 0);
-
-                    // منطق إخفاء زر الأندرويد على أجهزة iOS
-                    const androidHiddenClass = isIOSDevice ? 'hidden-by-device' : ''; 
                     
-                    // --- منطق زر الآيفون في البطاقة (تعديل النص والحالة) ---
-                    let iosButtonHtml = '';
-                    if (iosLink === '#') {
-                        // الحالة: الرابط غير متوفر -> إظهار "غير متوفر" مع تعطيل الزر (unavailable class)
-                        iosButtonHtml = ` 
-                        <button class="download-btn-split download-btn-ios unavailable" onclick="event.stopPropagation();"> 
-                            <i class="fab fa-apple"></i> غير متوفر 
-                        </button> 
-                        `; 
-                    } else {
-                        // الحالة: الرابط متوفر -> إظهار "فتح"
-                        const iosHiddenClass = isAndroidDevice ? 'hidden-by-device' : ''; 
-                        iosButtonHtml = ` 
-                        <button class="download-btn-split download-btn-ios ${iosHiddenClass}" onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');"> 
-                            <i class="fab fa-apple"></i> فتح 
-                        </button> 
-                        `; 
+                    allApps.push({ id: appId, ...app });
+
+                    if (app.category) {
+                        categories.add(app.category);
                     }
-                    // --- نهاية منطق زر الآيفون في البطاقة (تعديل) ---
+                    
+                    const androidLink = app.downloadLink || '#';
+                    const iosLink = app.iphoneDownloadLink || '#';
 
+                    // منطق إظهار/إخفاء أزرار التنزيل في البطاقة
+                    let androidButtonHtml = '';
+                    let iosButtonHtml = '';
+                    
+                    // زر الأندرويد
+                    const isAndroidAvailable = androidLink !== '#';
+                    const androidHiddenClass = (isIOSDevice && isAndroidAvailable) ? 'hidden-by-device' : (isAndroidAvailable ? '' : 'unavailable');
 
-                    allApps.push({ appId, ...app });
-                    categories.add(app.category || 'عام');
+                    // زر الآيفون
+                    const isIosAvailable = iosLink !== '#';
+                    const iosHiddenClass = (isAndroidDevice && isIosAvailable) ? 'hidden-by-device' : (isIosAvailable ? '' : 'unavailable');
 
+                    // زر الأندرويد
+                    androidButtonHtml = `
+                        <button class="download-btn-split download-btn-android ${androidHiddenClass}" 
+                                onclick="event.stopPropagation(); window.open('${androidLink}', '_blank');">
+                            <i class="fab fa-android"></i> تنزيل فقط
+                        </button>
+                    `;
+                    
+                    // زر الآيفون (يتم إظهاره إذا كان الرابط موجوداً أو إذا كان الجهاز هو iOS)
+                    iosButtonHtml = `
+                        <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
+                                onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
+                            <i class="fab fa-apple"></i> آيفون
+                        </button>
+                    `;
+                    
                     appCardsHtml += `
-                    <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" data-description="${app.fullDescription || ''}" onclick="showAppDetails('${appId}')">
-                        <div class="app-cover">
-                            <img src="${app.screenshotsPaths && app.screenshotsPaths.length > 0 ? app.screenshotsPaths[0] : 'https://via.placeholder.com/300x150?text=No+Image'}" alt="App Cover">
-                            <div class="overlay"><i class="fas fa-eye"></i></div>
-                        </div>
-                        <div class="app-info">
-                            <img src="${app.iconPath || 'https://via.placeholder.com/60x60?text=Icon'}" alt="App Icon" class="app-icon">
-                            <div class="app-text">
-                                <h4 class="app-title">${app.name || 'غير متوفر'}</h4>
-                                <p class="app-category">${app.category || 'عام'}</p>
-                                <div class="app-rating">
-                                    ${ratingStars} (${(app.rating || 0).toFixed(1)})
+                        <div class="app-card" 
+                            data-category="${app.category || ''}" 
+                            data-name="${app.name || ''}" 
+                            data-description="${app.fullDescription || ''}" 
+                            onclick="showAppDetails('${appId}')">
+                            <div class="app-cover">
+                                <img src="${app.screenshotsPaths && app.screenshotsPaths.length > 0 ? app.screenshotsPaths[0] : 'https://via.placeholder.com/300x150?text=No+Image'}" alt="App Cover">
+                                <div class="overlay"><i class="fas fa-eye"></i></div>
+                            </div>
+                            <div class="app-info">
+                                <img src="${app.iconPath || 'https://via.placeholder.com/60x60?text=Icon'}" alt="App Icon" class="app-icon">
+                                <div class="app-text">
+                                    <h4 class="app-title">${app.name || 'غير متوفر'}</h4>
+                                    <p class="app-category">${app.category || 'عام'}</p>
+                                    <div class="app-rating">
+                                        ${ratingStars} (${(app.rating || 0).toFixed(1)})
+                                    </div>
                                 </div>
                             </div>
+                            <div class="download-buttons-container">
+                                ${androidButtonHtml}
+                                ${iosButtonHtml}
+                            </div>
                         </div>
-                        <div class="download-buttons-container">
-                            <button class="download-btn-split download-btn-android ${androidHiddenClass}" onclick="event.stopPropagation(); window.open('${androidLink}', '_blank');">
-                                <i class="fab fa-android"></i> تنزيل فقط
-                            </button>
-                            ${iosButtonHtml}
-                        </div>
-                    </div>
                     `;
                     appsFound++;
                 });
@@ -1355,7 +1409,7 @@
                 });
 
                 document.getElementById('searchInput').addEventListener('input', searchApps);
-                filterApps();
+                filterApps(); 
 
                 if (appsFound === 0) {
                     appsContainer.innerHTML = '';
@@ -1363,239 +1417,197 @@
                 }
 
             }).catch(error => {
-                appsContainer.innerHTML = '<p style="color:red; text-align:center; grid-column: 1/-1;">❌ خطأ في تحميل التطبيقات. تأكد من إعدادات Firebase.</p>';
+                appsContainer.innerHTML = '<p style="color:red; text-align:center; grid-column: 1/-1;">تعذر تحميل التطبيقات. يرجى مراجعة إعدادات Firebase والاتصال بالإنترنت.</p>';
                 console.error("Error loading apps: ", error);
             });
         }
 
         // ----------------------------------------------------
-        // 4. دالة البحث والتصفية
+        // 5. دوال البحث والتصفية
         // ----------------------------------------------------
         function searchApps() {
             filterApps();
         }
 
         function filterApps() {
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            const categoryFilter = document.getElementById('categoryFilter').value;
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
             const appsContainer = document.getElementById('apps-container');
-            const cards = appsContainer.querySelectorAll('.app-card');
-            let visibleCount = 0;
+            const noAppsMessage = document.getElementById('noAppsMessage');
+            let foundCount = 0;
 
-            cards.forEach(card => {
-                const category = card.getAttribute('data-category');
-                const name = card.getAttribute('data-name').toLowerCase();
-                const description = card.getAttribute('data-description').toLowerCase();
+            document.querySelectorAll('.app-card').forEach(card => {
+                const appCategory = card.getAttribute('data-category');
+                const appName = card.getAttribute('data-name').toLowerCase();
+                const appDescription = card.getAttribute('data-description').toLowerCase();
 
-                const matchesSearch = name.includes(searchInput) || description.includes(searchInput);
-                const matchesCategory = categoryFilter === 'الكل' || category === categoryFilter;
+                const matchesSearch = appName.includes(query) || appDescription.includes(query);
+                const matchesCategory = (category === 'الكل' || appCategory === category);
 
                 if (matchesSearch && matchesCategory) {
                     card.style.display = 'flex';
-                    visibleCount++;
+                    foundCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
 
-            document.getElementById('noAppsMessage').style.display = visibleCount === 0 ? 'block' : 'none';
+            noAppsMessage.style.display = foundCount === 0 ? 'block' : 'none';
         }
 
         // ----------------------------------------------------
-        // 5. دالة عرض تفاصيل التطبيق (showAppDetails) - مُعدلة
+        // 6. دوال النوافذ المنبثقة (Modals)
         // ----------------------------------------------------
         function showAppDetails(appId) {
-            const modal = document.getElementById('appDetailsModal');
-            modal.style.display = 'flex'; // استخدام فليكس لإظهار المودال وتوسيطه
+            const app = allApps.find(a => a.id === appId);
+            if (!app) {
+                showToast('❌ لم يتم العثور على بيانات التطبيق.');
+                return;
+            }
 
-            // إعادة تعيين محتوى الصور لإظهار مؤشر التحميل
-            document.getElementById('detailsScreenshots').innerHTML = '<p style="text-align: center; color: #999;">جاري تحميل الصور...</p>';
-            
-            db.collection('apps').doc(appId).get().then(doc => {
-                if (doc.exists) {
-                    const app = doc.data();
+            document.getElementById('detailsTitle').textContent = app.name || 'غير متوفر';
+            document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/80x80?text=Icon';
+            document.getElementById('detailsCategory').innerHTML = `الفئة: <strong>${app.category || 'غير محدد'}</strong>`;
+            document.getElementById('detailsSize').innerHTML = `الحجم: <strong>${app.size ? app.size.toFixed(1) + ' MB' : 'غير محدد'}</strong>`;
+            document.getElementById('detailsRating').textContent = (app.rating || 0).toFixed(1);
+            document.getElementById('detailsDownloads').textContent = (app.downloads || 0).toLocaleString('ar-EG') + '+';
+            document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
 
-                    document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/80x80?text=Icon';
-                    document.getElementById('detailsName').textContent = app.name || 'غير متوفر';
-                    document.getElementById('detailsCategory').innerHTML = `<strong>الفئة:</strong> ${app.category || 'عام'}`;
-                    document.getElementById('detailsDeveloper').innerHTML = `<strong>المطور:</strong> ${app.developer || 'غير محدد'}</strong>`;
-                    document.getElementById('detailsRating').textContent = (app.rating || 0).toFixed(1);
-                    document.getElementById('detailsDownloads').textContent = (app.downloads || 0).toLocaleString('ar-EG') + '+';
-                    document.getElementById('detailsSize').textContent = (app.size || 0) + ' MB';
-                    document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
-
-                    // تحديد الروابط المنفصلة
-                    const androidLink = app.androidLink || app.downloadLink || '#';
-                    const iosLink = app.iphoneDownloadLink || app.iosLink || '#'; // Modified: check both fields
-                    
-                    const androidLinkElement = document.getElementById('detailsAndroidLink');
-                    const iosLinkElement = document.getElementById('detailsIosLink');
-                    const iosButtonElement = iosLinkElement.querySelector('button');
-                    const androidButtonElement = androidLinkElement.querySelector('button');
-
-                    // منطق إخفاء الأزرار على مستوى المودال
-                    const isAndroidLinkHiddenByDevice = isIOSDevice;
-                    const isIosLinkHiddenByDevice = isAndroidDevice;
-
-                    // تعيين الروابط
-                    androidLinkElement.href = androidLink;
-                    iosLinkElement.href = iosLink;
-
-                    // --- منطق زر الأندرويد ---
-                    androidButtonElement.textContent = 'تنزيل فقط';
-                    if (androidLink === '#' || isAndroidLinkHiddenByDevice) {
-                        androidLinkElement.classList.add('hidden-link');
-                        androidButtonElement.classList.remove('unavailable');
-                    } else {
-                        androidLinkElement.classList.remove('hidden-link');
-                        androidButtonElement.classList.remove('unavailable');
-                    }
-                    
-                    // إزالة كلاسات الحالة أولاً من الآيفون
-                    iosButtonElement.classList.remove('unavailable');
-                    iosLinkElement.classList.remove('hidden-link');
-
-                    // --- START: منطق زر الآيفون (التعديل المطلوب: فتح أو غير متوفر) ---
-                    if (iosLink === '#') {
-                        // 1. الرابط غير متوفر: يظهر الزر بنص "غير متوفر" ويكون معطلاً
-                        iosButtonElement.textContent = 'غير متوفر';
-                        iosButtonElement.classList.add('unavailable');
-                        // نضمن أنه مرئي لعرض "غير متوفر"
-                        iosLinkElement.classList.remove('hidden-link'); 
-                    } else {
-                        // 2. الرابط متوفر: يظهر الزر بنص "فتح" ويكون قابلاً للنقر
-                        iosButtonElement.textContent = 'فتح';
-                        iosButtonElement.classList.remove('unavailable');
-
-                        // منطق إخفاء الآيفون على جهاز أندرويد (يبقى كما هو)
-                        if (isIosLinkHiddenByDevice) { 
-                            iosLinkElement.classList.add('hidden-link');
-                        } else {
-                            iosLinkElement.classList.remove('hidden-link');
-                        }
-                    }
-                    // --- END: منطق زر الآيفون (التعديل المطلوب) ---
-
-                    // عرض صور الشاشة
-                    const screenshotsContainer = document.getElementById('detailsScreenshots');
-                    screenshotsContainer.innerHTML = '';
-                    const screenshots = app.screenshotsPaths || [];
-                    if (screenshots.length > 0) {
-                        screenshots.forEach(src => {
-                            const img = document.createElement('img');
-                            img.src = src;
-                            img.alt = app.name + ' screenshot';
-                            img.onclick = (e) => {
-                                e.stopPropagation();
-                                openImageModal(src);
-                            };
-                            screenshotsContainer.appendChild(img);
-                        });
-                    } else {
-                        screenshotsContainer.innerHTML = '<p style="text-align: center; color: #999;">لا توجد صور شاشة متاحة.</p>';
-                    }
-
-                } else {
-                    showToast('❌ لم يتم العثور على التطبيق.', 3000);
-                    closeModal();
-                }
-            }).catch(error => {
-                showToast('❌ خطأ في جلب تفاصيل التطبيق.', 3000);
-                console.error("Error fetching app details: ", error);
-                closeModal();
+            // صور الشاشة
+            const screenshotsContainer = document.getElementById('detailsScreenshots');
+            screenshotsContainer.innerHTML = '';
+            const screenshots = Array.isArray(app.screenshotsPaths) ? app.screenshotsPaths : [];
+            screenshots.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = `Screenshot of ${app.name}`;
+                img.onclick = () => openImageModal(src);
+                screenshotsContainer.appendChild(img);
             });
+            
+            // تحديد الروابط المنفصلة
+            const androidLink = app.downloadLink || '#';
+            const iosLink = app.iphoneDownloadLink || '#';
+            const androidLinkElement = document.getElementById('detailsAndroidLink');
+            const iosLinkElement = document.getElementById('detailsIosLink');
+            const iosButtonElement = iosLinkElement.querySelector('button');
+            const androidButtonElement = androidLinkElement.querySelector('button');
+            
+            // تعيين الروابط
+            androidLinkElement.href = androidLink;
+            iosLinkElement.href = iosLink;
+
+            // --- منطق زر الأندرويد ---
+            const isAndroidLinkAvailable = androidLink !== '#';
+            const isAndroidHiddenByDevice = isIOSDevice;
+            
+            androidButtonElement.textContent = 'تنزيل للأندرويد'; 
+            androidButtonElement.classList.remove('unavailable');
+            
+            if (!isAndroidLinkAvailable || isAndroidHiddenByDevice) {
+                androidLinkElement.classList.add('hidden-link');
+            } else {
+                androidLinkElement.classList.remove('hidden-link');
+            }
+            if (!isAndroidLinkAvailable) {
+                androidButtonElement.classList.add('unavailable');
+            }
+
+
+            // --- منطق زر الآيفون ---
+            const isIosLinkAvailable = iosLink !== '#';
+            const isIosHiddenByDevice = isAndroidDevice;
+
+            iosButtonElement.textContent = 'تنزيل للآيفون'; 
+            iosButtonElement.classList.remove('unavailable');
+            
+            if (!isIosLinkAvailable || isIosHiddenByDevice) { 
+                iosLinkElement.classList.add('hidden-link');
+            } else {
+                iosLinkElement.classList.remove('hidden-link');
+            }
+            if (!isIosLinkAvailable) {
+                 iosButtonElement.classList.add('unavailable');
+            }
+
+
+            document.getElementById('appDetailsModal').style.display = 'block';
         }
 
-        // ----------------------------------------------------
-        // 6. دوال النوافذ المنبثقة
-        // ----------------------------------------------------
-
+        function closeModal(event) {
+            const modal = document.getElementById('appDetailsModal');
+            const imageModal = document.getElementById('imageModal');
+            if (event) {
+                 // Check if the click was directly on the modal backdrop
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+                if (event.target === imageModal) {
+                    imageModal.style.display = 'none';
+                }
+            } else {
+                // If called without event (e.g., by the close button)
+                modal.style.display = 'none';
+                imageModal.style.display = 'none';
+            }
+        }
+        
         function openImageModal(src) {
             document.getElementById('modalImage').src = src;
             document.getElementById('imageModal').style.display = 'flex';
         }
 
-        function closeModal(event) {
-            const appModal = document.getElementById('appDetailsModal');
-            const imageModal = document.getElementById('imageModal');
-            const submissionModal = document.getElementById('submissionModal');
-            
-            if (event && event.target === appModal) {
-                appModal.style.display = 'none';
-            }
-            if (event && event.target === imageModal) {
-                imageModal.style.display = 'none';
-            }
-            if (event && event.target === submissionModal) { 
-                submissionModal.style.display = 'none';
-            }
-            
-            if (!event) {
-                appModal.style.display = 'none';
-                imageModal.style.display = 'none';
-                submissionModal.style.display = 'none';
-            }
-        }
-
         function openSubmissionModal() {
-            document.getElementById('submissionModal').style.display = 'flex';
+            document.getElementById('submissionModal').style.display = 'block';
         }
 
         function closeSubmissionModal() {
-            document.getElementById('submissionModal').style.display = 'none';
+             document.getElementById('submissionModal').style.display = 'none';
+             document.getElementById('submissionForm').reset();
         }
 
-        // ----------------------------------------------------
-        // 7. إرسال نموذج نشر التطبيق
-        // ----------------------------------------------------
+        // دالة إرسال الطلب إلى Firestore
         document.getElementById('submissionForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const submitButton = document.getElementById('submitSubmissionBtn');
+            const submitButton = e.submitter;
             submitButton.classList.add('loading');
-            submitButton.textContent = 'جاري الإرسال...';
-            
+            submitButton.disabled = true;
+
+            const appImagesValue = document.getElementById('appImages').value;
+
             const submissionData = {
                 appType: document.getElementById('appType').value,
                 appName: document.getElementById('appName').value,
                 appAndroidLink: document.getElementById('appAndroidLink').value,
-                appIosLink: document.getElementById('appIosLink').value,
-                appImages: document.getElementById('appImages').value.split(',').map(s => s.trim()).filter(s => s),
+                appIosLink: document.getElementById('appIosLink').value || '#',
+                appIconLink: document.getElementById('appIconLink').value || '',
+                appDescription: document.getElementById('appDescription').value,
+                appImages: appImagesValue.split(',').map(s => s.trim()).filter(s => s.length > 0).join(','),
                 devName: document.getElementById('devName').value,
-                companyName: document.getElementById('companyName').value,
+                companyName: document.getElementById('companyName').value || '',
                 devEmail: document.getElementById('devEmail').value,
                 transactionId: document.getElementById('transactionId').value,
                 submissionDate: firebase.firestore.FieldValue.serverTimestamp(),
-                reviewStatus: 'Pending', 
+                reviewStatus: 'pending', 
             };
 
             db.collection('submissions').add(submissionData)
                 .then(() => {
-                    submitButton.classList.remove('loading');
-                    submitButton.textContent = 'إرسال طلب النشر';
                     closeSubmissionModal();
                     showToast('✅ تم إرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 6000);
                 })
                 .catch(error => {
-                    submitButton.classList.remove('loading');
-                    submitButton.textContent = 'إرسال طلب النشر';
                     showToast('❌ حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.', 5000);
                     console.error("Error submitting application: ", error);
+                })
+                .finally(() => {
+                     submitButton.classList.remove('loading');
+                     submitButton.disabled = false;
                 });
         });
 
-        // ----------------------------------------------------
-        // 8. إرسال نموذج الاتصال
-        // ----------------------------------------------------
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            showToast('تم إرسال رسالتك بنجاح! سنتواصل معك قريبًا.');
-            this.reset();
-        });
-
-        // ----------------------------------------------------
-        // 9. وظيفة الإغلاق عند النقر خارج النافذة
-        // ----------------------------------------------------
+        // إغلاق النوافذ المنبثقة عند النقر خارجها
         window.onclick = function(event) {
             const appModal = document.getElementById('appDetailsModal');
             const imageModal = document.getElementById('imageModal');
@@ -1611,6 +1623,13 @@
                 submissionModal.style.display = 'none';
             }
         }
+
+        // إرسال نموذج الاتصال
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('تم إرسال رسالتك بنجاح! سنتواصل معك قريبًا.');
+            this.reset();
+        });
     </script>
 </body>
 </html>
