@@ -27,7 +27,7 @@
 
         body {
             background-color: var(--light);
-            min-height: 100vh;
+            min-height: 10vh;
             display: flex;
             flex-direction: column;
         }
@@ -1262,6 +1262,11 @@
                 textElement.innerHTML = `<i class="fas fa-desktop"></i> تم كشف جهاز سطح مكتب/غير محدد.`;
                 banner.classList.add('show');
             }
+            
+            // --- التعديل: إخفاء الشريط بعد 3 ثوانٍ ---
+            setTimeout(() => {
+                banner.classList.remove('show');
+            }, 3000);
             
             // بعد التعرف على الجهاز، يتم تحميل التطبيقات
             loadApps();
