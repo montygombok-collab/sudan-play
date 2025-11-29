@@ -1423,27 +1423,20 @@
                     
                     // --- START: منطق زر الآيفون في البطاقة (تعديل) ---
                     let iosButtonHtml;
-                    if (iosLink === '#') {
-                        // حالة عدم توفر الرابط: إظهار زر رمادي "غير متوفر"
-                        // مع كلاس hidden-link لو كان الجهاز أندرويد لتبسيط البطاقة
-                        let iosHiddenClass = isAndroidDevice ? 'hidden-link' : '';
-                        
-                        iosButtonHtml = `
-                            <button class="download-btn-split download-btn-ios unavailable ${iosHiddenClass}" 
-                                    onclick="event.stopPropagation();">
-                                <i class="fab fa-apple"></i> آيفون (غير متوفر)
-                            </button>
-                        `;
-                    } else {
-                        // حالة توفر الرابط: إظهار زر عادي (يتم إخفاؤه لو كان الجهاز أندرويد)
-                        let iosHiddenClass = isAndroidDevice ? 'hidden-link' : '';
-                        iosButtonHtml = `
-                            <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
-                                    onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
-                                <i class="fab fa-apple"></i> آيفون
-                            </button>
-                        `;
-                    }
+                    const isIosLinkPresent = (iosLink !== '#' && !!iosLink);
+                    
+                    const iosButtonClass = isIosLinkPresent ? '' : 'unavailable';
+                    const iosButtonText = isIosLinkPresent ? 'فتح' : 'غير متاح';
+                    
+                    // إخفاء الزر بالكامل إذا كان الجهاز أندرويد (لتبسيط البطاقة)
+                    const iosHiddenClass = isAndroidDevice ? 'hidden-link' : '';
+                    
+                    iosButtonHtml = `
+                        <button class="download-btn-split download-btn-ios ${iosButtonClass} ${iosHiddenClass}" 
+                                onclick="event.stopPropagation(); window.open('${isIosLinkPresent ? iosLink : '#'}', '_blank');">
+                            <i class="fab fa-apple"></i> ${iosButtonText}
+                        </button>
+                    `;
                     // --- END: منطق زر الآيفون في البطاقة (تعديل) ---
 
 
@@ -1583,7 +1576,7 @@
                     
                     // تعيين الروابط
                     androidLinkElement.href = androidLink;
-                    iosLinkElement.href = iosLink;
+                    // iosLinkElement.href = iosLink; // سيتم تعيينه لاحقا في منطق الآيفون
                     
                     // --- منطق زر الأندرويد ---
                     androidButtonElement.textContent = 'تنزيل فقط'; // إعادة النص الأصلي
@@ -1595,32 +1588,30 @@
                         androidButtonElement.classList.remove('unavailable');
                     }
 
-                    // --- START: منطق زر الآيفون (تعديل) ---
-                    iosButtonElement.textContent = 'آيفون'; // إعادة النص الأصلي
-                    iosButtonElement.classList.remove('unavailable');
+                    // --- START: منطق زر الآيفون (تعديل جديد) ---
+                    const isIosLinkPresentInModal = (iosLink !== '#' && !!iosLink);
+                    const iosButtonTextInModal = isIosLinkPresentInModal ? 'فتح' : 'غير متاح';
                     
-                    if (iosLink === '#') {
-                        // 1. الرابط غير متوفر: يظهر كـ "غير متوفر" وممنوع النقر
-                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> ❌ آيفون (غير متوفر)';
+                    iosButtonElement.innerHTML = `<i class="fab fa-apple"></i> ${iosButtonTextInModal}`;
+                    
+                    // 1. تحديد حالة "غير متاح" بناءً على وجود الرابط
+                    if (!isIosLinkPresentInModal) {
                         iosButtonElement.classList.add('unavailable');
-                        iosLinkElement.classList.remove('hidden-link'); 
-                        iosLinkElement.href = '#'; 
-                        
-                        // إخفاؤه بالكامل إذا كان المستخدم أندرويد لتبسيط المودال
-                        if (isIosLinkHiddenByDevice) {
-                            iosLinkElement.classList.add('hidden-link');
-                        }
-                        
-                    } else if (isIosLinkHiddenByDevice) {
-                        // 2. الرابط متوفر، لكن الجهاز غير مناسب (أندرويد): إخفاء
-                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> آيفون';
+                        iosLinkElement.href = '#'; // لا يجب أن ينتقل الرابط
+                    } else {
+                        iosButtonElement.classList.remove('unavailable');
+                        iosLinkElement.href = iosLink;
+                    }
+                    
+                    // 2. تحديد حالة الإخفاء بناءً على الجهاز
+                    if (isIosLinkHiddenByDevice) {
+                        // إخفاء الزر بالكامل إذا كان الجهاز أندرويد، بغض النظر عن حالة الرابط
                         iosLinkElement.classList.add('hidden-link');
                     } else {
-                        // 3. الرابط متوفر والجهاز مناسب (iOS أو غير محدد): إظهار
-                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> آيفون';
+                        // إظهار الزر إذا كان الجهاز مناسباً (أو غير محدد)
                         iosLinkElement.classList.remove('hidden-link');
                     }
-                    // --- END: منطق زر الآيفون (تعديل) ---
+                    // --- END: منطق زر الآيفون (تعديل جديد) ---
 
 
                     // صور الشاشة
@@ -1672,7 +1663,7 @@
             document.getElementById('submissionForm').reset();
         }
         
-        // دالة إرسال الطلب إلى Firestore
+        // دالة إرسال الطلب إلى Firebase
         document.getElementById('submissionForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
