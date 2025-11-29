@@ -11,18 +11,23 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* تغيير بسيط للخط لزيادة الجاذبية */
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* استيراد خط (في بيئة حقيقية يجب استيراد الخط أولاً) */
+        /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap'); */
+
         :root {
-            --primary: rgb(74, 107, 255);
-            --secondary: rgb(255, 94, 125);
+            --primary: rgb(74, 107, 255); /* أزرق أساسي */
+            --secondary: rgb(255, 94, 125); /* وردي/أحمر ثانوي */
             --accent: rgb(46, 196, 182);
             --dark: rgb(30, 30, 45);
             --light: rgb(248, 249, 254);
             --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             --gradient-light: linear-gradient(135deg, rgba(74, 107, 255, 0.1) 0%, rgba(255, 94, 125, 0.1) 100%);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.08); /* ظل جديد ناعم */
         }
 
         body {
@@ -32,7 +37,7 @@
             flex-direction: column;
         }
 
-        /* --- Header / Navigation (مماثل للملف الأصلي) --- */
+        /* --- Header / Navigation (تحسين التباعد والخطوط) --- */
         header {
             background-color: var(--dark);
             color: var(--light);
@@ -57,6 +62,7 @@
             align-items: center;
             font-size: 1.8em;
             font-weight: bold;
+            text-decoration: none; /* لإزالة التسطير من رابط الشعار */
         }
         
         .logo img {
@@ -69,6 +75,7 @@
         .logo h1 {
             color: var(--light);
             font-size: 1.5em;
+            margin: 0; /* إزالة أي هامش داخلي افتراضي */
         }
 
         .nav-links {
@@ -81,8 +88,9 @@
             text-decoration: none;
             margin-right: 20px;
             font-size: 1em;
-            transition: color 0.3s;
+            transition: color 0.3s, border-bottom 0.3s; /* إضافة transition للحد السفلي */
             white-space: nowrap;
+            padding: 5px 0; /* لزيادة مساحة الضغط */
         }
 
         .nav-links a:hover {
@@ -91,138 +99,202 @@
         
         .nav-links a.active {
             color: var(--primary);
-            border-bottom: 2px solid var(--primary);
+            border-bottom: 3px solid var(--primary); /* زيادة سماكة الحد */
             padding-bottom: 5px;
+            font-weight: 600; /* لتمييز الرابط النشط */
         }
         
         /* --- Publish App Section Styles --- */
         #publish-app {
             padding: 60px 20px;
-            max-width: 800px;
-            margin: 40px auto; /* زيادة الهامش العلوي */
+            max-width: 900px; /* زيادة عرض النموذج قليلاً */
+            margin: 40px auto; 
             width: 100%;
             text-align: center;
-            flex-grow: 1; /* للسماح للقسم بالتمدد */
+            flex-grow: 1; 
         }
 
         #publish-app h2 {
             text-align: center;
             color: var(--dark);
-            margin-bottom: 30px;
-            font-size: 2.2em;
-            border-bottom: 3px solid var(--primary);
+            margin-bottom: 40px; /* زيادة الهامش */
+            font-size: 2.5em; /* تكبير الخط قليلاً */
+            border-bottom: 4px solid var(--primary); /* زيادة سماكة الحد */
             display: inline-block;
-            padding-bottom: 5px;
+            padding-bottom: 10px; /* زيادة التباعد */
+            font-weight: 700;
         }
 
         #publish-app .publish-form-container {
             background-color: #fff;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 40px; /* زيادة التباعد الداخلي */
+            border-radius: 20px; /* زيادة انحناء الزوايا */
             box-shadow: var(--shadow);
             text-align: right;
+            border: 1px solid #eee; /* إضافة حد خفيف */
+        }
+        
+        .section-intro {
+            font-size: 1.15em;
+            color: #555;
+            margin-bottom: 40px;
+            text-align: center;
+            line-height: 1.7;
+            padding: 0 15px;
         }
 
         #publish-app .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px; /* زيادة الهامش */
         }
 
         #publish-app label {
             display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-weight: 600; /* جعل الخط أثقل */
+            margin-bottom: 10px;
             color: var(--dark);
             font-size: 1.1em;
+            display: flex;
+            align-items: center;
         }
+
+        #publish-app label i {
+            margin-left: 8px; /* زيادة التباعد بين الأيقونة والنص */
+            color: var(--secondary); /* تلوين الأيقونات بلون ثانوي */
+        }
+
 
         #publish-app .form-control,
         #publish-app .form-textarea {
             width: 100%;
-            padding: 15px;
+            padding: 16px; /* زيادة حجم الحقل */
             border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
+            border-radius: 10px; /* زيادة انحناء الزوايا */
+            font-size: 1.05em;
             transition: border-color 0.3s, box-shadow 0.3s;
             resize: vertical;
+            background-color: var(--light); /* خلفية خفيفة للحقل */
         }
 
         #publish-app .form-control:focus,
         #publish-app .form-textarea:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            box-shadow: 0 0 0 4px rgba(74, 107, 255, 0.15), var(--shadow-soft); /* ظل محسن عند التركيز */
             outline: none;
+            background-color: #fff; /* خلفية بيضاء عند التركيز */
         }
 
+        /* تحسين مظهر العناوين الفرعية للوضوح */
         #publish-app h3 {
-            color: var(--secondary);
-            margin-top: 30px;
-            margin-bottom: 15px;
-            border-bottom: 1px dashed #eee;
-            padding-bottom: 5px;
-            font-size: 1.5em;
+            color: var(--primary); /* تغيير اللون إلى الأساسي */
+            margin-top: 40px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--secondary); /* خط سفلي واضح باللون الثانوي */
+            padding-bottom: 10px;
+            font-size: 1.6em;
+            font-weight: 700;
             text-align: right;
+            position: relative;
+        }
+        
+        #publish-app h3 i {
+            margin-left: 10px;
+            color: var(--secondary);
+            font-size: 1.2em;
         }
 
+        /* تحسين قسم معلومات الدفع المُثبتة */
         #publish-app .fixed-info {
-            background-color: var(--gradient-light);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
+            background: var(--gradient-light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 35px;
             text-align: center;
-            border: 1px dashed var(--primary);
+            border: 2px dashed var(--primary);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); /* ظل ناعم لتمييزه */
         }
         
         #publish-app .fixed-info p {
-            margin: 5px 0;
+            margin: 8px 0;
             line-height: 1.8;
         }
 
         #publish-app .fixed-info p:first-child {
             font-weight: bold;
             color: var(--primary);
-            font-size: 1.1em;
+            font-size: 1.2em;
         }
 
         #publish-app .fixed-info p:nth-child(2) {
-            font-size: 1.8em;
+            font-size: 2.2em; /* تكبير الرقم */
             font-weight: 900;
             color: var(--dark);
-            direction: ltr; /* لضمان عرض الرقم بشكل صحيح */
+            direction: ltr; 
+            padding: 10px;
+            background-color: #fff; /* خلفية بيضاء للرقم للوضوح */
+            border-radius: 8px;
+            display: inline-block;
+            letter-spacing: 1px; /* تباعد بين الحروف للوضوح */
+            border: 1px solid var(--primary);
         }
+        
+        #publish-app .fixed-info small {
+            display: block;
+            margin-top: 10px;
+            color: #555;
+            font-style: italic;
+        }
+
 
         .submit-publish-btn {
             background: var(--gradient);
             color: var(--light);
             border: none;
             width: 100%;
-            padding: 18px;
-            border-radius: 10px;
+            padding: 20px; /* زيادة حجم الزر */
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 1.2em;
-            margin-top: 30px;
-            transition: opacity 0.3s, transform 0.3s;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-top: 40px;
+            transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 20px rgba(74, 107, 255, 0.3); /* ظل أنيق */
         }
 
         .submit-publish-btn:hover {
             opacity: 0.9;
-            transform: translateY(-2px);
+            transform: translateY(-3px); /* زيادة تأثير الرفع */
+            box-shadow: 0 15px 25px rgba(74, 107, 255, 0.4);
         }
 
         .info-note {
-            font-size: 0.9em;
+            font-size: 1em;
             color: var(--secondary);
-            margin-top: 15px;
+            margin-top: 20px;
             font-weight: 600;
             line-height: 1.6;
+            padding: 10px;
+            background-color: rgba(255, 94, 125, 0.05);
+            border-radius: 8px;
+            border-right: 3px solid var(--secondary);
         }
         
-        /* --- Footer (مماثل للملف الأصلي) --- */
+        .info-note i {
+            margin-left: 8px;
+        }
+        
+        /* --- Footer --- */
         footer {
             background-color: var(--dark);
             color: var(--light);
             text-align: center;
-            padding: 20px;
+            padding: 25px; /* زيادة التباعد */
             margin-top: auto;
+            border-top: 4px solid var(--primary);
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.95em;
         }
 
         /* --- شريط الرسائل التفاعلية (Toast/Snackbar) --- */
@@ -232,18 +304,20 @@
             background-color: var(--dark);
             color: var(--light);
             text-align: center;
-            border-radius: 8px;
-            padding: 16px;
+            border-radius: 10px;
+            padding: 18px;
             position: fixed;
             z-index: 3000;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 30px;
-            font-size: 1.1em;
+            bottom: 40px;
+            font-size: 1.15em;
             box-shadow: var(--shadow);
             transition: visibility 0s, opacity 0.5s linear;
             opacity: 0;
             max-width: 90%;
+            border-left: 5px solid var(--accent); /* إضافة تمييز */
+            font-weight: 600;
         }
 
         #toast-message.show {
@@ -259,16 +333,19 @@
             .nav-links { margin-top: 10px; width: 100%; justify-content: space-around; }
             .nav-links a { margin-right: 0; font-size: 0.95em; padding: 5px 0; }
             #publish-app { padding: 40px 15px; margin: 20px auto; }
-            #publish-app h2 { font-size: 1.8em; }
-            #publish-app .publish-form-container { padding: 20px; }
-            .submit-publish-btn { padding: 15px; font-size: 1.1em; }
-            #publish-app .fixed-info p:nth-child(2) { font-size: 1.6em; }
+            #publish-app h2 { font-size: 2em; margin-bottom: 30px; }
+            #publish-app .publish-form-container { padding: 25px; }
+            .submit-publish-btn { padding: 16px; font-size: 1.2em; }
+            #publish-app .fixed-info p:nth-child(2) { font-size: 1.8em; }
+            #publish-app h3 { font-size: 1.4em; }
+            .section-intro { margin-bottom: 30px; font-size: 1em; }
         }
         @media (max-width: 576px) {
             .logo h1 { font-size: 1.3em; }
             .nav-links { flex-wrap: wrap; }
             .nav-links a { margin: 0 5px 5px 5px; }
-            #publish-app h2 { font-size: 1.6em; }
+            #publish-app h2 { font-size: 1.8em; }
+            #publish-app .form-control, #publish-app .form-textarea { padding: 14px; }
         }
     </style>
 </head>
@@ -283,10 +360,10 @@
                 <h1>Sudan Play</h1>
             </a>
             <div class="nav-links">
-                <a href="index.html#apps">التطبيقات</a>
-                <a href="publish.html" class="active">انشر تطبيقك</a>
-                <a href="#">المدونة</a>
-                <a href="index.html#contact">تواصل معنا</a>
+                <a href="index.html#apps"><i class="fas fa-th-large"></i> التطبيقات</a>
+                <a href="publish.html" class="active"><i class="fas fa-upload"></i> انشر تطبيقك</a>
+                <a href="#"><i class="fas fa-blog"></i> المدونة</a>
+                <a href="index.html#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
             </div>
         </nav>
     </header>
@@ -295,68 +372,67 @@
         <section id="publish-app">
             <h2>نشر تطبيق جديد</h2>
 
-            <p style="
-                font-size: 1.1em;
-                color: #555;
-                margin-bottom: 30px;
-                text-align: center;
-            ">املأ النموذج التالي لتقديم طلب نشر تطبيقك على متجر Sudan Play. يرجى التأكد من دقة المعلومات لإتمام عملية المراجعة بنجاح.</p>
+            <p class="section-intro">
+                مرحباً بك في منصة السودان للمطورين. يرجى ملء النموذج التالي بدقة لتقديم طلب نشر تطبيقك على متجر Sudan Play. 
+                سيتم مراجعة الطلب خلال **30 ساعة** من التحقق من عملية الدفع.
+            </p>
 
             <div class="publish-form-container">
                 <form id="publishAppForm">
-                    <h3 style="color: var(--primary);">معلومات التطبيق</h3>
+                    <h3 style="color: var(--primary);"><i class="fas fa-info-circle"></i> معلومات التطبيق الأساسية</h3>
 
                     <div class="form-group">
-                        <label for="appName"><i class="fas fa-mobile-alt" style="margin-left: 5px;"></i> اسم التطبيق:</label>
-                        <input type="text" id="appName" name="appName" class="form-control" placeholder="ادخل الاسم الكامل للتطبيق" required>
+                        <label for="appName"><i class="fas fa-mobile-alt"></i> اسم التطبيق:</label>
+                        <input type="text" id="appName" name="appName" class="form-control" placeholder="ادخل الاسم الكامل للتطبيق (مثال: محفظتي السودانية)" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="appLink"><i class="fas fa-link" style="margin-left: 5px;"></i> رابط ملف التطبيق (APK/متجر):</label>
-                        <input type="url" id="appLink" name="appLink" class="form-control" placeholder="رابط التحميل المباشر أو رابط المتجر" required>
+                        <label for="appLink"><i class="fas fa-link"></i> رابط ملف التطبيق (APK/متجر):</label>
+                        <input type="url" id="appLink" name="appLink" class="form-control" placeholder="رابط التحميل المباشر للتطبيق أو رابط المتجر (Google Play/App Store)" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="appScreenshots"><i class="fas fa-images" style="margin-left: 5px;"></i> روابط صور/لقطات الشاشة (3 روابط على الأقل - افصل بينها بفاصلة):</label>
+                        <label for="appScreenshots"><i class="fas fa-images"></i> روابط صور/لقطات الشاشة (3 روابط على الأقل - افصل بينها بفاصلة):</label>
                         <textarea id="appScreenshots" name="appScreenshots" class="form-textarea" rows="4" placeholder="رابط الصورة 1, رابط الصورة 2, رابط الصورة 3, ..." required></textarea>
+                        <small style="color: #777; display: block; margin-top: 5px;">(يجب أن تكون الروابط قابلة للوصول ومستضافة خارجياً)</small>
                     </div>
 
-                    <h3>معلومات المطور والشركة</h3>
+                    <h3><i class="fas fa-code"></i> معلومات المطور والشركة</h3>
                     
                     <div class="form-group">
-                        <label for="developerName"><i class="fas fa-user" style="margin-left: 5px;"></i> اسم المطور:</label>
-                        <input type="text" id="developerName" name="developerName" class="form-control" placeholder="اسمك أو اسم الفريق المطور" required>
+                        <label for="developerName"><i class="fas fa-user-tie"></i> اسم المطور:</label>
+                        <input type="text" id="developerName" name="developerName" class="form-control" placeholder="اسمك الكامل أو اسم الفريق المطور" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="developerEmail"><i class="fas fa-envelope" style="margin-left: 5px;"></i> البريد الإلكتروني للمطور:</label>
-                        <input type="email" id="developerEmail" name="developerEmail" class="form-control" placeholder="example@domain.com" required>
+                        <label for="developerEmail"><i class="fas fa-at"></i> البريد الإلكتروني للتواصل:</label>
+                        <input type="email" id="developerEmail" name="developerEmail" class="form-control" placeholder="example@domain.com (البريد الرسمي للمطور)" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="companyName"><i class="fas fa-building" style="margin-left: 5px;"></i> اسم الشركة/المؤسسة (اختياري):</label>
+                        <label for="companyName"><i class="fas fa-building"></i> اسم الشركة/المؤسسة (اختياري):</label>
                         <input type="text" id="companyName" name="companyName" class="form-control" placeholder="اسم الشركة (إذا وجد)">
                     </div>
 
-                    <h3>تفاصيل الدفع لنشر التطبيق</h3>
+                    <h3><i class="fas fa-hand-holding-usd"></i> تفاصيل الدفع لنشر التطبيق</h3>
 
                     <div class="fixed-info">
-                        <p>رقم الحساب الثابت للمتجر (يرجى التحويل إليه):</p>
-                        <p style="font-family: monospace;">SDPLAY-ACC-123456789</p>
-                        <small style="color: #777;">(استخدم هذا الرقم لإتمام عملية التحويل عبر وسيلة الدفع المتاحة)</small>
+                        <p>رقم الحساب الثابت لمتجر Sudan Play (الرجاء التحويل إليه):</p>
+                        <p style="font-family: 'Courier New', Courier, monospace;">SDPLAY-ACC-123456789</p>
+                        <small>(استخدم هذا الرقم لإتمام عملية التحويل عبر وسيلة الدفع المتاحة لديك لتكاليف النشر)</small>
                     </div>
 
                     <div class="form-group">
-                        <label for="transactionID"><i class="fas fa-money-check-alt" style="margin-left: 5px;"></i> رقم عملية التحويل (للتحقق من الدفع):</label>
-                        <input type="text" id="transactionID" name="transactionID" class="form-control" placeholder="أدخل رقم العملية الذي يظهر في إيصال التحويل" required>
+                        <label for="transactionID"><i class="fas fa-receipt"></i> رقم عملية التحويل (للتحقق من الدفع):</label>
+                        <input type="text" id="transactionID" name="transactionID" class="form-control" placeholder="أدخل رقم العملية الذي يظهر في إيصال التحويل المصرفي" required>
                     </div>
 
                     <button type="submit" class="submit-publish-btn">
-                        <i class="fas fa-paper-plane" style="margin-left: 5px;"></i> إرسال طلب النشر
+                        <i class="fas fa-paper-plane" style="margin-left: 8px;"></i> إرسال وطلب مراجعة التطبيق
                     </button>
                     
                     <p class="info-note">
-                        <i class="fas fa-hourglass-half" style="margin-left: 5px;"></i> ملاحظة: سيتم التحقق من الطلب والموافقة عليه خلال مدة تصل إلى **30 ساعة** بعد التحقق من صحة رقم عملية التحويل.
+                        <i class="fas fa-clock"></i> ملاحظة هامة: سيتم التحقق من الطلب والموافقة عليه خلال مدة تصل إلى **30 ساعة** بعد التحقق من صحة رقم عملية التحويل المرفق.
                     </p>
                 </form>
             </div>
@@ -365,16 +441,17 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Sudan Play. جميع الحقوق محفوظة.</p>
-        <p>تصميم وتطوير برعاية مجتمع المطورين السوداني.</p>
+        <p><i class="fas fa-copyright"></i> 2025 Sudan Play. جميع الحقوق محفوظة.</p>
+        <p> .</p>
     </footer>
 
     <script>
         // دالة لعرض رسالة تفاعلية (Toast)
-        function showToast(message, duration = 3000) {
+        function showToast(message, duration = 4000) { // زيادة مدة العرض قليلاً
             const toast = document.getElementById('toast-message');
             toast.textContent = message;
             toast.classList.add('show');
+            // إضافة مؤقت لاختفاء الرسالة
             setTimeout(() => {
                 toast.classList.remove('show');
             }, duration);
