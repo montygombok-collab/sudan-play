@@ -1263,6 +1263,11 @@
                 banner.classList.add('show');
             }
             
+            // تم التعديل: إخفاء الشريط بعد 3000 ملي ثانية (3 ثواني)
+            setTimeout(() => {
+                banner.classList.remove('show');
+            }, 3000); 
+            
             // بعد التعرف على الجهاز، يتم تحميل التطبيقات
             loadApps();
         }
@@ -1595,10 +1600,10 @@
             db.collection('submissions').add(submissionData)
                 .then(() => {
                     closeSubmissionModal();
-                    showToast('✅ تم إرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 6000);
+                    showToast('✅ تم إرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 3000); // تم التعديل إلى 3000
                 })
                 .catch(error => {
-                    showToast('❌ حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.', 5000);
+                    showToast('❌ حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.', 3000); // تم التعديل إلى 3000
                     console.error("Error submitting application: ", error);
                 })
                 .finally(() => {
