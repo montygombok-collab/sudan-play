@@ -1084,8 +1084,8 @@
                 height: 90px;
             }
             .app-icon {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
             }
             .app-title {
                 font-size: 0.75em;
@@ -1418,13 +1418,13 @@
                     const androidLink = app.androidLink || app.downloadLink || '#';
                     const iosLink = app.iosLink || '#';
 
-                    // منطق إخفاء زر الأندرويد
+                    // منطق إخفاء زر الأندرويد (يبقى كما هو)
                     let androidHiddenClass = (androidLink === '#' || isIOSDevice) ? 'hidden-link' : '';
                     
                     // --- START: منطق زر الآيفون في البطاقة (تعديل) ---
                     let iosButtonHtml;
                     if (iosLink === '#') {
-                        // حالة عدم توفر الرابط: إظهار زر رمادي "غير متوفر" 
+                        // حالة عدم توفر الرابط: إظهار زر رمادي "غير متوفر"
                         // مع كلاس hidden-link لو كان الجهاز أندرويد لتبسيط البطاقة
                         let iosHiddenClass = isAndroidDevice ? 'hidden-link' : '';
                         
@@ -1596,13 +1596,13 @@
                     }
 
                     // --- START: منطق زر الآيفون (التعديل المطلوب) ---
-                    iosButtonElement.classList.remove('unavailable'); // التأكد من إزالة كلاس عدم التوفر
-                    iosLinkElement.classList.remove('hidden-link'); // التأكد من إظهار الرابط مبدئياً
+                    iosButtonElement.classList.remove('unavailable');
 
                     if (iosLink === '#') {
                         // 1. الرابط غير متوفر: يظهر كـ "غير متوفر" وممنوع النقر
-                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> غير متوفر';
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> غير متوفر'; // تم التعديل
                         iosButtonElement.classList.add('unavailable');
+                        iosLinkElement.classList.remove('hidden-link'); 
                         iosLinkElement.href = '#'; 
                         
                         // إخفاؤه بالكامل إذا كان المستخدم أندرويد لتبسيط المودال
@@ -1610,14 +1610,14 @@
                             iosLinkElement.classList.add('hidden-link');
                         }
                         
+                    } else if (isIosLinkHiddenByDevice) {
+                        // 2. الرابط متوفر، لكن الجهاز غير مناسب (أندرويد): إظهار "فتح" وإخفاء الرابط
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> فتح'; // تم التعديل
+                        iosLinkElement.classList.add('hidden-link');
                     } else {
-                        // 2. الرابط متوفر: يظهر كـ "فتح"
-                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> فتح'; 
-                        
-                         // إخفاؤه بالكامل إذا كان الجهاز غير مناسب (أندرويد)
-                        if (isIosLinkHiddenByDevice) {
-                            iosLinkElement.classList.add('hidden-link');
-                        }
+                        // 3. الرابط متوفر والجهاز مناسب (iOS أو غير محدد): إظهار "فتح"
+                        iosButtonElement.innerHTML = '<i class="fab fa-apple"></i> فتح'; // تم التعديل
+                        iosLinkElement.classList.remove('hidden-link');
                     }
                     // --- END: منطق زر الآيفون (التعديل المطلوب) ---
 
