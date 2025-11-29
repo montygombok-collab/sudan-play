@@ -933,15 +933,22 @@
             .logo h1 {
                 font-size: 1.3em;
             }
+            /* تم تعديل هذا الجزء لضمان ظهور الروابط بشكل واضح على شاشات الهواتف الصغيرة */
+            nav {
+                flex-direction: column; /* جعل الشعار والروابط تتكدس عمودياً */
+                align-items: center;
+            }
             .nav-links {
+                width: 100%; 
                 justify-content: center;
                 margin-top: 10px;
+                flex-wrap: wrap; 
             }
             .nav-links a {
                 font-size: 0.9em;
-                margin-right: 10px;
-                margin-left: 10px;
+                margin: 5px 8px; /* تقليل الهوامش لتناسب أكبر عدد من الروابط */
             }
+            /* نهاية التعديل */
             .hero h2 {
                 font-size: 1.6em;
             }
@@ -1282,7 +1289,7 @@
         let allApps = []; // لتخزين جميع التطبيقات للبحث
 
         // ----------------------------------------------------
-        // 4. دالة تحميل التطبيقات (loadApps) - (بدون تغيير)
+        // 4. دالة تحميل التطبيقات (loadApps) - (تم تعديل نص زر الأندرويد)
         // ----------------------------------------------------
         function loadApps() {
             const appsContainer = document.getElementById('apps-container');
@@ -1329,11 +1336,11 @@
                     const isIosAvailable = iosLink !== '#';
                     const iosHiddenClass = (isAndroidDevice && isIosAvailable) ? 'hidden-by-device' : (isIosAvailable ? '' : 'unavailable');
 
-                    // زر الأندرويد
+                    // زر الأندرويد (تم تغيير "تنزيل فقط" إلى "تنزيل")
                     androidButtonHtml = `
                         <button class="download-btn-split download-btn-android ${androidHiddenClass}" 
                                 onclick="event.stopPropagation(); window.open('${androidLink}', '_blank');">
-                            <i class="fab fa-android"></i> تنزيل فقط
+                            <i class="fab fa-android"></i> تنزيل
                         </button>
                     `;
                     
