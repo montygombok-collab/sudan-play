@@ -286,7 +286,8 @@
 
         #apps-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            /* [تعديل] لضمان ظهور 4 تطبيقات في الصف على الشاشات المتوسطة والكبيرة */
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
             gap: 25px;
         }
 
@@ -463,8 +464,8 @@
         /* ------------------------------------------------ */
         /* --- كلاس لإخفاء الروابط إذا كانت غير متوفرة أو غير مناسبة للجهاز (جديد) --- */
         /* ------------------------------------------------ */
-        .hidden-link,
-        .hidden-by-device {
+        /* [تعديل] تم إزالة .hidden-by-device للسماح بظهور الأزرار على جميع الأجهزة */
+        .hidden-link {
             display: none !important;
         }
 
@@ -679,14 +680,14 @@
         }
 
         /* --- START: التعديل الجديد لإظهار حالة عدم التوفر في المودال --- */
-        .download-modal-ios.unavailable {
+        .download-modal-btn.unavailable {
             background: #ccc !important; /* لون رمادي */
             color: #666 !important;
             cursor: not-allowed;
             pointer-events: none;
             box-shadow: none !important;
         }
-        .download-modal-ios.unavailable:hover {
+        .download-modal-btn.unavailable:hover {
             transform: none;
             background: #ccc !important;
         }
@@ -905,7 +906,8 @@
                 max-width: 100%;
             }
             #apps-container {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                /* [تعديل] لزيادة عدد الأعمدة على شاشات التابلت/الهواتف الكبيرة */
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
                 gap: 15px;
             }
             .app-card {
@@ -1148,10 +1150,10 @@
                 </div>
 
             <div class="download-buttons-container-modal">
-                <a id="detailsAndroidLink" href="#" target="_blank" class="hidden-link">
+                <a id="detailsAndroidLink" href="#" target="_blank">
                     <button class="download-modal-btn download-modal-android"><i class="fab fa-android"></i> تنزيل للأندرويد</button>
                 </a>
-                <a id="detailsIosLink" href="#" target="_blank" class="hidden-link">
+                <a id="detailsIosLink" href="#" target="_blank">
                     <button class="download-modal-btn download-modal-ios"><i class="fab fa-apple"></i> تنزيل للآيفون</button>
                 </a>
             </div>
@@ -1263,11 +1265,6 @@
                 banner.classList.add('show');
             }
             
-            // تم التعديل: إخفاء الشريط بعد 3000 ملي ثانية (3 ثواني)
-            setTimeout(() => {
-                banner.classList.remove('show');
-            }, 3000); 
-            
             // بعد التعرف على الجهاز، يتم تحميل التطبيقات
             loadApps();
         }
@@ -1306,7 +1303,7 @@
         let allApps = []; // لتخزين جميع التطبيقات للبحث
 
         // ----------------------------------------------------
-        // 4. دالة تحميل التطبيقات (loadApps) - مُعدلة بمنطق الأزرار الذكية
+        // 4. دالة تحميل التطبيقات (loadApps) - مُعدلة لإظهار جميع الأزرار
         // ----------------------------------------------------
         function loadApps() {
             const appsContainer = document.getElementById('apps-container');
@@ -1341,17 +1338,19 @@
                     const androidLink = app.downloadLink || '#';
                     const iosLink = app.iphoneDownloadLink || '#';
 
-                    // منطق إظهار/إخفاء أزرار التنزيل في البطاقة
+                    // منطق إظهار/إخفاء أزرار التنزيل في البطاقة - [تعديل] تم إزالة شرط كشف الجهاز
                     let androidButtonHtml = '';
                     let iosButtonHtml = '';
                     
                     // زر الأندرويد
                     const isAndroidAvailable = androidLink !== '#';
-                    const androidHiddenClass = (isIOSDevice && isAndroidAvailable) ? 'hidden-by-device' : (isAndroidAvailable ? '' : 'unavailable');
+                    // [تعديل] إظهار الزر دائماً، وإضافة كلاس "unavailable" فقط إذا لم يتوفر الرابط
+                    const androidHiddenClass = (isAndroidAvailable ? '' : 'unavailable'); 
 
                     // زر الآيفون
                     const isIosAvailable = iosLink !== '#';
-                    const iosHiddenClass = (isAndroidDevice && isIosAvailable) ? 'hidden-by-device' : (isIosAvailable ? '' : 'unavailable');
+                    // [تعديل] إظهار الزر دائماً، وإضافة كلاس "unavailable" فقط إذا لم يتوفر الرابط
+                    const iosHiddenClass = (isIosAvailable ? '' : 'unavailable'); 
 
                     // زر الأندرويد
                     androidButtonHtml = `
@@ -1361,7 +1360,7 @@
                         </button>
                     `;
                     
-                    // زر الآيفون (يتم إظهاره إذا كان الرابط موجوداً أو إذا كان الجهاز هو iOS)
+                    // زر الآيفون
                     iosButtonHtml = `
                         <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
                                 onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
@@ -1461,7 +1460,7 @@
         }
 
         // ----------------------------------------------------
-        // 6. دوال النوافذ المنبثقة (Modals)
+        // 6. دوال النوافذ المنبثقة (Modals) - مُعدلة لإظهار جميع الأزرار
         // ----------------------------------------------------
         function showAppDetails(appId) {
             const app = allApps.find(a => a.id === appId);
@@ -1501,37 +1500,30 @@
             // تعيين الروابط
             androidLinkElement.href = androidLink;
             iosLinkElement.href = iosLink;
+            
+            // [تعديل] إزالة فئة الإخفاء لضمان ظهور الأزرار دائماً على جميع الأجهزة
+            androidLinkElement.classList.remove('hidden-link');
+            iosLinkElement.classList.remove('hidden-link');
+
 
             // --- منطق زر الأندرويد ---
             const isAndroidLinkAvailable = androidLink !== '#';
-            const isAndroidHiddenByDevice = isIOSDevice;
             
             androidButtonElement.textContent = 'تنزيل للأندرويد'; 
-            androidButtonElement.classList.remove('unavailable');
+            androidButtonElement.classList.remove('unavailable'); // التأكد من إزالة الكلاس أولاً
             
-            if (!isAndroidLinkAvailable || isAndroidHiddenByDevice) {
-                androidLinkElement.classList.add('hidden-link');
-            } else {
-                androidLinkElement.classList.remove('hidden-link');
-            }
             if (!isAndroidLinkAvailable) {
                 androidButtonElement.classList.add('unavailable');
-            }
+            } 
 
 
             // --- منطق زر الآيفون ---
             const isIosLinkAvailable = iosLink !== '#';
-            const isIosHiddenByDevice = isAndroidDevice;
 
             iosButtonElement.textContent = 'تنزيل للآيفون'; 
-            iosButtonElement.classList.remove('unavailable');
+            iosButtonElement.classList.remove('unavailable'); // التأكد من إزالة الكلاس أولاً
             
-            if (!isIosLinkAvailable || isIosHiddenByDevice) { 
-                iosLinkElement.classList.add('hidden-link');
-            } else {
-                iosLinkElement.classList.remove('hidden-link');
-            }
-            if (!isIosLinkAvailable) {
+            if (!isIosLinkAvailable) { 
                  iosButtonElement.classList.add('unavailable');
             }
 
@@ -1600,10 +1592,10 @@
             db.collection('submissions').add(submissionData)
                 .then(() => {
                     closeSubmissionModal();
-                    showToast('✅ تم إرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 3000); // تم التعديل إلى 3000
+                    showToast('✅ تم إرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 6000);
                 })
                 .catch(error => {
-                    showToast('❌ حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.', 3000); // تم التعديل إلى 3000
+                    showToast('❌ حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.', 5000);
                     console.error("Error submitting application: ", error);
                 })
                 .finally(() => {
