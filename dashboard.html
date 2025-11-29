@@ -789,6 +789,12 @@
                     const app = doc.data();
                     const appId = doc.id;
                     
+                    // تحديد ما إذا كان رابط الآيفون متاحًا
+                    const isIosAvailable = app.iphoneDownloadLink && app.iphoneDownloadLink.trim().length > 0;
+                    const iosStatusHtml = isIosAvailable 
+                        ? '<i class="fab fa-apple" style="color: #555;"></i> iOS: متاح' 
+                        : '<i class="fas fa-ban" style="color: #dc3545;"></i> iOS: غير متاح';
+
                     const appItem = document.createElement('div');
                     appItem.className = 'app-item';
                     
@@ -798,7 +804,12 @@
                         </div>
                         <div class="app-details">
                             <h3>${app.name}</h3>
-                            <p>الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()}</p>
+                            <p>
+                                الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()} 
+                                <span style="margin-right: 10px; font-size: 0.9em;">
+                                    ${iosStatusHtml}
+                                </span>
+                            </p>
                         </div>
                         <div class="app-actions">
                             <button class="action-btn" title="تعديل" onclick="editApp('${appId}')">
