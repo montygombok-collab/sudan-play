@@ -27,7 +27,7 @@
 
         body {
             background-color: var(--light);
-            min-height: 100vh;
+            min-height: 10vh;
             display: flex;
             flex-direction: column;
         }
@@ -445,6 +445,16 @@
             background: #006AC4;
             transform: translateY(-1px);
         }
+        
+        /* --- تصميم الزر غير المتوفر (مُضاف) --- */
+        .download-btn-unavailable {
+            background-color: #aaa !important; /* لون رمادي للإشارة إلى عدم التوفر */
+            cursor: not-allowed !important;
+            opacity: 0.7;
+            pointer-events: none; /* لضمان عدم النقر */
+            box-shadow: none !important;
+        }
+
 
         /* ------------------------------------------------ */
         /* --- كلاس لإخفاء الروابط إذا كانت غير متوفرة أو غير مناسبة للجهاز (جديد) --- */
@@ -662,6 +672,15 @@
         .download-modal-ios:hover {
             background: #006AC4 !important;
             transform: translateY(-2px);
+        }
+        
+        /* تعديل الزر في المودال ليكون غير متوفر (مُضاف) */
+        .download-modal-btn.unavailable {
+            background: #aaa !important; 
+            cursor: not-allowed !important;
+            opacity: 0.7;
+            pointer-events: none;
+            box-shadow: none !important;
         }
 
 
@@ -1341,10 +1360,33 @@
                     const androidLink = app.androidLink || app.downloadLink || '#';
                     const iosLink = app.iosLink || '#';
 
-                    // منطق إخفاء الأزرار على مستوى البطاقة (جديد)
-                    let androidHiddenClass = (androidLink === '#' || isIOSDevice) ? 'hidden-link' : '';
-                    let iosHiddenClass = (iosLink === '#' || isAndroidDevice) ? 'hidden-link' : '';
+                    // منطق الآيفون
+                    let iosButtonText = '<i class="fab fa-apple"></i> آيفون';
+                    let iosButtonClass = 'download-btn-ios';
+                    let iosButtonDisabledClick = `window.open('${iosLink}', '_blank');`;
 
+                    if (iosLink === '#') {
+                        // غير متوفر: إظهاره كغير نشط وتغيير النص
+                        iosButtonText = '<i class="fab fa-apple"></i> غير متوفر';
+                        iosButtonClass += ' download-btn-unavailable';
+                        iosButtonDisabledClick = '';
+                    } else if (isAndroidDevice) {
+                        // متوفر ولكن يتم إخفاؤه لمستخدم الأندرويد بناءً على المنطق القديم
+                        iosButtonClass += ' hidden-link';
+                    }
+
+                    // منطق الأندرويد
+                    let androidButtonText = '<i class="fab fa-android"></i> تنزيل فقط';
+                    let androidButtonClass = 'download-btn-android';
+                    let androidButtonDisabledClick = `window.open('${androidLink}', '_blank');`;
+                    
+                    if (androidLink === '#') {
+                        androidButtonText = '<i class="fab fa-android"></i> غير متوفر';
+                        androidButtonClass += ' download-btn-unavailable';
+                        androidButtonDisabledClick = '';
+                    } else if (isIOSDevice) {
+                        androidButtonClass += ' hidden-link';
+                    }
 
                     appCardsHtml += `
                         <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" data-description="${app.fullDescription || ''}" onclick="showAppDetails('${appId}')">
@@ -1364,13 +1406,13 @@
                             </div>
                             
                             <div class="download-buttons-container">
-                                <button class="download-btn-split download-btn-android ${androidHiddenClass}" 
-                                        onclick="event.stopPropagation(); window.open('${androidLink}', '_blank');">
-                                    <i class="fab fa-android"></i> تنزيل فقط
+                                <button class="download-btn-split ${androidButtonClass}" 
+                                        onclick="event.stopPropagation(); ${androidButtonDisabledClick}">
+                                    ${androidButtonText}
                                 </button>
-                                <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
-                                        onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
-                                    <i class="fab fa-apple"></i> آيفون
+                                <button class="download-btn-split ${iosButtonClass}" 
+                                        onclick="event.stopPropagation(); ${iosButtonDisabledClick}">
+                                    ${iosButtonText}
                                 </button>
                             </div>
 
@@ -1476,26 +1518,41 @@
                     
                     const androidLinkElement = document.getElementById('detailsAndroidLink');
                     const iosLinkElement = document.getElementById('detailsIosLink');
-                    
-                    // منطق إخفاء الأزرار على مستوى المودال (جديد)
-                    const isAndroidLinkHiddenByDevice = isIOSDevice;
-                    const isIosLinkHiddenByDevice = isAndroidDevice;
+                    const androidButton = androidLinkElement.querySelector('button');
+                    const iosButton = iosLinkElement.querySelector('button');
                     
                     // تعيين الروابط
                     androidLinkElement.href = androidLink;
                     iosLinkElement.href = iosLink;
                     
-                    // تطبيق الإخفاء بناءً على التوفر ونوع الجهاز
-                    if (androidLink === '#' || isAndroidLinkHiddenByDevice) {
-                        androidLinkElement.classList.add('hidden-link');
-                    } else {
-                        androidLinkElement.classList.remove('hidden-link');
-                    }
+                    // إزالة أي كلاسات إخفاء أو عدم توفر سابقة
+                    androidLinkElement.classList.remove('hidden-link');
+                    iosLinkElement.classList.remove('hidden-link');
+                    androidButton.classList.remove('unavailable');
+                    iosButton.classList.remove('unavailable');
+                    
+                    androidButton.innerHTML = '<i class="fab fa-android"></i> تنزيل فقط';
+                    iosButton.innerHTML = '<i class="fab fa-apple"></i> آيفون';
 
-                    if (iosLink === '#' || isIosLinkHiddenByDevice) {
+                    // منطق زر الآيفون
+                    if (iosLink === '#') {
+                        // غير متوفر: إظهاره كغير نشط وتغيير النص
+                        iosButton.innerHTML = '<i class="fab fa-apple"></i> غير متوفر';
+                        iosButton.classList.add('unavailable');
+                        iosLinkElement.removeAttribute('href'); // لمنع أي نقر على الرابط
+                    } else if (isAndroidDevice) {
+                        // متوفر ولكن يتم إخفاؤه لمستخدم الأندرويد بناءً على المنطق القديم
                         iosLinkElement.classList.add('hidden-link');
-                    } else {
-                        iosLinkElement.classList.remove('hidden-link');
+                    }
+                    
+                    // منطق زر الأندرويد
+                    if (androidLink === '#') {
+                        // غير متوفر: إظهاره كغير نشط وتغيير النص
+                        androidButton.innerHTML = '<i class="fab fa-android"></i> غير متوفر';
+                        androidButton.classList.add('unavailable');
+                        androidLinkElement.removeAttribute('href'); // لمنع أي نقر على الرابط
+                    } else if (isIOSDevice) {
+                        androidLinkElement.classList.add('hidden-link');
                     }
 
                     // صور الشاشة
