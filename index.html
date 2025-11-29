@@ -27,7 +27,7 @@
 
         body {
             background-color: var(--light);
-            min-height: 10vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
@@ -189,90 +189,6 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
-
-        /* ------------------------------------------------ */
-        /* --- قسم عن الشركة (About Us) --- (جديد) */
-        /* ------------------------------------------------ */
-        #about {
-            padding: 60px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            text-align: center;
-            background-color: var(--light);
-        }
-
-        #about h2 {
-            text-align: center;
-            color: var(--dark);
-            margin-bottom: 40px;
-            font-size: 2.2em;
-            position: relative;
-        }
-
-        #about h2::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: var(--gradient);
-            margin: 15px auto;
-            border-radius: 2px;
-        }
-
-        .about-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            text-align: right;
-        }
-
-        .about-content p {
-            font-size: 1.1em;
-            color: #555;
-            line-height: 1.8;
-            max-width: 700px;
-            margin: 0 auto 20px auto;
-        }
-
-        .feature-box {
-            flex: 1;
-            min-width: 250px;
-            max-width: 350px;
-            background-color: #fff;
-            padding: 25px;
-            border-radius: var(--radius);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            border-top: 5px solid var(--primary);
-            transition: all 0.3s;
-            text-align: center; /* لتوسيط الأيقونات والنصوص داخل الصندوق */
-        }
-
-        .feature-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-box i {
-            font-size: 2.5em;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        .feature-box h4 {
-            font-size: 1.3em;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-        .feature-box p {
-            font-size: 0.95em;
-            color: #777;
-            line-height: 1.6;
-            text-align: right;
-        }
-
 
         /* --- App Showcase --- */
         #apps {
@@ -529,16 +445,6 @@
             background: #006AC4;
             transform: translateY(-1px);
         }
-        
-        /* --- تصميم الزر غير المتوفر (مُضاف) --- */
-        .download-btn-unavailable {
-            background-color: #aaa !important; /* لون رمادي للإشارة إلى عدم التوفر */
-            cursor: not-allowed !important;
-            opacity: 0.7;
-            pointer-events: none; /* لضمان عدم النقر */
-            box-shadow: none !important;
-        }
-
 
         /* ------------------------------------------------ */
         /* --- كلاس لإخفاء الروابط إذا كانت غير متوفرة أو غير مناسبة للجهاز (جديد) --- */
@@ -756,15 +662,6 @@
         .download-modal-ios:hover {
             background: #006AC4 !important;
             transform: translateY(-2px);
-        }
-        
-        /* تعديل الزر في المودال ليكون غير متوفر (مُضاف) */
-        .download-modal-btn.unavailable {
-            background: #aaa !important; 
-            cursor: not-allowed !important;
-            opacity: 0.7;
-            pointer-events: none;
-            box-shadow: none !important;
         }
 
 
@@ -1015,17 +912,6 @@
             .hero { padding: 60px 15px; } 
             .hero h2 { font-size: 1.8em; } 
             .hero button { padding: 12px 25px; font-size: 1em; } 
-            
-            #about h2 { font-size: 1.8em; } /* Responsive for About Us */
-            .about-content {
-                flex-direction: column;
-                gap: 20px;
-            }
-            .feature-box {
-                max-width: 100%;
-                margin: 0 auto;
-            }
-            
             #apps { padding: 40px 15px; } 
             #apps h2 { font-size: 1.8em; } 
             .filter-section { flex-direction: column; align-items: flex-start; gap: 10px; } 
@@ -1092,7 +978,6 @@
             .nav-links a { margin: 0 8px 5px 8px; } 
             .hero h2 { font-size: 1.8em; } 
             .hero p { font-size: 0.95em; } 
-            #about h2 { font-size: 1.6em; } /* Responsive for About Us */
             #apps h2 { font-size: 1.6em; } 
             #apps-container { 
                 grid-template-columns: repeat(3, 1fr); 
@@ -1129,7 +1014,6 @@
             .logo h1 { font-size: 1.1em; } 
             .nav-links a { font-size: 0.85em; } 
             .hero h2 { font-size: 1.4em; } 
-            #about h2 { font-size: 1.4em; } /* Responsive for About Us */
             #apps h2 { font-size: 1.4em; } 
             #apps-container { 
                 grid-template-columns: repeat(3, 1fr); 
@@ -1173,7 +1057,7 @@
                 <h1>Sudan Play</h1>
             </div>
             <div class="nav-links">
-                <a href="#about"><i class="fas fa-info-circle"></i> عن الشركة</a> <a href="#apps"><i class="fas fa-th"></i> التطبيقات</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> عن الشركة</a> <a href="#apps"><i class="fas fa-th"></i> التطبيقات</a>
                 <a href="#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
                 <a href="#" class="btn btn-primary" onclick="openSubmissionModal()">
                     <i class="fas fa-cloud-upload-alt"></i> نشر تطبيقك
@@ -1188,31 +1072,6 @@
                 <h2>متجر التطبيقات السوداني</h2>
                 <p>منصة متجر التطبيقات السوداني الأولى، نوفر لك أحدث وأفضل البرامج والخدمات المحلية والدولية.</p>
                 <button onclick="document.getElementById('apps').scrollIntoView();">ابدأ التصفح</button>
-            </div>
-        </section>
-
-        <section id="about">
-            <h2>من نحن - رؤيتنا وقيمنا</h2>
-            <div class="about-content">
-                <p>
-                    تأسست Sudan Play بواسطة Monty Go SDN-Co.Ltd لتكون المنصة الرائدة لتطبيقات الهاتف المحمول في السودان. 
-                    نحن نؤمن بأهمية دعم الابتكار المحلي وتوفير جسر يربط المطورين السودانيين بجمهور واسع، مع تقديم أفضل التطبيقات العالمية للمستخدمين السودانيين.
-                </p>
-                <div class="feature-box">
-                    <i class="fas fa-eye"></i>
-                    <h4>رؤيتنا</h4>
-                    <p>أن نصبح البوابة الرقمية الأولى للتطبيقات في السودان وأفريقيا، وأن نكون محفزًا للنمو الاقتصادي الرقمي.</p>
-                </div>
-                <div class="feature-box">
-                    <i class="fas fa-handshake"></i>
-                    <h4>قيمنا</h4>
-                    <p>النزاهة، دعم المطورين، الجودة في الاختيار، وتوفير تجربة مستخدم موثوقة ومحلية.</p>
-                </div>
-                <div class="feature-box">
-                    <i class="fas fa-layer-group"></i>
-                    <h4>هدفنا</h4>
-                    <p>تجميع أفضل التطبيقات السودانية والعالمية في مكان واحد، وتسهيل عملية التنزيل والدفع محليًا.</p>
-                </div>
             </div>
         </section>
 
@@ -1482,33 +1341,10 @@
                     const androidLink = app.androidLink || app.downloadLink || '#';
                     const iosLink = app.iosLink || '#';
 
-                    // منطق الآيفون
-                    let iosButtonText = '<i class="fab fa-apple"></i> آيفون';
-                    let iosButtonClass = 'download-btn-ios';
-                    let iosButtonDisabledClick = `window.open('${iosLink}', '_blank');`;
+                    // منطق إخفاء الأزرار على مستوى البطاقة (جديد)
+                    let androidHiddenClass = (androidLink === '#' || isIOSDevice) ? 'hidden-link' : '';
+                    let iosHiddenClass = (iosLink === '#' || isAndroidDevice) ? 'hidden-link' : '';
 
-                    if (iosLink === '#') {
-                        // غير متوفر: إظهاره كغير نشط وتغيير النص
-                        iosButtonText = '<i class="fab fa-apple"></i> غير متوفر';
-                        iosButtonClass += ' download-btn-unavailable';
-                        iosButtonDisabledClick = '';
-                    } else if (isAndroidDevice) {
-                        // متوفر ولكن يتم إخفاؤه لمستخدم الأندرويد بناءً على المنطق القديم
-                        iosButtonClass += ' hidden-link';
-                    }
-
-                    // منطق الأندرويد
-                    let androidButtonText = '<i class="fab fa-android"></i> تنزيل فقط';
-                    let androidButtonClass = 'download-btn-android';
-                    let androidButtonDisabledClick = `window.open('${androidLink}', '_blank');`;
-                    
-                    if (androidLink === '#') {
-                        androidButtonText = '<i class="fab fa-android"></i> غير متوفر';
-                        androidButtonClass += ' download-btn-unavailable';
-                        androidButtonDisabledClick = '';
-                    } else if (isIOSDevice) {
-                        androidButtonClass += ' hidden-link';
-                    }
 
                     appCardsHtml += `
                         <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" data-description="${app.fullDescription || ''}" onclick="showAppDetails('${appId}')">
@@ -1528,13 +1364,13 @@
                             </div>
                             
                             <div class="download-buttons-container">
-                                <button class="download-btn-split ${androidButtonClass}" 
-                                        onclick="event.stopPropagation(); ${androidButtonDisabledClick}">
-                                    ${androidButtonText}
+                                <button class="download-btn-split download-btn-android ${androidHiddenClass}" 
+                                        onclick="event.stopPropagation(); window.open('${androidLink}', '_blank');">
+                                    <i class="fab fa-android"></i> تنزيل فقط
                                 </button>
-                                <button class="download-btn-split ${iosButtonClass}" 
-                                        onclick="event.stopPropagation(); ${iosButtonDisabledClick}">
-                                    ${iosButtonText}
+                                <button class="download-btn-split download-btn-ios ${iosHiddenClass}" 
+                                        onclick="event.stopPropagation(); window.open('${iosLink}', '_blank');">
+                                    <i class="fab fa-apple"></i> آيفون
                                 </button>
                             </div>
 
@@ -1640,41 +1476,26 @@
                     
                     const androidLinkElement = document.getElementById('detailsAndroidLink');
                     const iosLinkElement = document.getElementById('detailsIosLink');
-                    const androidButton = androidLinkElement.querySelector('button');
-                    const iosButton = iosLinkElement.querySelector('button');
+                    
+                    // منطق إخفاء الأزرار على مستوى المودال (جديد)
+                    const isAndroidLinkHiddenByDevice = isIOSDevice;
+                    const isIosLinkHiddenByDevice = isAndroidDevice;
                     
                     // تعيين الروابط
                     androidLinkElement.href = androidLink;
                     iosLinkElement.href = iosLink;
                     
-                    // إزالة أي كلاسات إخفاء أو عدم توفر سابقة
-                    androidLinkElement.classList.remove('hidden-link');
-                    iosLinkElement.classList.remove('hidden-link');
-                    androidButton.classList.remove('unavailable');
-                    iosButton.classList.remove('unavailable');
-                    
-                    androidButton.innerHTML = '<i class="fab fa-android"></i> تنزيل فقط';
-                    iosButton.innerHTML = '<i class="fab fa-apple"></i> آيفون';
-
-                    // منطق زر الآيفون
-                    if (iosLink === '#') {
-                        // غير متوفر: إظهاره كغير نشط وتغيير النص
-                        iosButton.innerHTML = '<i class="fab fa-apple"></i> غير متوفر';
-                        iosButton.classList.add('unavailable');
-                        iosLinkElement.removeAttribute('href'); // لمنع أي نقر على الرابط
-                    } else if (isAndroidDevice) {
-                        // متوفر ولكن يتم إخفاؤه لمستخدم الأندرويد بناءً على المنطق القديم
-                        iosLinkElement.classList.add('hidden-link');
-                    }
-                    
-                    // منطق زر الأندرويد
-                    if (androidLink === '#') {
-                        // غير متوفر: إظهاره كغير نشط وتغيير النص
-                        androidButton.innerHTML = '<i class="fab fa-android"></i> غير متوفر';
-                        androidButton.classList.add('unavailable');
-                        androidLinkElement.removeAttribute('href'); // لمنع أي نقر على الرابط
-                    } else if (isIOSDevice) {
+                    // تطبيق الإخفاء بناءً على التوفر ونوع الجهاز
+                    if (androidLink === '#' || isAndroidLinkHiddenByDevice) {
                         androidLinkElement.classList.add('hidden-link');
+                    } else {
+                        androidLinkElement.classList.remove('hidden-link');
+                    }
+
+                    if (iosLink === '#' || isIosLinkHiddenByDevice) {
+                        iosLinkElement.classList.add('hidden-link');
+                    } else {
+                        iosLinkElement.classList.remove('hidden-link');
                     }
 
                     // صور الشاشة
