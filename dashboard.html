@@ -712,7 +712,9 @@
     </section>
 
     <script>
-        // إعدادات Firebase (يجب تغييرها ببيانات مشروعك الحقيقية)
+        // ******************************************************
+        // انتبه: يجب تغيير إعدادات Firebase ببيانات مشروعك الحقيقية
+        // ******************************************************
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
@@ -772,7 +774,7 @@
         }
         
         // ----------------------------------------------------
-        // دوال إدارة التطبيقات (القديمة)
+        // دوال إدارة التطبيقات 
         // ----------------------------------------------------
         function loadApps() {
             const appsList = document.getElementById('appsList');
@@ -840,9 +842,7 @@
                     document.getElementById('shortDescription').value = app.shortDescription || '';
                     document.getElementById('fullDescription').value = app.fullDescription || '';
                     document.getElementById('downloadLink').value = app.downloadLink || '';
-                    // **** تم إضافة هذا السطر لتعبئة حقل رابط الآيفون ****
                     document.getElementById('iphoneDownloadLink').value = app.iphoneDownloadLink || '';
-                    // **********************************************
                     document.getElementById('size').value = app.size || 0;
                     document.getElementById('rating').value = app.rating || 0;
                     document.getElementById('downloads').value = app.downloads || 0;
@@ -866,7 +866,7 @@
         }
 
         // ----------------------------------------------------
-        // دوال طلبات النشر (المصححة)
+        // دوال طلبات النشر
         // ----------------------------------------------------
 
         // 1. دالة جلب وعرض طلبات النشر
@@ -876,7 +876,7 @@
             
             submissionsList.innerHTML = '<h3>جاري تحميل الطلبات...</h3>';
             
-            // جلب الطلبات التي حالتها 'Pending' (تم التصحيح هنا)
+            // جلب الطلبات التي حالتها 'Pending'
             db.collection('submissions').where('reviewStatus', '==', 'Pending').onSnapshot(snapshot => {
                 submissionsList.innerHTML = ''; 
                 const pendingCount = snapshot.size;
@@ -986,9 +986,7 @@
                         rating: 0,
                         downloads: 0,
                         iconPath: submissionData.appImages && submissionData.appImages.length > 0 ? submissionData.appImages[0] : 'placeholder-icon.png',
-                        // **** تم إضافة هذا الحقل لضمان وجوده في قاعدة البيانات ****
                         iphoneDownloadLink: '', 
-                        // **********************************************
                         
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     };
@@ -1133,9 +1131,7 @@
                     shortDescription: form.shortDescription.value,
                     fullDescription: form.fullDescription.value,
                     downloadLink: form.downloadLink.value,
-                    // **** تم إضافة هذا السطر لحفظ رابط الآيفون ****
                     iphoneDownloadLink: form.iphoneDownloadLink.value,
-                    // **********************************************
                     developerName: 'Admin',
                 };
                 
@@ -1188,6 +1184,7 @@
             // التحقق من حالة تسجيل الدخول أولاً
             firebase.auth().onAuthStateChanged(user => {
                 if (!user && !localStorage.getItem('sudanPlayAdmin')) {
+                    // يمكنك تفعيل هذا السطر لإعادة التوجيه لصفحة الدخول
                     // window.location.href = '/login.html';
                 } else {
                     // إعداد النموذج
