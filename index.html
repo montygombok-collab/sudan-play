@@ -229,14 +229,12 @@
             outline: none;
         }
 
-        /* 🟢 شبكة التطبيقات */
         #apps-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 12px;
         }
 
-        /* 🟢 كرت التطبيقات المحدث ليشمل التقييمات والتنزيلات */
         .app-card {
             background: var(--glass-card);
             backdrop-filter: blur(14px);
@@ -302,7 +300,6 @@
             margin-top: 2px;
         }
 
-        /* 🟢 شريط التقييم والتنزيلات المصغر */
         .app-stats-row {
             display: flex;
             align-items: center;
@@ -460,7 +457,7 @@
             text-align: center;
         }
 
-        /* --- Modals --- */
+        /* --- Modals & Multi-Step Gate System --- */
         .modal {
             display: none;
             position: fixed;
@@ -477,13 +474,13 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            margin: 10% auto;
+            margin: 5% auto;
             padding: 20px;
             border-radius: 18px;
             width: 92%;
-            max-width: 480px;
+            max-width: 520px;
             position: relative;
-            max-height: 85vh;
+            max-height: 88vh;
             overflow-y: auto;
         }
 
@@ -496,7 +493,93 @@
             cursor: pointer;
         }
 
-        input[type="text"], input[type="email"], input[type="url"], textarea {
+        /* 🟢 شريط تنقل البوابات / المراحل */
+        .step-progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0 20px 0;
+            position: relative;
+        }
+
+        .step-progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #cbd5e1;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 2;
+            background: #e2e8f0;
+            color: #64748b;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 10px rgba(74, 107, 255, 0.5);
+        }
+
+        .step-item.completed {
+            background: var(--accent);
+            color: white;
+        }
+
+        .gate-step {
+            display: none;
+        }
+
+        .gate-step.active-gate {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .terms-box {
+            background: rgba(241, 245, 249, 0.8);
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 0.8em;
+            color: #334155;
+            max-height: 180px;
+            overflow-y: auto;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .fee-card {
+            background: linear-gradient(135deg, rgba(74, 107, 255, 0.1), rgba(46, 196, 182, 0.1));
+            border: 1px dashed var(--primary);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .fee-card .price {
+            font-size: 1.3em;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 4px;
+        }
+
+        input[type="text"], input[type="email"], input[type="url"], input[type="number"], select, textarea {
             width: 100%;
             padding: 9px;
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -520,6 +603,26 @@
             font-size: 0.82em;
             padding: 0 5px;
         }
+
+        .modal-btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .btn-gate {
+            flex: 1;
+            padding: 9px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-next { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .btn-prev { background: #cbd5e1; color: #334155; }
 
         .download-modal-btn {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -600,7 +703,6 @@
             opacity: 1;
         }
 
-        /* 📱 🟢 التنسيقات للشاشات الصغيرة والهواتف 📱 */
         @media (max-width: 600px) {
             header { padding: 8px 10px; }
 
@@ -638,10 +740,7 @@
                 font-weight: 700;
             }
 
-            .app-stats-row {
-                font-size: 0.58em;
-                gap: 3px;
-            }
+            .app-stats-row { font-size: 0.58em; gap: 3px; }
 
             .download-buttons-container {
                 padding: 3px 2px;
@@ -717,7 +816,6 @@
                     </select>
                 </div>
 
-                <!-- 🟢 عرض 4 تطبيقات في الصف للجوال -->
                 <div id="apps-container">
                     <h3 style="text-align: center; grid-column: 1/-1; color: #64748b; font-size: 0.85em; padding: 20px 0;">جاري تحميل التطبيقات...</h3>
                 </div>
@@ -752,30 +850,35 @@
             </div>
         </section>
 
-        <!-- 3. صفحة المطورين -->
+        <!-- 3. 🟢 قسم المطورين المحدث ليشمل بوابات ونصوص النشر 🟢 -->
         <section id="developers-page" class="page-section">
             <div class="glass-panel">
                 <div class="developer-header">
                     <h2><i class="fas fa-laptop-code" style="color: var(--primary);"></i> بوابة المطورين</h2>
-                    <p style="color: #475569; margin-top: 5px; font-size: 0.85em;">منصة مخصصة للمطورين والشركات السودانية لنشر وتوزيع التطبيقات.</p>
+                    <p style="color: #475569; margin-top: 5px; font-size: 0.85em;">انضم إلى مجتمع المطورين وانشر تطبيقاتك ليصل إلى آلاف المستخدمين.</p>
                 </div>
 
                 <div class="features-grid">
                     <div class="feature-box">
-                        <i class="fas fa-rocket" style="color: var(--primary);"></i>
-                        <h4 style="font-size: 0.88em; margin-top: 4px;">نشر سريع</h4>
-                        <p style="font-size: 0.72em; color: #64748b;">مراجعة ونشر خلال وقت قياسي.</p>
+                        <i class="fas fa-shield-alt" style="color: var(--primary); font-size: 1.5em;"></i>
+                        <h4 style="font-size: 0.88em; margin-top: 6px;">حماية الأكواد</h4>
+                        <p style="font-size: 0.72em; color: #64748b;">مراجعة وأمان عالي لكافة الموارد المرفوقة.</p>
                     </div>
                     <div class="feature-box">
-                        <i class="fas fa-chart-line" style="color: var(--primary);"></i>
-                        <h4 style="font-size: 0.88em; margin-top: 4px;">إحصائيات</h4>
-                        <p style="font-size: 0.72em; color: #64748b;">متابعة التنزيلات بسهولة.</p>
+                        <i class="fas fa-rocket" style="color: var(--primary); font-size: 1.5em;"></i>
+                        <h4 style="font-size: 0.88em; margin-top: 6px;">نشر بوابي منظم</h4>
+                        <p style="font-size: 0.72em; color: #64748b;">خطوات واضحة تبدأ من الشروط وحتى الدفع.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-chart-line" style="color: var(--primary); font-size: 1.5em;"></i>
+                        <h4 style="font-size: 0.88em; margin-top: 6px;">نمو دائم</h4>
+                        <p style="font-size: 0.72em; color: #64748b;">تحديث التنزيلات والتقييمات تلقائياً من الفايربيس.</p>
                     </div>
                 </div>
 
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="download-modal-btn" style="max-width: 220px;" onclick="openSubmissionModal()">
-                        <i class="fas fa-plus-circle"></i> رفع تطبيق جديد
+                <div style="text-align: center; margin-top: 25px;">
+                    <button class="download-modal-btn" style="max-width: 250px; font-size: 0.95em;" onclick="openSubmissionModal()">
+                        <i class="fas fa-paper-plane"></i> تقديم طلب نشر تطبيق
                     </button>
                 </div>
             </div>
@@ -818,29 +921,97 @@
         </div>
     </div>
 
+    <!-- 🟢 🟢 نافذة تقديم طلب نشر التطبيق بالبوابات متعددة المراحل 🟢 🟢 -->
     <div id="submissionModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeSubmissionModal()">&times;</span>
-            <h3 style="text-align: center; margin-bottom: 12px; color: var(--dark); font-size: 1em;">طلب نشر تطبيق</h3>
+            <h3 style="text-align: center; color: var(--dark); font-size: 1em;">بوابة نشر التطبيقات</h3>
             
-            <form id="submissionForm">
-                <fieldset>
-                    <legend>بيانات التطبيق</legend>
-                    <input type="text" id="appType" placeholder="الفئة (أدوات / ألعاب)" required>
-                    <input type="text" id="appName" placeholder="اسم التطبيق" required>
-                    <input type="url" id="appIconLink" placeholder="رابط الأيقونة (URL)" required>
-                    <textarea id="appDescription" placeholder="وصف قصير..." rows="2" required></textarea>
-                </fieldset>
-                
-                <fieldset>
-                    <legend>الروابط والتواصل</legend>
-                    <input type="url" id="appAndroidLink" placeholder="رابط الأندرويد" required>
-                    <input type="url" id="appIosLink" placeholder="رابط الآيفون (اختياري)">
-                    <input type="text" id="devName" placeholder="اسم المطور" required>
-                    <input type="email" id="devEmail" placeholder="البريد الإلكتروني" required>
-                </fieldset>
+            <!-- شريط خطوات البوابات -->
+            <div class="step-progress-bar">
+                <div class="step-item active" id="step-indicator-1">1</div>
+                <div class="step-item" id="step-indicator-2">2</div>
+                <div class="step-item" id="step-indicator-3">3</div>
+            </div>
 
-                <button type="submit" class="download-modal-btn">إرسال الطلب</button>
+            <form id="submissionForm">
+                
+                <!-- 🔴 البوابة الأولى: الشروط والأحكام -->
+                <div class="gate-step active-gate" id="gate-1">
+                    <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-file-contract"></i> البوابة الأولى: الاتفاقية والشروط</h4>
+                    <div class="terms-box">
+                        <b>شروط ونصوص النشر على Sudan Play:</b><br>
+                        1. يتعهد المطور بأن التطبيق خالي من أي برمجيات خبيثة أو نصوص تضر ببيانات المستخدم.<br>
+                        2. يجب أن يتوافق التطبيق مع الأنظمة والتعليمات العامة ولا يحتك بملكية فكرية محفوظة.<br>
+                        3. الرسوم المدفوعة هي رسوم مراجعة ونشر غير قابلة للاسترداد بعد البدء في عملية الفحص.<br>
+                        4. تحتفظ منصة Monty Go SDN بحق قبول أو رفض التطبيق في حال عدم استيفاء المعايير.
+                    </div>
+                    <label style="font-size: 0.78em; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                        <input type="checkbox" id="acceptTermsCheckbox"> أوافق على كافة الشروط والأحكام المذكورة أصلها.
+                    </label>
+
+                    <div class="modal-btn-row">
+                        <button type="button" class="btn-gate btn-next" onclick="goToGate(2)">التالي: معلومات التطبيق <i class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <!-- 🟡 البوابة الثانية: معلومات التطبيق -->
+                <div class="gate-step" id="gate-2">
+                    <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-info-circle"></i> البوابة الثانية: تفاصيل التطبيق</h4>
+                    <fieldset>
+                        <legend>معلومات الحزمة</legend>
+                        <input type="text" id="appName" placeholder="اسم التطبيق" required>
+                        <select id="appType" required>
+                            <option value="" disabled selected>اختر الفئة...</option>
+                            <option value="أدوات">أدوات (Tools)</option>
+                            <option value="ألعاب">ألعاب (Games)</option>
+                            <option value="تعليم">تعليم (Education)</option>
+                            <option value="إنتاجية">إنتاجية (Productivity)</option>
+                            <option value="خدمات">خدمات (Services)</option>
+                        </select>
+                        <input type="url" id="appIconLink" placeholder="رابط الأيقونة المباشر (URL)" required>
+                        <textarea id="appDescription" placeholder="وصف التطبيق ووظائفه..." rows="2" required></textarea>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>روابط التنزيل</legend>
+                        <input type="url" id="appAndroidLink" placeholder="رابط تنزيل الأندرويد (.apk أو متجر)" required>
+                        <input type="url" id="appIosLink" placeholder="رابط الآيفون iOS (اختياري)">
+                    </fieldset>
+
+                    <div class="modal-btn-row">
+                        <button type="button" class="btn-gate btn-prev" onclick="goToGate(1)">السابق</button>
+                        <button type="button" class="btn-gate btn-next" onclick="goToGate(3)">التالي: الدفع والتحويل <i class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <!-- 🟢 البوابة الثالثة: الدفع وتفاصيل المحول والمطور -->
+                <div class="gate-step" id="gate-3">
+                    <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-credit-card"></i> البوابة الأخيرة: بوابة الدفع وتأكيد الحساب</h4>
+                    
+                    <div class="fee-card">
+                        <div style="font-size:0.78em; color:#475569;">رسوم معالجة ونشر التطبيق</div>
+                        <div class="price">15,000 ج.س / أو ما يعادلها</div>
+                    </div>
+
+                    <fieldset>
+                        <legend>بيانات تحويل الرسوم المصرفية</legend>
+                        <input type="text" id="transactionId" placeholder="رقم عملية التحويل / الإشعار" required>
+                        <input type="text" id="bankName" placeholder="اسم البنك المحوّل منه (مثال: بنك الخرطوم / بنكك)" required>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>بيانات المطور للتواصل</legend>
+                        <input type="text" id="devName" placeholder="اسم المطور / الشركة" required>
+                        <input type="email" id="devEmail" placeholder="البريد الإلكتروني الرسمي" required>
+                    </fieldset>
+
+                    <div class="modal-btn-row">
+                        <button type="button" class="btn-gate btn-prev" onclick="goToGate(2)">السابق</button>
+                        <button type="submit" class="btn-gate btn-next" style="background:var(--accent);">إرسال وتأكيد الطلب <i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>
@@ -896,7 +1067,6 @@
             setTimeout(() => t.classList.remove("show"), 3000);
         }
 
-        // 🟢 تنسيق أرقام التنزيلات (مثال: 1200 تصبح 1.2K)
         function formatDownloads(count) {
             if (!count) return '0';
             if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
@@ -904,14 +1074,11 @@
             return count.toString();
         }
 
-        // 🟢 زيادة حساب التنزيلات في الفايربيس عند الضغط
         function triggerDownload(appId, url) {
             if (!url || url === '#') return;
-            
-            // تحديث التنزيلات في لوحة التحكم / الفايربيس
             db.collection('apps').doc(appId).update({
                 downloads: firebase.firestore.FieldValue.increment(1)
-            }).catch(err => console.log('Update downloads error:', err));
+            }).catch(err => console.log('Update error:', err));
 
             window.open(url, '_blank');
         }
@@ -935,8 +1102,6 @@
 
                     const androidLink = app.downloadLink || '#';
                     const iosLink = app.iphoneDownloadLink || '#';
-                    
-                    // 🟢 جلب القيمة من الفايربيس أو وضع افتراضي
                     const rating = app.rating ? Number(app.rating).toFixed(1) : '5.0';
                     const downloadsCount = app.downloads || 0;
 
@@ -948,8 +1113,6 @@
                             <div class="app-info">
                                 <img src="${app.iconPath || 'https://via.placeholder.com/40'}" class="app-icon" alt="Icon" loading="lazy">
                                 <h4 class="app-title">${app.name || 'تطبيق'}</h4>
-                                
-                                <!-- 🟢 شريط التقييم والتنزيلات -->
                                 <div class="app-stats-row">
                                     <span class="app-rating"><i class="fas fa-star"></i> ${rating}</span>
                                     <span>•</span>
@@ -996,8 +1159,6 @@
             document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/48';
             document.getElementById('detailsCategory').textContent = app.category || 'عام';
             document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
-            
-            // 🟢 إظهار التقييم والتنزيلات في المودال
             document.getElementById('detailsRating').innerHTML = `<i class="fas fa-star"></i> ${app.rating ? Number(app.rating).toFixed(1) : '5.0'}`;
             document.getElementById('detailsDownloads').innerHTML = `<i class="fas fa-download"></i> ${formatDownloads(app.downloads || 0)} تنزيل`;
 
@@ -1011,11 +1172,68 @@
         }
 
         function closeModal() { document.getElementById('appDetailsModal').style.display = 'none'; }
-        function openSubmissionModal() { document.getElementById('submissionModal').style.display = 'block'; }
-        function closeSubmissionModal() { document.getElementById('submissionModal').style.display = 'none'; }
+        
+        function openSubmissionModal() { 
+            document.getElementById('submissionModal').style.display = 'block'; 
+            goToGate(1);
+        }
+        
+        function closeSubmissionModal() { 
+            document.getElementById('submissionModal').style.display = 'none'; 
+        }
 
+        /* 🟢 التنقل بين البوابات الثلاث مع التحقق من الشروط والبيانات */
+        function goToGate(gateNum) {
+            if (gateNum === 2) {
+                const acceptTerms = document.getElementById('acceptTermsCheckbox').checked;
+                if (!acceptTerms) {
+                    showToast('⚠️ يجب الموافقة على الشروط والأحكام للمتابعة.');
+                    return;
+                }
+            } else if (gateNum === 3) {
+                const appName = document.getElementById('appName').value;
+                const appType = document.getElementById('appType').value;
+                const appIconLink = document.getElementById('appIconLink').value;
+                const appAndroidLink = document.getElementById('appAndroidLink').value;
+
+                if (!appName || !appType || !appIconLink || !appAndroidLink) {
+                    showToast('⚠️ يرجى ملء كافة الخانات المطلوبة للتطبيق.');
+                    return;
+                }
+            }
+
+            document.querySelectorAll('.gate-step').forEach(step => step.classList.remove('active-gate'));
+            document.getElementById(`gate-${gateNum}`).classList.add('active-gate');
+
+            for (let i = 1; i <= 3; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`);
+                if (i < gateNum) {
+                    indicator.className = 'step-item completed';
+                    indicator.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (i === gateNum) {
+                    indicator.className = 'step-item active';
+                    indicator.textContent = i;
+                } else {
+                    indicator.className = 'step-item';
+                    indicator.textContent = i;
+                }
+            }
+        }
+
+        /* 🟢 حفظ البيانات النهائية وشاملة تفاصيل الدفع في Firestore */
         document.getElementById('submissionForm').addEventListener('submit', function(e) {
             e.preventDefault();
+
+            const transactionId = document.getElementById('transactionId').value;
+            const bankName = document.getElementById('bankName').value;
+            const devName = document.getElementById('devName').value;
+            const devEmail = document.getElementById('devEmail').value;
+
+            if (!transactionId || !bankName || !devName || !devEmail) {
+                showToast('⚠️ يرجى إكمال جميع بيانات التحويل وتواصل المطور.');
+                return;
+            }
+
             db.collection('submissions').add({
                 appName: document.getElementById('appName').value,
                 appType: document.getElementById('appType').value,
@@ -1023,12 +1241,21 @@
                 appDescription: document.getElementById('appDescription').value,
                 appAndroidLink: document.getElementById('appAndroidLink').value,
                 appIosLink: document.getElementById('appIosLink').value || '#',
-                devName: document.getElementById('devName').value,
-                devEmail: document.getElementById('devEmail').value,
+                
+                // بيانات بوابة الدفع والمطور
+                transactionId: transactionId,
+                bankName: bankName,
+                devName: devName,
+                devEmail: devEmail,
+                paymentStatus: 'pending', // حالة المراجعة
                 submissionDate: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 closeSubmissionModal();
-                showToast('✅ تم إرسال الطلب بنجاح.');
+                showToast('✅ تم إرسال الطلب ورقم التحويل بنجاح للمراجعة.');
+                document.getElementById('submissionForm').reset();
+            }).catch(err => {
+                showToast('❌ حدث خطأ أثناء إرسال البيانات.');
+                console.error(err);
             });
         });
 
