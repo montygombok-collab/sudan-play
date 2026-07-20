@@ -6,7 +6,6 @@
     <title>لوحة تحكم Sudan Play</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* أنماط CSS المحدثة */
         * {
             margin: 0;
             padding: 0;
@@ -62,7 +61,6 @@
             background: rgb(200, 70, 95);
         }
 
-        /* شريط التنقل في الداشبورد */
         .dashboard-nav {
             background: white;
             padding: 15px 30px;
@@ -116,7 +114,6 @@
             }
         }
 
-        /* ----- لوحة إضافة التطبيق ----- */
         .app-form-panel {
             background: #fff;
             padding: 25px;
@@ -205,7 +202,6 @@
             background: #bbb;
         }
 
-        /* ----- قائمة التطبيقات ----- */
         .app-list-panel {
             flex-grow: 1;
             background: #fff;
@@ -296,7 +292,6 @@
             background: rgba(255, 94, 125, 0.1);
         }
         
-        /* === قسم طلبات النشر === */
         .submission-card {
             background-color: #fff;
             border: 1px solid #ddd;
@@ -516,7 +511,6 @@
             font-weight: bold;
         }
 
-        /* Modal Style */
         .modal {
             display: none; 
             position: fixed; 
@@ -554,7 +548,6 @@
         .modal-btn.confirm { background-color: var(--secondary); color: white; }
         .modal-btn.cancel { background-color: #ddd; color: var(--dark); }
         
-        /* Toast Notification Style */
         .toast {
             visibility: hidden; 
             min-width: 250px;
@@ -580,7 +573,6 @@
         @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
         @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
 
-        /* عدادات الإحصائيات */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -716,7 +708,7 @@
         <div class="submissions-list" id="submissionsList"></div>
     </section>
 
-    <!-- قسم الرسائل والدعم المباشر الجديد -->
+    <!-- قسم الرسائل والدعم المباشر -->
     <section id="messages-section" class="content-section" style="display: none;">
         <h2>محادثات الدعم المباشر مع العملاء</h2>
         <div class="chat-dashboard-wrapper">
@@ -852,7 +844,7 @@
                     `;
                     appsList.appendChild(appItem);
                 });
-            });
+            }, err => console.error("خطأ في جلب التطبيقات:", err));
         }
 
         function editApp(appId) {
@@ -968,87 +960,126 @@
             }
         }
 
-        // ----------------------------------------------------
-        // نظام إدارة الرسائل والدعم المباشر (المضاف حديثًا)
-        // ----------------------------------------------------
+        // ====================================================
+        // نظام الدردشة المباشرة والدعم المحدث والمصلح بالكامل
+        // ====================================================
         let activeChatCustomerId = null;
         let messagesUnsubscribe = null;
 
         function loadChatUsers() {
             const usersList = document.getElementById('chatUsersList');
-            db.collection('chats').onSnapshot(snapshot => {
+            usersList.innerHTML = '<p style="padding: 15px; color: #777; text-align: center;">جاري فحص المراسلات...</p>';
+
+            // استماع المجموعات الرئيسية + إظهار أي عميل قام بإرسال رسائل
+            db.collectionGroup('messages').onSnapshot(snapshot => {
+                const customerIdsSet = new Set();
+                
+                snapshot.forEach(doc => {
+                    // الحصول على معرف العميل من مسار الرسالة: chats/{customerId}/messages/{messageId}
+                    const pathSegments = doc.ref.path.split('/');
+                    if (pathSegments.length >= 2 && pathSegments[0] === 'chats') {
+                        customerIdsSet.add(pathSegments[1]);
+                    }
+                });
+
                 usersList.innerHTML = '';
-                if (snapshot.empty) {
-                    usersList.innerHTML = '<p style="padding: 15px; color: #777; text-align: center;">لا توجد محادثات جارية.</p>';
+
+                if (customerIdsSet.size === 0) {
+                    usersList.innerHTML = '<p style="padding: 15px; color: #777; text-align: center;">لا توجد محادثات جارية حتى الآن.</p>';
                     return;
                 }
 
-                snapshot.forEach(doc => {
-                    const custId = doc.id;
+                customerIdsSet.forEach(custId => {
                     const item = document.createElement('div');
                     item.className = `chat-user-item ${activeChatCustomerId === custId ? 'active' : ''}`;
-                    item.onclick = () => selectChatUser(custId);
+                    item.setAttribute('data-id', custId);
+                    item.onclick = (e) => selectChatUser(custId, e.currentTarget);
                     item.innerHTML = `
                         <div class="chat-user-avatar"><i class="fas fa-user"></i></div>
                         <div class="chat-user-info">
                             <h4>${custId}</h4>
-                            <p>اضغط للدردشة والمتابعة</p>
+                            <p>اضغط لمشاهدة المحادثة</p>
                         </div>
                     `;
                     usersList.appendChild(item);
                 });
+            }, error => {
+                console.error("خطأ في جلب قائمة العملاء:", error);
+                usersList.innerHTML = `<p style="padding: 15px; color: red; text-align: center;">خطأ: ${error.message}</p>`;
             });
         }
 
-        function selectChatUser(custId) {
+        function selectChatUser(custId, targetElement) {
             activeChatCustomerId = custId;
             document.getElementById('currentChatHeader').textContent = `محادثة مع العميل: ${custId}`;
             
-            // تحديث التحديد المرئي
             document.querySelectorAll('.chat-user-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if(targetElement) targetElement.classList.add('active');
 
-            // إلغاء الاشتراك السابق إن وجد
             if (messagesUnsubscribe) messagesUnsubscribe();
 
             const chatMessagesContainer = document.getElementById('adminChatMessages');
+            chatMessagesContainer.innerHTML = '<p style="text-align:center; color:#777;">جاري جلب الرسائل...</p>';
             
             messagesUnsubscribe = db.collection('chats').doc(custId).collection('messages')
-                .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
                     chatMessagesContainer.innerHTML = '';
-                    if(snapshot.empty) {
+                    if (snapshot.empty) {
                         chatMessagesContainer.innerHTML = '<p style="text-align:center; color:#777;">لا توجد رسائل لهذا العميل بعد.</p>';
                         return;
                     }
 
+                    let messagesArray = [];
                     snapshot.forEach(doc => {
-                        const msg = doc.data();
+                        messagesArray.push(doc.data());
+                    });
+
+                    // فرز الرسائل حسب التاريخ محلياً لتفادي أخطاء Indexing
+                    messagesArray.sort((a, b) => {
+                        const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
+                        const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+                        return timeA - timeB;
+                    });
+
+                    messagesArray.forEach(msg => {
                         const bubble = document.createElement('div');
                         bubble.className = `msg-bubble ${msg.sender === 'user' ? 'user' : 'admin'}`;
-                        bubble.textContent = msg.text;
+                        bubble.textContent = msg.text || '';
                         chatMessagesContainer.appendChild(bubble);
                     });
 
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                }, error => {
+                    console.error("خطأ في جلب محادثة العميل:", error);
+                    chatMessagesContainer.innerHTML = `<p style="color:red; text-align:center;">خطأ في تحميل الرسائل: ${error.message}</p>`;
                 });
         }
 
         function sendAdminReply() {
             const input = document.getElementById('adminReplyInput');
             const text = input.value.trim();
-            if (!text || !activeChatCustomerId) {
-                if(!activeChatCustomerId) showToast('⚠️ يرجى اختيار عميل من القائمة أولاً.');
+            
+            if (!text) return;
+            if (!activeChatCustomerId) {
+                showToast('⚠️ يرجى اختيار عميل من القائمة أولاً.');
                 return;
             }
 
-            db.collection('chats').doc(activeChatCustomerId).collection('messages').add({
-                text: text,
-                sender: 'admin',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            // إنشاء/تحديث العقدة الرئيسية ثم إضافة الرسالة
+            db.collection('chats').doc(activeChatCustomerId).set({
+                lastReply: firebase.firestore.FieldValue.serverTimestamp(),
+                status: 'active'
+            }, { merge: true }).then(() => {
+                return db.collection('chats').doc(activeChatCustomerId).collection('messages').add({
+                    text: text,
+                    sender: 'admin',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
             }).then(() => {
                 input.value = '';
+                showToast('✅ تم إرسال الرد بنجاح');
             }).catch(error => {
+                console.error("خطأ في الإرسال:", error);
                 showToast(`❌ خطأ أثناء إرسال الرد: ${error.message}`);
             });
         }
