@@ -70,6 +70,7 @@
             display: flex;
             gap: 15px;
             border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
         }
 
         .nav-btn {
@@ -97,16 +98,14 @@
             margin-left: 5px;
         }
 
-        /* تعديل: هذا هو الحاوية الرئيسية الآن */
         .content-section {
             flex-grow: 1;
             padding: 20px;
-            /* للتأكد من أن الأقسام تأخذ كامل العرض عند التبديل */
             width: 100%;
         }
         
         #apps-management-section {
-            display: flex; /* لضمان بقاء اللوحات جنباً إلى جنب */
+            display: flex;
             gap: 20px;
             flex-wrap: wrap;
         }
@@ -126,7 +125,7 @@
             width: 100%;
             max-width: 450px;
             position: sticky;
-            top: 20px; /* لجعله يلتصق عند التمرير */
+            top: 20px;
             height: fit-content;
         }
         
@@ -297,7 +296,7 @@
             background: rgba(255, 94, 125, 0.1);
         }
         
-        /* === أنماط قسم طلبات النشر الجديدة === */
+        /* === قسم طلبات النشر === */
         .submission-card {
             background-color: #fff;
             border: 1px solid #ddd;
@@ -329,14 +328,6 @@
             margin: 0;
         }
 
-        .submission-meta {
-            display: flex;
-            gap: 15px;
-            font-size: 14px;
-            color: #666;
-            flex-wrap: wrap;
-        }
-
         .submission-details {
             margin-bottom: 20px;
         }
@@ -344,31 +335,6 @@
         .submission-details p {
             margin: 8px 0;
             line-height: 1.5;
-        }
-
-        .submission-details strong {
-            color: var(--dark);
-        }
-
-        .submission-images {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 15px 0;
-        }
-
-        .submission-image {
-            width: 100px;
-            height: 150px;
-            border-radius: 8px;
-            object-fit: cover;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            border: 1px solid #ddd;
-        }
-
-        .submission-image:hover {
-            transform: scale(1.05);
         }
 
         .submission-actions {
@@ -388,25 +354,10 @@
             min-width: 120px;
         }
 
-        .btn-approve {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .btn-approve:hover {
-            background-color: #218838;
-            transform: translateY(-1px);
-        }
-
-        .btn-reject {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-reject:hover {
-            background-color: #c82333;
-            transform: translateY(-1px);
-        }
+        .btn-approve { background-color: #28a745; color: white; }
+        .btn-approve:hover { background-color: #218838; transform: translateY(-1px); }
+        .btn-reject { background-color: #dc3545; color: white; }
+        .btn-reject:hover { background-color: #c82333; transform: translateY(-1px); }
 
         .status-badge {
             padding: 4px 12px;
@@ -416,23 +367,7 @@
             text-transform: uppercase;
         }
 
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-
-        .status-approved {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        .status-rejected {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+        .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
 
         .empty-state {
             text-align: center;
@@ -446,9 +381,139 @@
             margin-bottom: 15px;
         }
 
-        .empty-state h3 {
-            color: #999;
-            margin-bottom: 10px;
+        /* === أنماط قسم الرسائل والدردشة الدعم المباشر === */
+        .chat-dashboard-wrapper {
+            display: flex;
+            height: 600px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        .chat-users-list {
+            width: 320px;
+            border-left: 1px solid #eee;
+            background: #fdfdfd;
+            overflow-y: auto;
+        }
+
+        .chat-user-item {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-user-item:hover, .chat-user-item.active {
+            background: #eef2ff;
+        }
+
+        .chat-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .chat-user-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .chat-user-info h4 {
+            font-size: 14px;
+            color: var(--dark);
+            margin-bottom: 3px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .chat-user-info p {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .chat-conversation-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fafafa;
+        }
+
+        .chat-header-bar {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .admin-chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .msg-bubble {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .msg-bubble.user {
+            align-self: flex-start;
+            background: #e9ecef;
+            color: #333;
+            border-bottom-right-radius: 2px;
+        }
+
+        .msg-bubble.admin {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-left-radius: 2px;
+        }
+
+        .admin-chat-input-row {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .admin-chat-input-row input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .admin-chat-input-row button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         /* Modal Style */
@@ -456,11 +521,8 @@
             display: none; 
             position: fixed; 
             z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.4); 
             justify-content: center;
             align-items: center;
@@ -476,16 +538,6 @@
             text-align: center;
         }
 
-        .modal-content h3 {
-            color: var(--dark);
-            margin-bottom: 20px;
-        }
-
-        .modal-content p {
-            margin-bottom: 25px;
-            color: #555;
-        }
-
         .modal-buttons {
             display: flex;
             justify-content: space-around;
@@ -497,24 +549,10 @@
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.3s;
         }
 
-        .modal-btn.confirm {
-            background-color: var(--secondary);
-            color: white;
-        }
-        .modal-btn.confirm:hover {
-            opacity: 0.9;
-        }
-
-        .modal-btn.cancel {
-            background-color: #ddd;
-            color: var(--dark);
-        }
-        .modal-btn.cancel:hover {
-            background-color: #ccc;
-        }
+        .modal-btn.confirm { background-color: var(--secondary); color: white; }
+        .modal-btn.cancel { background-color: #ddd; color: var(--dark); }
         
         /* Toast Notification Style */
         .toast {
@@ -536,13 +574,10 @@
 
         .toast.show {
             visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
             animation: fadein 0.5s, fadeout 0.5s 2.5s;
         }
 
-        @-webkit-keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
         @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
-        @-webkit-keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
         @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
 
         /* عدادات الإحصائيات */
@@ -568,10 +603,7 @@
             margin-bottom: 5px;
         }
 
-        .stat-label {
-            color: #666;
-            font-size: 14px;
-        }
+        .stat-label { color: #666; font-size: 14px; }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
@@ -585,7 +617,7 @@
     <div id="deleteModal" class="modal">
         <div class="modal-content">
             <h3>تأكيد الحذف</h3>
-            <p>هل أنت متأكد أنك تريد حذف التطبيق <strong id="appNamePlaceholder"></strong>؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <p>هل أنت متأكد أنك تريد حذف التطبيق <strong id="appNamePlaceholder"></strong>؟</p>
             <div class="modal-buttons">
                 <button class="modal-btn cancel" onclick="closeDeleteModal()">إلغاء</button>
                 <button class="modal-btn confirm" id="confirmDeleteBtn">حذف نهائي</button>
@@ -607,6 +639,9 @@
         <button class="nav-btn" onclick="showSection('submissions-section')">
             <i class="fas fa-inbox"></i> طلبات النشر 
             <span id="pendingSubmissionsCount" class="status-badge status-pending" style="margin-right: 5px;">0</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('messages-section')">
+            <i class="fas fa-comments"></i> الرسائل والدعم
         </button>
         <button class="nav-btn" onclick="showSection('stats-section')">
             <i class="fas fa-chart-bar"></i> الإحصائيات
@@ -639,7 +674,7 @@
                         <textarea id="fullDescription" name="fullDescription" class="form-textarea" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="downloadLink">رابط ملف التحميل (APK/متجر) <span style="font-size: 0.8em; color: #666;">(أندرويد)</span></label>
+                        <label for="downloadLink">رابط ملف التحميل (APK/متجر)</label>
                         <input type="url" id="downloadLink" name="downloadLink" class="form-control" required>
                     </div>
                     <div class="form-group">
@@ -655,7 +690,7 @@
                         <input type="number" step="0.1" max="5" min="0" id="rating" name="rating" class="form-control" value="0" required>
                     </div>
                     <div class="form-group">
-                        <label for="downloads">عدد التنزيلات (رقم صحيح)</label>
+                        <label for="downloads">عدد التنزيلات</label>
                         <input type="number" id="downloads" name="downloads" class="form-control" value="0" required>
                     </div>
                     <div class="form-group">
@@ -671,15 +706,36 @@
 
             <div class="app-list-panel">
                 <h2>قائمة التطبيقات المنشورة</h2>
-                <div id="appsList">
-                </div>
+                <div id="appsList"></div>
             </div>
         </div>
     </section>
     
     <section id="submissions-section" class="content-section" style="display: none;">
         <h2>طلبات نشر التطبيقات الجديدة</h2>
-        <div class="submissions-list" id="submissionsList">
+        <div class="submissions-list" id="submissionsList"></div>
+    </section>
+
+    <!-- قسم الرسائل والدعم المباشر الجديد -->
+    <section id="messages-section" class="content-section" style="display: none;">
+        <h2>محادثات الدعم المباشر مع العملاء</h2>
+        <div class="chat-dashboard-wrapper">
+            <div class="chat-users-list" id="chatUsersList">
+                <p style="padding: 15px; color: #777; text-align: center;">جاري تحميل المحادثات...</p>
+            </div>
+            <div class="chat-conversation-area">
+                <div class="chat-header-bar" id="currentChatHeader">اختر عميلاً لمشاهدة المحادثة</div>
+                <div class="admin-chat-messages" id="adminChatMessages">
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <p>اختر عميلاً من القائمة الجانبية لبدء المراسلة الفورية.</p>
+                    </div>
+                </div>
+                <div class="admin-chat-input-row">
+                    <input type="text" id="adminReplyInput" placeholder="اكتب ردك للعميل هنا..." onkeypress="if(event.key==='Enter') sendAdminReply()">
+                    <button onclick="sendAdminReply()"><i class="fas fa-paper-plane"></i> إرسال</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -706,13 +762,11 @@
         
         <div class="app-list-panel">
             <h2>أكثر التطبيقات تحميلاً</h2>
-            <div id="topAppsList">
-            </div>
+            <div id="topAppsList"></div>
         </div>
     </section>
 
     <script>
-        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
@@ -723,27 +777,17 @@
             measurementId: "G-Y6NP2MNQR9"
         };
         
-        // تهيئة Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
 
-        // variables to keep listeners active
-        let appsUnsubscribe = null;
-        let submissionsUnsubscribe = null;
-
-        // ----------------------------------------------------
-        // الدوال المشتركة
-        // ----------------------------------------------------
         function showToast(message, duration = 3000) {
             const toast = document.getElementById("toast");
             if (!toast) return;
             toast.textContent = message;
             toast.classList.add("show");
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, duration);
+            setTimeout(() => toast.classList.remove("show"), duration);
         }
 
         let currentDeleteId = null;
@@ -762,253 +806,55 @@
 
         function deleteApp() {
             if (!currentDeleteId) return;
-            
             db.collection('apps').doc(currentDeleteId).delete()
                 .then(() => {
                     showToast('✅ تم حذف التطبيق بنجاح!', 4000);
                     closeDeleteModal();
+                    loadApps(); 
                 })
-                .catch(error => {
-                    showToast(`❌ خطأ في حذف التطبيق: ${error.message}`, 5000);
-                    console.error("Error removing document: ", error);
-                });
+                .catch(error => showToast(`❌ خطأ في الحذف: ${error.message}`));
         }
         
-        // ----------------------------------------------------
-        // الاستماع التلقائي المباشر (Real-time Listeners)
-        // ----------------------------------------------------
-        function startRealtimeListeners() {
-            // 1. الاستماع التلقائي لقائمة التطبيقات والإحصائيات الخاصة بها
-            if (!appsUnsubscribe) {
-                appsUnsubscribe = db.collection('apps').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
-                    renderAppsList(snapshot);
-                    updateAppsStats(snapshot);
-                }, error => {
-                    showToast(`❌ خطأ في الاستماع للبيانات: ${error.message}`);
-                    console.error("Error listening to apps: ", error);
-                });
-            }
-
-            // 2. الاستماع التلقائي لطلبات النشر
-            if (!submissionsUnsubscribe) {
-                submissionsUnsubscribe = db.collection('submissions').orderBy('submissionDate', 'desc').onSnapshot(snapshot => {
-                    renderSubmissionsList(snapshot);
-                    updateSubmissionsStats(snapshot);
-                }, error => {
-                    // في حال عدم وجود الفهرس المركب مع الترتيب، نستخدم الاستعلام المباشر
-                    submissionsUnsubscribe = db.collection('submissions').onSnapshot(snapshot => {
-                        renderSubmissionsList(snapshot);
-                        updateSubmissionsStats(snapshot);
-                    });
-                });
-            }
-        }
-
-        // عرض قائمة التطبيقات المنشورة
-        function renderAppsList(snapshot) {
+        function loadApps() {
             const appsList = document.getElementById('appsList');
-            if (!appsList) return;
-            appsList.innerHTML = '';
-
-            if (snapshot.empty) {
-                appsList.innerHTML = '<p>لا توجد تطبيقات منشورة حاليًا.</p>';
-                return;
-            }
-
-            snapshot.forEach(doc => {
-                const app = doc.data();
-                const appId = doc.id;
-                
-                const isIosAvailable = app.iphoneDownloadLink && app.iphoneDownloadLink.trim().length > 0;
-                const iosStatusHtml = isIosAvailable 
-                    ? '<i class="fab fa-apple" style="color: #555;"></i> iOS: متاح' 
-                    : '<i class="fas fa-ban" style="color: #dc3545;"></i> iOS: غير متاح';
-
-                const appItem = document.createElement('div');
-                appItem.className = 'app-item';
-                
-                appItem.innerHTML = `
-                    <div class="app-icon">
-                        <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name} Icon">
-                    </div>
-                    <div class="app-details">
-                        <h3>${app.name}</h3>
-                        <p>
-                            الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()} 
-                            <span style="margin-right: 10px; font-size: 0.9em;">
-                                ${iosStatusHtml}
-                            </span>
-                        </p>
-                    </div>
-                    <div class="app-actions">
-                        <button class="action-btn" title="تعديل" onclick="editApp('${appId}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name}')">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                `;
-                appsList.appendChild(appItem);
-            });
-        }
-
-        // عرض طلبات النشر
-        function renderSubmissionsList(snapshot) {
-            const submissionsList = document.getElementById('submissionsList');
-            if (!submissionsList) return;
-            submissionsList.innerHTML = '';
-
-            let pendingCount = 0;
-
-            if (snapshot.empty) {
-                submissionsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <h3>لا توجد طلبات نشر حاليًا</h3>
-                        <p>أرسل طلب نشر جديد باستخدام صفحة نشر التطبيق.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            snapshot.forEach(doc => {
-                const submission = doc.data();
-                const submissionId = doc.id;
-                const status = submission.reviewStatus || 'Pending';
-
-                if (status === 'Pending') {
-                    pendingCount++;
-                } else {
-                    return; // عرض الطلبات التي تحت المراجعة فقط
+            appsList.innerHTML = '<h3>جاري تحميل التطبيقات...</h3>';
+            
+            db.collection('apps').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                appsList.innerHTML = '';
+                if (snapshot.empty) {
+                    appsList.innerHTML = '<p>لا توجد تطبيقات منشورة حاليًا.</p>';
+                    return;
                 }
+                
+                snapshot.forEach(doc => {
+                    const app = doc.data();
+                    const appId = doc.id;
+                    const isIosAvailable = app.iphoneDownloadLink && app.iphoneDownloadLink.trim().length > 0;
+                    const iosStatusHtml = isIosAvailable 
+                        ? '<i class="fab fa-apple" style="color: #555;"></i> iOS: متاح' 
+                        : '<i class="fas fa-ban" style="color: #dc3545;"></i> iOS: غير متاح';
 
-                const card = document.createElement('div');
-                card.className = 'submission-card';
-                
-                const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
-                
-                let imagesHTML = '';
-                if (Array.isArray(submission.appImages) && submission.appImages.length > 0) {
-                    imagesHTML = `
-                        <div class="submission-images">
-                            ${submission.appImages.map(img => `
-                                <img src="${img}" alt="صورة التطبيق" class="submission-image" onclick="openImageModal('${img}')">
-                            `).join('')}
+                    const appItem = document.createElement('div');
+                    appItem.className = 'app-item';
+                    
+                    appItem.innerHTML = `
+                        <div class="app-icon">
+                            <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name}">
+                        </div>
+                        <div class="app-details">
+                            <h3>${app.name}</h3>
+                            <p>الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()} <span style="margin-right: 10px;">${iosStatusHtml}</span></p>
+                        </div>
+                        <div class="app-actions">
+                            <button class="action-btn" title="تعديل" onclick="editApp('${appId}')"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name}')"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     `;
-                } else {
-                     imagesHTML = '<p style="color:#dc3545; font-weight:600;">⚠️ لا توجد صور مُرفقة لهذا الطلب.</p>';
-                }
-
-                card.innerHTML = `
-                    <div class="submission-header">
-                        <h3 class="submission-title">${submission.appName || 'غير متوفر'}</h3>
-                        <span class="status-badge status-pending">قيد المراجعة</span>
-                    </div>
-                    
-                    <div class="submission-details">
-                        <p><strong>نوع التطبيق:</strong> ${submission.appType || 'غير محدد'}</p>
-                        <p><strong>المطور:</strong> ${submission.devName || 'غير متوفر'}</p>
-                        <p><strong>الشركة:</strong> ${submission.companyName || 'لا توجد شركة'}</p>
-                        <p><strong>البريد الإلكتروني:</strong> ${submission.devEmail || 'غير متوفر'}</p>
-                        <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code></p>
-                        <p><strong>رابط التطبيق:</strong> ${submission.appLink ? `<a href="${submission.appLink}" target="_blank">اضغط للتحميل/المعاينة</a>` : 'غير متوفر'}</p>
-                        <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
-                    </div>
-                    
-                    ${imagesHTML}
-                    
-                    <div class="submission-actions">
-                        <button class="btn-approve" onclick="reviewSubmission('${submissionId}', 'approved')">
-                            <i class="fas fa-check"></i> موافقة ونشر
-                        </button>
-                        <button class="btn-reject" onclick="reviewSubmission('${submissionId}', 'rejected')">
-                            <i class="fas fa-times"></i> رفض
-                        </button>
-                    </div>
-                `;
-                submissionsList.appendChild(card);
+                    appsList.appendChild(appItem);
+                });
             });
-
-            if (pendingCount === 0) {
-                 submissionsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
-                        <h3>لا توجد طلبات نشر قيد المراجعة حاليًا</h3>
-                        <p>جميع الطلبات تمت مراجعتها بالفعل.</p>
-                    </div>
-                `;
-            }
         }
 
-        // تحديث إحصائيات التطبيقات تلقائيًا
-        function updateAppsStats(snapshot) {
-            const totalAppsEl = document.getElementById('totalApps');
-            const totalDownloadsEl = document.getElementById('totalDownloads');
-            const topAppsList = document.getElementById('topAppsList');
-
-            if (totalAppsEl) totalAppsEl.textContent = snapshot.size;
-
-            let totalDownloads = 0;
-            const apps = [];
-
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                totalDownloads += data.downloads || 0;
-                apps.push({ id: doc.id, ...data });
-            });
-
-            if (totalDownloadsEl) totalDownloadsEl.textContent = totalDownloads.toLocaleString();
-
-            if (topAppsList) {
-                topAppsList.innerHTML = '';
-                if (apps.length === 0) {
-                    topAppsList.innerHTML = '<p>لا توجد تطبيقات</p>';
-                } else {
-                    apps.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
-                    apps.slice(0, 5).forEach(app => {
-                        const appItem = document.createElement('div');
-                        appItem.className = 'app-item';
-                        appItem.innerHTML = `
-                            <div class="app-icon">
-                                <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name} Icon">
-                            </div>
-                            <div class="app-details">
-                                <h3>${app.name}</h3>
-                                <p>التنزيلات: ${(app.downloads || 0).toLocaleString()}</p>
-                            </div>
-                        `;
-                        topAppsList.appendChild(appItem);
-                    });
-                }
-            }
-        }
-
-        // تحديث إحصائيات الطلبات تلقائيًا
-        function updateSubmissionsStats(snapshot) {
-            let pendingCount = 0;
-            let approvedCount = 0;
-
-            snapshot.forEach(doc => {
-                const status = doc.data().reviewStatus || 'Pending';
-                if (status === 'Pending') pendingCount++;
-                if (status === 'approved') approvedCount++;
-            });
-
-            const pendingSubmissionsCount = document.getElementById('pendingSubmissionsCount');
-            if (pendingSubmissionsCount) pendingSubmissionsCount.textContent = pendingCount;
-
-            const pendingSubmissionsStat = document.getElementById('pendingSubmissions');
-            if (pendingSubmissionsStat) pendingSubmissionsStat.textContent = pendingCount;
-
-            const approvedSubmissionsStat = document.getElementById('approvedSubmissions');
-            if (approvedSubmissionsStat) approvedSubmissionsStat.textContent = approvedCount;
-        }
-
-        // ----------------------------------------------------
-        // دوال التحكم والتعديل
-        // ----------------------------------------------------
         function editApp(appId) {
             db.collection('apps').doc(appId).get().then(doc => {
                 if (doc.exists) {
@@ -1025,15 +871,9 @@
                     document.getElementById('size').value = app.size || 0;
                     document.getElementById('rating').value = app.rating || 0;
                     document.getElementById('downloads').value = app.downloads || 0;
-                    
-                    const screenshotsPaths = Array.isArray(app.screenshotsPaths) ? app.screenshotsPaths.join(', ') : (app.screenshotsPaths || '');
-                    document.getElementById('screenshotsPaths').value = screenshotsPaths;
-                    
+                    document.getElementById('screenshotsPaths').value = Array.isArray(app.screenshotsPaths) ? app.screenshotsPaths.join(', ') : (app.screenshotsPaths || '');
                     document.getElementById('submitButton').textContent = 'حفظ التعديلات';
                 }
-            }).catch(error => {
-                showToast(`❌ خطأ في جلب بيانات التطبيق للتعديل: ${error.message}`);
-                console.error("Error editing app: ", error);
             });
         }
         
@@ -1044,6 +884,56 @@
             document.getElementById('submitButton').textContent = 'حفظ التطبيق';
         }
 
+        function loadSubmissions() {
+            const submissionsList = document.getElementById('submissionsList');
+            if (!submissionsList) return; 
+            submissionsList.innerHTML = '<h3>جاري تحميل الطلبات...</h3>';
+            
+            db.collection('submissions').onSnapshot(snapshot => {
+                submissionsList.innerHTML = ''; 
+                let pendingCount = 0;
+                
+                if (snapshot.empty) {
+                    document.getElementById('pendingSubmissionsCount').textContent = 0;
+                    submissionsList.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><h3>لا توجد طلبات نشر حاليًا</h3></div>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const submission = doc.data();
+                    const submissionId = doc.id;
+                    const status = submission.reviewStatus || 'Pending';
+                    
+                    if (status === 'Pending') pendingCount++;
+                    if (status !== 'Pending') return; 
+
+                    const card = document.createElement('div');
+                    card.className = 'submission-card';
+                    const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
+
+                    card.innerHTML = `
+                        <div class="submission-header">
+                            <h3 class="submission-title">${submission.appName || 'غير متوفر'}</h3>
+                            <span class="status-badge status-pending">قيد المراجعة</span>
+                        </div>
+                        <div class="submission-details">
+                            <p><strong>المطور:</strong> ${submission.devName || 'غير متوفر'} | <strong>البريد:</strong> ${submission.devEmail || 'غير متوفر'}</p>
+                            <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code></p>
+                            <p><strong>رابط التطبيق:</strong> ${submission.appAndroidLink ? `<a href="${submission.appAndroidLink}" target="_blank">رابط التحميل</a>` : 'غير متوفر'}</p>
+                            <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
+                        </div>
+                        <div class="submission-actions">
+                            <button class="btn-approve" onclick="reviewSubmission('${submissionId}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
+                            <button class="btn-reject" onclick="reviewSubmission('${submissionId}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
+                        </div>
+                    `;
+                    submissionsList.appendChild(card);
+                });
+
+                document.getElementById('pendingSubmissionsCount').textContent = pendingCount;
+            });
+        }
+
         function reviewSubmission(submissionId, status) {
             const updatePromise = db.collection('submissions').doc(submissionId).update({
                 reviewStatus: status,
@@ -1051,14 +941,7 @@
             });
 
             if (status === 'rejected') {
-                updatePromise
-                    .then(() => {
-                        showToast('✅ تم رفض الطلب بنجاح.', 4000);
-                    })
-                    .catch(error => {
-                        showToast(`❌ فشلت عملية الرفض: ${error.message}`, 5000);
-                        console.error("Error rejecting submission: ", error);
-                    });
+                updatePromise.then(() => showToast('✅ تم رفض الطلب بنجاح.'));
                 return; 
             }
             
@@ -1066,88 +949,149 @@
                 updatePromise
                     .then(() => db.collection('submissions').doc(submissionId).get())
                     .then(doc => {
-                        if (!doc.exists) {
-                            throw new Error("بيانات الطلب غير موجودة!");
-                        }
                         const submissionData = doc.data();
-                        
                         const appData = {
-                            name: submissionData.appName || 'تطبيق غير مسمى',
+                            name: submissionData.appName || 'تطبيق جديد',
                             category: submissionData.appType || 'عام', 
-                            downloadLink: submissionData.appLink || '#',
-                            screenshotsPaths: submissionData.appImages || [],
-                            developerName: submissionData.devName || 'غير متوفر',
-                            
-                            shortDescription: submissionData.appShortDesc || `تطبيق مقدم بواسطة ${submissionData.devName || 'مطور خارجي'}.`,
-                            fullDescription: submissionData.appFullDesc || `تطبيق ${submissionData.appName || 'غير محدد'} تم تقديمه بواسطة ${submissionData.devName || 'مطور خارجي'}.`,
-                            
-                            size: submissionData.size || 0,
-                            rating: submissionData.rating || 4.5, 
-                            downloads: submissionData.downloads || 0,
-                            iconPath: Array.isArray(submissionData.appImages) && submissionData.appImages.length > 0 ? submissionData.appImages[0] : 'placeholder-icon.png',
-                            iphoneDownloadLink: submissionData.iphoneDownloadLink || '', 
-                            
+                            downloadLink: submissionData.appAndroidLink || '#',
+                            iphoneDownloadLink: submissionData.appIosLink || '',
+                            iconPath: submissionData.appIconLink || 'placeholder-icon.png',
+                            shortDescription: submissionData.appDescription || '',
+                            fullDescription: submissionData.appDescription || '',
+                            developerName: submissionData.devName || 'مطور',
+                            size: 0, rating: 5.0, downloads: 0,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         };
-
                         return db.collection('apps').add(appData);
                     })
-                    .then(() => {
-                        showToast('🎉 تم نشر التطبيق بنجاح وإضافته إلى قائمة التطبيقات!', 5000);
-                    })
-                    .catch(error => {
-                        showToast(`❌ فشلت عملية مراجعة/نشر الطلب: ${error.message}`, 5000);
-                        console.error("Error reviewing submission: ", error);
-                    });
+                    .then(() => showToast('🎉 تم نشر التطبيق بنجاح!'));
             }
         }
 
         // ----------------------------------------------------
-        // دالة التبديل بين الأقسام
+        // نظام إدارة الرسائل والدعم المباشر (المضاف حديثًا)
         // ----------------------------------------------------
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.style.display = 'none';
+        let activeChatCustomerId = null;
+        let messagesUnsubscribe = null;
+
+        function loadChatUsers() {
+            const usersList = document.getElementById('chatUsersList');
+            db.collection('chats').onSnapshot(snapshot => {
+                usersList.innerHTML = '';
+                if (snapshot.empty) {
+                    usersList.innerHTML = '<p style="padding: 15px; color: #777; text-align: center;">لا توجد محادثات جارية.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const custId = doc.id;
+                    const item = document.createElement('div');
+                    item.className = `chat-user-item ${activeChatCustomerId === custId ? 'active' : ''}`;
+                    item.onclick = () => selectChatUser(custId);
+                    item.innerHTML = `
+                        <div class="chat-user-avatar"><i class="fas fa-user"></i></div>
+                        <div class="chat-user-info">
+                            <h4>${custId}</h4>
+                            <p>اضغط للدردشة والمتابعة</p>
+                        </div>
+                    `;
+                    usersList.appendChild(item);
+                });
             });
+        }
+
+        function selectChatUser(custId) {
+            activeChatCustomerId = custId;
+            document.getElementById('currentChatHeader').textContent = `محادثة مع العميل: ${custId}`;
             
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
+            // تحديث التحديد المرئي
+            document.querySelectorAll('.chat-user-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // إلغاء الاشتراك السابق إن وجد
+            if (messagesUnsubscribe) messagesUnsubscribe();
+
+            const chatMessagesContainer = document.getElementById('adminChatMessages');
+            
+            messagesUnsubscribe = db.collection('chats').doc(custId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot(snapshot => {
+                    chatMessagesContainer.innerHTML = '';
+                    if(snapshot.empty) {
+                        chatMessagesContainer.innerHTML = '<p style="text-align:center; color:#777;">لا توجد رسائل لهذا العميل بعد.</p>';
+                        return;
+                    }
+
+                    snapshot.forEach(doc => {
+                        const msg = doc.data();
+                        const bubble = document.createElement('div');
+                        bubble.className = `msg-bubble ${msg.sender === 'user' ? 'user' : 'admin'}`;
+                        bubble.textContent = msg.text;
+                        chatMessagesContainer.appendChild(bubble);
+                    });
+
+                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                });
+        }
+
+        function sendAdminReply() {
+            const input = document.getElementById('adminReplyInput');
+            const text = input.value.trim();
+            if (!text || !activeChatCustomerId) {
+                if(!activeChatCustomerId) showToast('⚠️ يرجى اختيار عميل من القائمة أولاً.');
+                return;
+            }
+
+            db.collection('chats').doc(activeChatCustomerId).collection('messages').add({
+                text: text,
+                sender: 'admin',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                input.value = '';
+            }).catch(error => {
+                showToast(`❌ خطأ أثناء إرسال الرد: ${error.message}`);
             });
+        }
+
+        function loadStats() {
+            db.collection('apps').get().then(snapshot => {
+                document.getElementById('totalApps').textContent = snapshot.size;
+                let totalDownloads = 0;
+                snapshot.forEach(doc => totalDownloads += doc.data().downloads || 0);
+                document.getElementById('totalDownloads').textContent = totalDownloads.toLocaleString();
+            });
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             
             const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.style.display = 'block';
-            }
+            if (targetSection) targetSection.style.display = 'block';
             
             const activeBtn = document.querySelector(`.nav-btn[onclick*="${sectionId}"]`);
             if(activeBtn) activeBtn.classList.add('active');
+
+            if (sectionId === 'submissions-section') loadSubmissions(); 
+            else if (sectionId === 'apps-management-section') loadApps();
+            else if (sectionId === 'messages-section') loadChatUsers();
+            else if (sectionId === 'stats-section') loadStats();
         }
 
-        // ----------------------------------------------------
-        // دالة تسجيل الخروج
-        // ----------------------------------------------------
         function logout() {
             firebase.auth().signOut().then(() => {
                 localStorage.removeItem('sudanPlayAdmin');
                 window.location.href = '/login.html';
-            }).catch((error) => {
-                showToast('❌ خطأ في تسجيل الخروج: ' + error.message);
-                console.error("Logout error: ", error);
             });
         }
-        
-        // ----------------------------------------------------
-        // إعداد النموذج
-        // ----------------------------------------------------
+
         function setupAppForm() {
              document.getElementById('appForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
                 const form = e.target;
                 const editingId = form.getAttribute('data-editing-id');
-                const appsCollection = db.collection('apps');
                 
-                const formData = {
+                const appData = {
                     name: form.name.value,
                     category: form.category.value,
                     iconPath: form.iconPath.value,
@@ -1155,61 +1099,31 @@
                     fullDescription: form.fullDescription.value,
                     downloadLink: form.downloadLink.value,
                     iphoneDownloadLink: form.iphoneDownloadLink.value,
-                    developerName: 'Admin',
-                };
-                
-                const screenshotsArray = form.screenshotsPaths.value.split(',').map(s => s.trim()).filter(s => s.length > 0);
-                
-                const appData = {
-                    ...formData,
                     size: parseFloat(form.size.value) || 0,
                     rating: parseFloat(form.rating.value) || 0,
                     downloads: parseInt(form.downloads.value) || 0,
-                    screenshotsPaths: screenshotsArray,
+                    screenshotsPaths: form.screenshotsPaths.value.split(',').map(s => s.trim()).filter(s => s.length > 0),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-                
-                let promise;
-                if (editingId) {
-                    promise = appsCollection.doc(editingId).update(appData);
-                } else {
-                    promise = appsCollection.add(appData);
-                }
+
+                const promise = editingId 
+                    ? db.collection('apps').doc(editingId).update(appData)
+                    : db.collection('apps').add(appData);
 
                 promise.then(() => {
-                    showToast('✅ تم حفظ التطبيق بنجاح!', 4000);
+                    showToast('✅ تم حفظ التطبيق بنجاح!');
                     resetForm();
-                }).catch(error => {
-                    showToast(`❌ حدث خطأ أثناء الحفظ: ${error.message}.`, 5000);
-                    console.error("Error writing document: ", error);
+                    loadApps(); 
                 });
             });
             
-            const resetButton = document.getElementById('resetButton');
-            if(resetButton) {
-                 resetButton.addEventListener('click', resetForm);
-            }
+            document.getElementById('resetButton').addEventListener('click', resetForm);
         }
 
-        // ----------------------------------------------------
-        // دالة فتح الصورة في نافذة منبثقة
-        // ----------------------------------------------------
-        function openImageModal(src) {
-            window.open(src, '_blank');
-        }
-
-        // ----------------------------------------------------
-        // دالة تهيئة الصفحة
-        // ----------------------------------------------------
         document.addEventListener('DOMContentLoaded', function() {
             firebase.auth().onAuthStateChanged(user => {
-                if (!user && !localStorage.getItem('sudanPlayAdmin')) {
-                    // window.location.href = '/login.html';
-                } else {
-                    setupAppForm();
-                    startRealtimeListeners();
-                    showSection('apps-management-section');
-                }
+                setupAppForm();
+                showSection('apps-management-section');
             });
         });
     </script>
