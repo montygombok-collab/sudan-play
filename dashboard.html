@@ -672,7 +672,7 @@
             <div class="app-list-panel">
                 <h2>قائمة التطبيقات المنشورة</h2>
                 <div id="appsList">
-                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -680,7 +680,7 @@
     <section id="submissions-section" class="content-section" style="display: none;">
         <h2>طلبات نشر التطبيقات الجديدة</h2>
         <div class="submissions-list" id="submissionsList">
-            </div>
+        </div>
     </section>
 
     <section id="stats-section" class="content-section" style="display: none;">
@@ -707,12 +707,12 @@
         <div class="app-list-panel">
             <h2>أكثر التطبيقات تحميلاً</h2>
             <div id="topAppsList">
-                </div>
+            </div>
         </div>
     </section>
 
     <script>
-        // إعدادات Firebase (يجب تغييرها ببيانات مشروعك الحقيقية)
+        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
@@ -728,6 +728,10 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
+
+        // variables to keep listeners active
+        let appsUnsubscribe = null;
+        let submissionsUnsubscribe = null;
 
         // ----------------------------------------------------
         // الدوال المشتركة
@@ -763,7 +767,6 @@
                 .then(() => {
                     showToast('✅ تم حذف التطبيق بنجاح!', 4000);
                     closeDeleteModal();
-                    loadApps(); 
                 })
                 .catch(error => {
                     showToast(`❌ خطأ في حذف التطبيق: ${error.message}`, 5000);
@@ -772,62 +775,240 @@
         }
         
         // ----------------------------------------------------
-        // دوال إدارة التطبيقات 
+        // الاستماع التلقائي المباشر (Real-time Listeners)
         // ----------------------------------------------------
-        function loadApps() {
-            const appsList = document.getElementById('appsList');
-            appsList.innerHTML = '<h3>جاري تحميل التطبيقات...</h3>';
-            
-            db.collection('apps').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
-                appsList.innerHTML = '';
-                if (snapshot.empty) {
-                    appsList.innerHTML = '<p>لا توجد تطبيقات منشورة حاليًا.</p>';
-                    return;
-                }
-                
-                snapshot.forEach(doc => {
-                    const app = doc.data();
-                    const appId = doc.id;
-                    
-                    // تحديد ما إذا كان رابط الآيفون متاحًا
-                    const isIosAvailable = app.iphoneDownloadLink && app.iphoneDownloadLink.trim().length > 0;
-                    const iosStatusHtml = isIosAvailable 
-                        ? '<i class="fab fa-apple" style="color: #555;"></i> iOS: متاح' 
-                        : '<i class="fas fa-ban" style="color: #dc3545;"></i> iOS: غير متاح';
-
-                    const appItem = document.createElement('div');
-                    appItem.className = 'app-item';
-                    
-                    appItem.innerHTML = `
-                        <div class="app-icon">
-                            <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name} Icon">
-                        </div>
-                        <div class="app-details">
-                            <h3>${app.name}</h3>
-                            <p>
-                                الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()} 
-                                <span style="margin-right: 10px; font-size: 0.9em;">
-                                    ${iosStatusHtml}
-                                </span>
-                            </p>
-                        </div>
-                        <div class="app-actions">
-                            <button class="action-btn" title="تعديل" onclick="editApp('${appId}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name}')">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    `;
-                    appsList.appendChild(appItem);
+        function startRealtimeListeners() {
+            // 1. الاستماع التلقائي لقائمة التطبيقات والإحصائيات الخاصة بها
+            if (!appsUnsubscribe) {
+                appsUnsubscribe = db.collection('apps').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                    renderAppsList(snapshot);
+                    updateAppsStats(snapshot);
+                }, error => {
+                    showToast(`❌ خطأ في الاستماع للبيانات: ${error.message}`);
+                    console.error("Error listening to apps: ", error);
                 });
-            }, error => {
-                showToast(`❌ خطأ في تحميل قائمة التطبيقات: ${error.message}`);
-                console.error("Error loading apps: ", error);
+            }
+
+            // 2. الاستماع التلقائي لطلبات النشر
+            if (!submissionsUnsubscribe) {
+                submissionsUnsubscribe = db.collection('submissions').orderBy('submissionDate', 'desc').onSnapshot(snapshot => {
+                    renderSubmissionsList(snapshot);
+                    updateSubmissionsStats(snapshot);
+                }, error => {
+                    // في حال عدم وجود الفهرس المركب مع الترتيب، نستخدم الاستعلام المباشر
+                    submissionsUnsubscribe = db.collection('submissions').onSnapshot(snapshot => {
+                        renderSubmissionsList(snapshot);
+                        updateSubmissionsStats(snapshot);
+                    });
+                });
+            }
+        }
+
+        // عرض قائمة التطبيقات المنشورة
+        function renderAppsList(snapshot) {
+            const appsList = document.getElementById('appsList');
+            if (!appsList) return;
+            appsList.innerHTML = '';
+
+            if (snapshot.empty) {
+                appsList.innerHTML = '<p>لا توجد تطبيقات منشورة حاليًا.</p>';
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const app = doc.data();
+                const appId = doc.id;
+                
+                const isIosAvailable = app.iphoneDownloadLink && app.iphoneDownloadLink.trim().length > 0;
+                const iosStatusHtml = isIosAvailable 
+                    ? '<i class="fab fa-apple" style="color: #555;"></i> iOS: متاح' 
+                    : '<i class="fas fa-ban" style="color: #dc3545;"></i> iOS: غير متاح';
+
+                const appItem = document.createElement('div');
+                appItem.className = 'app-item';
+                
+                appItem.innerHTML = `
+                    <div class="app-icon">
+                        <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name} Icon">
+                    </div>
+                    <div class="app-details">
+                        <h3>${app.name}</h3>
+                        <p>
+                            الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()} 
+                            <span style="margin-right: 10px; font-size: 0.9em;">
+                                ${iosStatusHtml}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="app-actions">
+                        <button class="action-btn" title="تعديل" onclick="editApp('${appId}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name}')">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                `;
+                appsList.appendChild(appItem);
             });
         }
 
+        // عرض طلبات النشر
+        function renderSubmissionsList(snapshot) {
+            const submissionsList = document.getElementById('submissionsList');
+            if (!submissionsList) return;
+            submissionsList.innerHTML = '';
+
+            let pendingCount = 0;
+
+            if (snapshot.empty) {
+                submissionsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>لا توجد طلبات نشر حاليًا</h3>
+                        <p>أرسل طلب نشر جديد باستخدام صفحة نشر التطبيق.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const submission = doc.data();
+                const submissionId = doc.id;
+                const status = submission.reviewStatus || 'Pending';
+
+                if (status === 'Pending') {
+                    pendingCount++;
+                } else {
+                    return; // عرض الطلبات التي تحت المراجعة فقط
+                }
+
+                const card = document.createElement('div');
+                card.className = 'submission-card';
+                
+                const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
+                
+                let imagesHTML = '';
+                if (Array.isArray(submission.appImages) && submission.appImages.length > 0) {
+                    imagesHTML = `
+                        <div class="submission-images">
+                            ${submission.appImages.map(img => `
+                                <img src="${img}" alt="صورة التطبيق" class="submission-image" onclick="openImageModal('${img}')">
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                     imagesHTML = '<p style="color:#dc3545; font-weight:600;">⚠️ لا توجد صور مُرفقة لهذا الطلب.</p>';
+                }
+
+                card.innerHTML = `
+                    <div class="submission-header">
+                        <h3 class="submission-title">${submission.appName || 'غير متوفر'}</h3>
+                        <span class="status-badge status-pending">قيد المراجعة</span>
+                    </div>
+                    
+                    <div class="submission-details">
+                        <p><strong>نوع التطبيق:</strong> ${submission.appType || 'غير محدد'}</p>
+                        <p><strong>المطور:</strong> ${submission.devName || 'غير متوفر'}</p>
+                        <p><strong>الشركة:</strong> ${submission.companyName || 'لا توجد شركة'}</p>
+                        <p><strong>البريد الإلكتروني:</strong> ${submission.devEmail || 'غير متوفر'}</p>
+                        <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code></p>
+                        <p><strong>رابط التطبيق:</strong> ${submission.appLink ? `<a href="${submission.appLink}" target="_blank">اضغط للتحميل/المعاينة</a>` : 'غير متوفر'}</p>
+                        <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
+                    </div>
+                    
+                    ${imagesHTML}
+                    
+                    <div class="submission-actions">
+                        <button class="btn-approve" onclick="reviewSubmission('${submissionId}', 'approved')">
+                            <i class="fas fa-check"></i> موافقة ونشر
+                        </button>
+                        <button class="btn-reject" onclick="reviewSubmission('${submissionId}', 'rejected')">
+                            <i class="fas fa-times"></i> رفض
+                        </button>
+                    </div>
+                `;
+                submissionsList.appendChild(card);
+            });
+
+            if (pendingCount === 0) {
+                 submissionsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                        <h3>لا توجد طلبات نشر قيد المراجعة حاليًا</h3>
+                        <p>جميع الطلبات تمت مراجعتها بالفعل.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // تحديث إحصائيات التطبيقات تلقائيًا
+        function updateAppsStats(snapshot) {
+            const totalAppsEl = document.getElementById('totalApps');
+            const totalDownloadsEl = document.getElementById('totalDownloads');
+            const topAppsList = document.getElementById('topAppsList');
+
+            if (totalAppsEl) totalAppsEl.textContent = snapshot.size;
+
+            let totalDownloads = 0;
+            const apps = [];
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                totalDownloads += data.downloads || 0;
+                apps.push({ id: doc.id, ...data });
+            });
+
+            if (totalDownloadsEl) totalDownloadsEl.textContent = totalDownloads.toLocaleString();
+
+            if (topAppsList) {
+                topAppsList.innerHTML = '';
+                if (apps.length === 0) {
+                    topAppsList.innerHTML = '<p>لا توجد تطبيقات</p>';
+                } else {
+                    apps.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+                    apps.slice(0, 5).forEach(app => {
+                        const appItem = document.createElement('div');
+                        appItem.className = 'app-item';
+                        appItem.innerHTML = `
+                            <div class="app-icon">
+                                <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name} Icon">
+                            </div>
+                            <div class="app-details">
+                                <h3>${app.name}</h3>
+                                <p>التنزيلات: ${(app.downloads || 0).toLocaleString()}</p>
+                            </div>
+                        `;
+                        topAppsList.appendChild(appItem);
+                    });
+                }
+            }
+        }
+
+        // تحديث إحصائيات الطلبات تلقائيًا
+        function updateSubmissionsStats(snapshot) {
+            let pendingCount = 0;
+            let approvedCount = 0;
+
+            snapshot.forEach(doc => {
+                const status = doc.data().reviewStatus || 'Pending';
+                if (status === 'Pending') pendingCount++;
+                if (status === 'approved') approvedCount++;
+            });
+
+            const pendingSubmissionsCount = document.getElementById('pendingSubmissionsCount');
+            if (pendingSubmissionsCount) pendingSubmissionsCount.textContent = pendingCount;
+
+            const pendingSubmissionsStat = document.getElementById('pendingSubmissions');
+            if (pendingSubmissionsStat) pendingSubmissionsStat.textContent = pendingCount;
+
+            const approvedSubmissionsStat = document.getElementById('approvedSubmissions');
+            if (approvedSubmissionsStat) approvedSubmissionsStat.textContent = approvedCount;
+        }
+
+        // ----------------------------------------------------
+        // دوال التحكم والتعديل
+        // ----------------------------------------------------
         function editApp(appId) {
             db.collection('apps').doc(appId).get().then(doc => {
                 if (doc.exists) {
@@ -863,138 +1044,7 @@
             document.getElementById('submitButton').textContent = 'حفظ التطبيق';
         }
 
-        // ----------------------------------------------------
-        // دوال طلبات النشر (المُحدثة)
-        // ----------------------------------------------------
-
-        // 1. دالة جلب وعرض طلبات النشر - (تم إزالة الفلتر وعرض Pending فقط)
-        function loadSubmissions() {
-            const submissionsList = document.getElementById('submissionsList');
-            if (!submissionsList) return; 
-            
-            submissionsList.innerHTML = '<h3>جاري تحميل الطلبات...</h3>';
-            
-            // التعديل: جلب جميع الطلبات بدون فلترة
-            db.collection('submissions').onSnapshot(snapshot => {
-                submissionsList.innerHTML = ''; 
-                
-                let pendingCount = 0;
-                
-                if (snapshot.empty) {
-                    // تحديث عداد قيد المراجعة إلى صفر
-                    const pendingSubmissionsCount = document.getElementById('pendingSubmissionsCount');
-                    if(pendingSubmissionsCount) pendingSubmissionsCount.textContent = 0;
-                    const pendingSubmissionsStat = document.getElementById('pendingSubmissions');
-                    if(pendingSubmissionsStat) pendingSubmissionsStat.textContent = 0;
-
-                    submissionsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-inbox"></i>
-                            <h3>لا توجد طلبات نشر حاليًا</h3>
-                            <p>أرسل طلب نشر جديد باستخدام صفحة نشر التطبيق.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                snapshot.forEach(doc => {
-                    const submission = doc.data();
-                    const submissionId = doc.id;
-                    
-                    const status = submission.reviewStatus || 'Pending'; // نعتبر الطلب الذي لا يحمل حالة هو 'قيد المراجعة'
-                    
-                    if (status === 'Pending') {
-                        pendingCount++;
-                    }
-
-                    // فقط عرض الطلبات التي هي 'Pending' للمراجعة
-                    if (status !== 'Pending') {
-                        return; 
-                    }
-                    
-                    // ------------------------------------------------------------------
-                    // بدء بناء بطاقة الطلب (لطلبات Pending فقط)
-                    // ------------------------------------------------------------------
-                    const card = document.createElement('div');
-                    card.className = 'submission-card';
-                    
-                    const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
-                    
-                    const statusClass = 'status-pending'; // بما أننا نعرض Pending فقط
-                    
-                    // معالجة الصور
-                    let imagesHTML = '';
-                    if (Array.isArray(submission.appImages) && submission.appImages.length > 0) {
-                        imagesHTML = `
-                            <div class="submission-images">
-                                ${submission.appImages.map(img => `
-                                    <img src="${img}" alt="صورة التطبيق" class="submission-image" onclick="openImageModal('${img}')">
-                                `).join('')}
-                            </div>
-                        `;
-                    } else {
-                         imagesHTML = '<p style="color:#dc3545; font-weight:600;">⚠️ لا توجد صور مُرفقة لهذا الطلب.</p>';
-                    }
-
-                    card.innerHTML = `
-                        <div class="submission-header">
-                            <h3 class="submission-title">${submission.appName || 'غير متوفر'}</h3>
-                            <span class="status-badge ${statusClass}">قيد المراجعة</span>
-                        </div>
-                        
-                        <div class="submission-details">
-                            <p><strong>نوع التطبيق:</strong> ${submission.appType || 'غير محدد'}</p>
-                            <p><strong>المطور:</strong> ${submission.devName || 'غير متوفر'}</p>
-                            <p><strong>الشركة:</strong> ${submission.companyName || 'لا توجد شركة'}</p>
-                            <p><strong>البريد الإلكتروني:</strong> ${submission.devEmail || 'غير متوفر'}</p>
-                            <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code></p>
-                            <p><strong>رابط التطبيق:</strong> ${submission.appLink ? `<a href="${submission.appLink}" target="_blank">اضغط للتحميل/المعاينة</a>` : 'غير متوفر'}</p>
-                            <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
-                        </div>
-                        
-                        ${imagesHTML}
-                        
-                        <div class="submission-actions">
-                            <button class="btn-approve" onclick="reviewSubmission('${submissionId}', 'approved')">
-                                <i class="fas fa-check"></i> موافقة ونشر
-                            </button>
-                            <button class="btn-reject" onclick="reviewSubmission('${submissionId}', 'rejected')">
-                                <i class="fas fa-times"></i> رفض
-                            </button>
-                        </div>
-                    `;
-                    submissionsList.appendChild(card);
-                });
-
-                // تحديث العدادات بناءً على الطلبات التي وجدناها
-                const pendingSubmissionsCount = document.getElementById('pendingSubmissionsCount');
-                if(pendingSubmissionsCount) pendingSubmissionsCount.textContent = pendingCount;
-                
-                const pendingSubmissionsStat = document.getElementById('pendingSubmissions');
-                if(pendingSubmissionsStat) pendingSubmissionsStat.textContent = pendingCount;
-
-                // إذا كان هناك طلبات ولكن ليس هناك طلبات "قيد المراجعة"، أظهر رسالة مناسبة
-                if (pendingCount === 0 && !snapshot.empty) {
-                     submissionsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-check-circle" style="color: ${getComputedStyle(document.documentElement).getPropertyValue('--accent')};"></i>
-                            <h3>لا توجد طلبات نشر قيد المراجعة حاليًا</h3>
-                            <p>جميع الطلبات تمت مراجعتها بالفعل.</p>
-                        </div>
-                    `;
-                }
-
-
-            }, error => {
-                showToast(`❌ خطأ في تحميل الطلبات: ${error.message}`);
-                console.error("Error loading submissions: ", error);
-            });
-        }
-
-        // 2. دالة مراجعة الطلب (موافقة / رفض) - المُحدثة لجلب البيانات مباشرةً
         function reviewSubmission(submissionId, status) {
-            
-            // 1. تحديث حالة الطلب في مجموعة submissions
             const updatePromise = db.collection('submissions').doc(submissionId).update({
                 reviewStatus: status,
                 reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1004,8 +1054,6 @@
                 updatePromise
                     .then(() => {
                         showToast('✅ تم رفض الطلب بنجاح.', 4000);
-                        loadSubmissions(); // تحديث القائمة لإزالة الطلب
-                        loadStats(); 
                     })
                     .catch(error => {
                         showToast(`❌ فشلت عملية الرفض: ${error.message}`, 5000);
@@ -1016,14 +1064,13 @@
             
             if (status === 'approved') {
                 updatePromise
-                    .then(() => db.collection('submissions').doc(submissionId).get()) // 2. جلب بيانات الطلب من Firestore
+                    .then(() => db.collection('submissions').doc(submissionId).get())
                     .then(doc => {
                         if (!doc.exists) {
                             throw new Error("بيانات الطلب غير موجودة!");
                         }
                         const submissionData = doc.data();
                         
-                        // 3. تجهيز بيانات التطبيق للنشر
                         const appData = {
                             name: submissionData.appName || 'تطبيق غير مسمى',
                             category: submissionData.appType || 'عام', 
@@ -1031,11 +1078,9 @@
                             screenshotsPaths: submissionData.appImages || [],
                             developerName: submissionData.devName || 'غير متوفر',
                             
-                            // استخدام حقول الوصف إذا كانت موجودة، أو استخدام قيَم افتراضية
                             shortDescription: submissionData.appShortDesc || `تطبيق مقدم بواسطة ${submissionData.devName || 'مطور خارجي'}.`,
                             fullDescription: submissionData.appFullDesc || `تطبيق ${submissionData.appName || 'غير محدد'} تم تقديمه بواسطة ${submissionData.devName || 'مطور خارجي'}.`,
                             
-                            // قيم مبدئية للتطبيق المنشور (مع تصحيح التقييم ليكون رقمًا معقولاً)
                             size: submissionData.size || 0,
                             rating: submissionData.rating || 4.5, 
                             downloads: submissionData.downloads || 0,
@@ -1045,14 +1090,10 @@
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         };
 
-                        // 4. نسخ بيانات التطبيق إلى مجموعة 'apps'
                         return db.collection('apps').add(appData);
                     })
                     .then(() => {
                         showToast('🎉 تم نشر التطبيق بنجاح وإضافته إلى قائمة التطبيقات!', 5000);
-                        loadSubmissions(); 
-                        loadStats(); 
-                        loadApps(); 
                     })
                     .catch(error => {
                         showToast(`❌ فشلت عملية مراجعة/نشر الطلب: ${error.message}`, 5000);
@@ -1062,95 +1103,24 @@
         }
 
         // ----------------------------------------------------
-        // دوال الإحصائيات
-        // ----------------------------------------------------
-        function loadStats() {
-            // إجمالي التطبيقات
-            db.collection('apps').get().then(snapshot => {
-                document.getElementById('totalApps').textContent = snapshot.size;
-                
-                // إجمالي التنزيلات
-                let totalDownloads = 0;
-                snapshot.forEach(doc => {
-                    totalDownloads += doc.data().downloads || 0;
-                });
-                document.getElementById('totalDownloads').textContent = totalDownloads.toLocaleString();
-                
-                // أكثر التطبيقات تحميلاً
-                const topAppsList = document.getElementById('topAppsList');
-                topAppsList.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    topAppsList.innerHTML = '<p>لا توجد تطبيقات</p>';
-                    return;
-                }
-                
-                const apps = [];
-                snapshot.forEach(doc => {
-                    apps.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // ترتيب التطبيقات حسب عدد التنزيلات
-                apps.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
-                
-                // عرض أفضل 5 تطبيقات
-                apps.slice(0, 5).forEach(app => {
-                    const appItem = document.createElement('div');
-                    appItem.className = 'app-item';
-                    
-                    appItem.innerHTML = `
-                        <div class="app-icon">
-                            <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name} Icon">
-                        </div>
-                        <div class="app-details">
-                            <h3>${app.name}</h3>
-                            <p>التنزيلات: ${(app.downloads || 0).toLocaleString()}</p>
-                        </div>
-                    `;
-                    topAppsList.appendChild(appItem);
-                });
-            });
-            
-            // طلبات مقبولة
-            db.collection('submissions').where('reviewStatus', '==', 'approved').get().then(snapshot => {
-                document.getElementById('approvedSubmissions').textContent = snapshot.size;
-            });
-            
-            // عداد "قيد المراجعة" يتم تحديثه في دالة loadSubmissions()
-        }
-
-        // ----------------------------------------------------
         // دالة التبديل بين الأقسام
         // ----------------------------------------------------
         function showSection(sectionId) {
-            // إخفاء جميع الأقسام
             document.querySelectorAll('.content-section').forEach(section => {
                 section.style.display = 'none';
             });
             
-            // إزالة النشاط من جميع الأزرار
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // إظهار القسم المطلوب
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.style.display = 'block';
             }
             
-            // إضافة النشاط للزر المحدد
             const activeBtn = document.querySelector(`.nav-btn[onclick*="${sectionId}"]`);
             if(activeBtn) activeBtn.classList.add('active');
-
-            // استدعاء دالة تحميل البيانات المناسبة
-            if (sectionId === 'submissions-section') {
-                loadSubmissions(); 
-            } else if (sectionId === 'apps-management-section') {
-                loadApps();
-            } else if (sectionId === 'stats-section') {
-                loadStats();
-            }
         }
 
         // ----------------------------------------------------
@@ -1196,7 +1166,7 @@
                     rating: parseFloat(form.rating.value) || 0,
                     downloads: parseInt(form.downloads.value) || 0,
                     screenshotsPaths: screenshotsArray,
-                    createdAt: editingId ? firebase.firestore.FieldValue.serverTimestamp() : firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
                 let promise;
@@ -1209,8 +1179,6 @@
                 promise.then(() => {
                     showToast('✅ تم حفظ التطبيق بنجاح!', 4000);
                     resetForm();
-                    loadStats(); // تحديث الإحصائيات
-                    loadApps(); 
                 }).catch(error => {
                     showToast(`❌ حدث خطأ أثناء الحفظ: ${error.message}.`, 5000);
                     console.error("Error writing document: ", error);
@@ -1227,7 +1195,6 @@
         // دالة فتح الصورة في نافذة منبثقة
         // ----------------------------------------------------
         function openImageModal(src) {
-            // يمكن إضافة نافذة منبثقة لعرض الصورة بشكل كامل
             window.open(src, '_blank');
         }
 
@@ -1235,16 +1202,12 @@
         // دالة تهيئة الصفحة
         // ----------------------------------------------------
         document.addEventListener('DOMContentLoaded', function() {
-            // التحقق من حالة تسجيل الدخول أولاً
             firebase.auth().onAuthStateChanged(user => {
                 if (!user && !localStorage.getItem('sudanPlayAdmin')) {
-                    // window.location.href = '/login.html'; // يمكنك تفعيل هذا السطر لإعادة التوجيه لصفحة الدخول
+                    // window.location.href = '/login.html';
                 } else {
-                    // إعداد النموذج
                     setupAppForm();
-                    
-                    // تحميل البيانات الأولية
-                    // ملاحظة: يتم استدعاء loadSubmissions و loadStats و loadApps داخل showSection عند التهيئة
+                    startRealtimeListeners();
                     showSection('apps-management-section');
                 }
             });
