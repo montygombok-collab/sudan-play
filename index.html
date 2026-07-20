@@ -20,8 +20,8 @@
             --dark: #0f111a;
             --light: #f0f3f9;
             --glass-bg: rgba(255, 255, 255, 0.45);
-            --glass-card: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-card: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.75);
             --glass-shadow: 0 8px 25px 0 rgba(31, 38, 135, 0.08);
             --radius: 16px;
         }
@@ -63,7 +63,7 @@
 
         /* --- Header / Navigation --- */
         header {
-            background: rgba(15, 17, 26, 0.85);
+            background: rgba(15, 17, 26, 0.88);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -86,7 +86,7 @@
         .logo {
             display: flex;
             align-items: center;
-            font-size: 1.3em;
+            font-size: 1.2em;
             font-weight: bold;
             text-decoration: none;
             gap: 8px;
@@ -102,14 +102,14 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .nav-links a {
             color: #e2e8f0;
             text-decoration: none;
-            font-size: 0.85em;
-            padding: 6px 12px;
+            font-size: 0.82em;
+            padding: 6px 10px;
             border-radius: 20px;
             transition: all 0.3s;
         }
@@ -145,7 +145,7 @@
         .hero {
             margin: 15px auto;
             max-width: 1200px;
-            padding: 30px 15px;
+            padding: 25px 15px;
             text-align: center;
             border-radius: var(--radius);
             background: rgba(255, 255, 255, 0.3);
@@ -156,26 +156,26 @@
         }
 
         .hero h2 {
-            font-size: 1.8em;
+            font-size: 1.7em;
             margin-bottom: 8px;
             color: #0f111a;
             font-weight: 800;
         }
 
         .hero p {
-            font-size: 0.95em;
+            font-size: 0.9em;
             color: #334155;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .hero button {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
             border: none;
-            padding: 10px 25px;
+            padding: 9px 22px;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 0.95em;
+            font-size: 0.9em;
             font-weight: 700;
             box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
         }
@@ -192,7 +192,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .search-box {
@@ -202,10 +202,10 @@
 
         .search-box input {
             width: 100%;
-            padding: 10px 35px 10px 15px;
+            padding: 9px 35px 9px 12px;
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            font-size: 0.9em;
+            font-size: 0.88em;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
             outline: none;
@@ -217,11 +217,11 @@
             top: 50%;
             transform: translateY(-50%);
             color: #64748b;
-            font-size: 0.9em;
+            font-size: 0.88em;
         }
 
         #categoryFilter {
-            padding: 9px 12px;
+            padding: 8px 12px;
             border-radius: 20px;
             border: 1px solid var(--glass-border);
             background: var(--glass-bg);
@@ -229,38 +229,38 @@
             outline: none;
         }
 
-        /* 🟢 شبكة التطبيقات: الافتراضي للشاشات الكبيرة */
+        /* 🟢 شبكة التطبيقات للأجهزة المتوسطة والكبيرة */
         #apps-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
         }
 
-        /* 🟢 الكرت المنسق والمصغّر للتطبيق */
+        /* 🟢 تحسين كرت التطبيقات وزيادة الوضوح */
         .app-card {
             background: var(--glass-card);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 14px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 12px;
             border: 1px solid var(--glass-border);
             box-shadow: var(--glass-shadow);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: all 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
             position: relative;
         }
 
         .app-card:hover {
-            transform: translateY(-4px);
-            background: rgba(255, 255, 255, 0.85);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .app-cover {
-            height: 85px;
+            height: 75px;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.05);
+            background: #e2e8f0;
             position: relative;
         }
 
@@ -271,28 +271,28 @@
         }
 
         .app-info {
-            padding: 8px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 4px;
+            gap: 3px;
             flex-grow: 1;
         }
 
         .app-icon {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
             object-fit: cover;
-            margin-top: -24px;
+            margin-top: -22px;
             border: 2px solid #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
             background: #fff;
         }
 
         .app-title {
-            font-size: 0.82em;
+            font-size: 0.8em;
             color: #0f111a;
             font-weight: 700;
             width: 100%;
@@ -303,24 +303,25 @@
         }
 
         .app-category {
-            font-size: 0.7em;
+            font-size: 0.68em;
             color: var(--primary);
             font-weight: 600;
         }
 
         .download-buttons-container {
             display: flex;
-            gap: 4px;
-            padding: 6px;
+            gap: 3px;
+            padding: 5px;
             background: rgba(0, 0, 0, 0.02);
+            border-top: 1px solid rgba(0,0,0,0.03);
         }
 
         .download-btn-split {
             flex: 1;
-            padding: 5px 0;
+            padding: 4px 0;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.72em;
+            font-size: 0.7em;
             transition: all 0.2s;
             text-align: center;
             font-weight: 600;
@@ -341,6 +342,71 @@
             cursor: not-allowed;
         }
 
+        /* --- 🟢 قسم عن الشركة (Monty Go SDN) 🟢 --- */
+        #about-page {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 15px;
+        }
+
+        .company-hero {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .company-hero h2 {
+            font-size: 1.8em;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .company-hero p {
+            color: #475569;
+            font-size: 0.95em;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .company-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .service-card i {
+            font-size: 2.2em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .service-card h4 {
+            font-size: 1.05em;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .service-card p {
+            font-size: 0.82em;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
         /* --- Developer Page --- */
         #developers-page {
             max-width: 900px;
@@ -358,20 +424,20 @@
         }
 
         .developer-header h2 {
-            font-size: 1.6em;
+            font-size: 1.5em;
             text-align: center;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 12px;
             margin-top: 20px;
         }
 
         .feature-box {
             background: rgba(255, 255, 255, 0.4);
-            padding: 15px;
+            padding: 12px;
             border-radius: 12px;
             text-align: center;
         }
@@ -390,16 +456,16 @@
         }
 
         .modal-content {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             margin: 10% auto;
             padding: 20px;
             border-radius: 18px;
             width: 92%;
-            max-width: 500px;
+            max-width: 480px;
             position: relative;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
         }
 
@@ -414,26 +480,26 @@
 
         input[type="text"], input[type="email"], input[type="url"], textarea {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             border: 1px solid rgba(0, 0, 0, 0.1);
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 8px;
-            font-size: 0.88em;
-            margin-bottom: 10px;
+            font-size: 0.85em;
+            margin-bottom: 8px;
             outline: none;
         }
 
         fieldset {
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 12px;
+            padding: 10px;
+            margin-bottom: 10px;
         }
 
         legend {
             color: var(--primary);
             font-weight: 700;
-            font-size: 0.85em;
+            font-size: 0.82em;
             padding: 0 5px;
         }
 
@@ -442,10 +508,10 @@
             color: white;
             border: none;
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.95em;
+            font-size: 0.9em;
             font-weight: 700;
         }
 
@@ -455,7 +521,7 @@
             backdrop-filter: blur(15px);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--light);
-            padding: 25px 15px 15px 15px;
+            padding: 20px 15px 12px 15px;
             text-align: center;
             margin-top: auto;
         }
@@ -464,22 +530,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
         }
 
         .brand-logo-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
             background: rgba(255, 255, 255, 0.1);
-            padding: 4px;
+            padding: 3px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             object-fit: cover;
         }
 
         .brand-title {
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: 800;
             background: linear-gradient(135deg, #4a6bff, #ff5e7d);
             -webkit-background-clip: text;
@@ -487,10 +553,10 @@
         }
 
         .footer-rights {
-            font-size: 0.75em;
+            font-size: 0.72em;
             color: #94a3b8;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 10px;
+            padding-top: 8px;
         }
 
         #toast-message {
@@ -500,7 +566,7 @@
             color: white;
             text-align: center;
             border-radius: 8px;
-            padding: 10px;
+            padding: 9px;
             position: fixed;
             z-index: 3000;
             left: 50%;
@@ -508,7 +574,7 @@
             bottom: 20px;
             opacity: 0;
             transition: all 0.3s;
-            font-size: 0.85em;
+            font-size: 0.82em;
         }
 
         #toast-message.show {
@@ -516,85 +582,70 @@
             opacity: 1;
         }
 
-        /* 📱 🟢 تحسينات خاصة بجميع الشاشات وصغيرة الحجم (الهواتف) 🟢 📱 */
+        /* 📱 🟢 تحسينات خاصة جداً بالهواتف (عرض 4 تطبيقات متناسقة) 📱 */
         @media (max-width: 600px) {
-            header {
-                padding: 10px;
-            }
+            header { padding: 8px 10px; }
 
             .nav-links a {
-                padding: 5px 8px;
-                font-size: 0.75em;
+                padding: 4px 7px;
+                font-size: 0.72em;
             }
 
-            .logo span {
-                font-size: 0.9em;
-            }
+            .logo span { font-size: 0.85em; }
 
-            /* إجبار الشبكة على عرض 4 تطبيقات في الصف على الهواتف */
+            /* 🟢 ضبط الشبكة لجعل الصف يحوي 4 تطبيقات بدقة ومتانة دون تكدس */
             #apps-container {
                 grid-template-columns: repeat(4, 1fr) !important;
-                gap: 6px !important;
+                gap: 5px !important;
             }
 
-            #apps-view {
-                padding: 5px;
-            }
+            #apps-view { padding: 4px; }
 
-            .app-card {
-                border-radius: 8px;
-            }
+            .app-card { border-radius: 8px; }
 
-            .app-cover {
-                height: 55px;
-            }
+            .app-cover { height: 48px; }
 
             .app-icon {
-                width: 32px;
-                height: 32px;
-                margin-top: -18px;
+                width: 28px;
+                height: 28px;
+                margin-top: -15px;
                 border-width: 1.5px;
                 border-radius: 6px;
             }
 
-            .app-info {
-                padding: 4px 2px;
-            }
+            .app-info { padding: 3px 2px; }
 
             .app-title {
-                font-size: 0.68em;
+                font-size: 0.65em;
                 margin-top: 1px;
+                font-weight: 700;
             }
 
-            .app-category {
-                font-size: 0.58em;
-                display: none; /* إخفاء التصنيف في الجوال لتوفير المساحة */
-            }
+            .app-category { display: none; } /* إخفاء قسم التصنيف في الأجهزة الصغيرة */
 
             .download-buttons-container {
-                padding: 3px;
+                padding: 3px 2px;
                 gap: 2px;
-                flex-direction: column; /* تقسيم الأزرار لأسفل على الشاشات الصغير جداً */
+                flex-direction: column;
             }
 
             .download-btn-split {
-                font-size: 0.6em;
-                padding: 3px 0;
+                font-size: 0.58em;
+                padding: 2.5px 0;
+                border-radius: 4px;
             }
 
-            .search-filter-wrapper {
-                gap: 6px;
-            }
+            .search-filter-wrapper { gap: 4px; }
 
             .search-box input {
-                padding: 8px 30px 8px 10px;
-                font-size: 0.8em;
+                padding: 7px 25px 7px 8px;
+                font-size: 0.78em;
             }
 
             #categoryFilter {
-                padding: 8px;
-                font-size: 0.78em;
-                max-width: 110px;
+                padding: 6px;
+                font-size: 0.72em;
+                max-width: 95px;
             }
         }
     </style>
@@ -618,7 +669,8 @@
                 <span>Sudan Play</span>
             </a>
             <div class="nav-links">
-                <a href="#" id="nav-main" class="active" onclick="switchPage('main-page')"><i class="fas fa-th"></i> الرئيسيات</a>
+                <a href="#" id="nav-main" class="active" onclick="switchPage('main-page')"><i class="fas fa-th"></i> الرئيسية</a>
+                <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
                 <a href="#" id="nav-dev" onclick="switchPage('developers-page')"><i class="fas fa-code"></i> المطورين</a>
                 <a href="#" class="btn-primary" onclick="openSubmissionModal()"><i class="fas fa-upload"></i> انشر</a>
             </div>
@@ -645,36 +697,64 @@
                     </select>
                 </div>
 
-                <!-- 🟢 هنا تعرض 4 تطبيقات في الصف للجوال -->
+                <!-- 🟢 عرض 4 تطبيقات في الصف للجوال -->
                 <div id="apps-container">
-                    <h3 style="text-align: center; grid-column: 1/-1; color: #64748b; font-size: 0.9em;">جاري تحميل التطبيقات...</h3>
+                    <h3 style="text-align: center; grid-column: 1/-1; color: #64748b; font-size: 0.85em; padding: 20px 0;">جاري تحميل التطبيقات...</h3>
                 </div>
             </div>
         </section>
 
-        <!-- 2. صفحة المطورين -->
+        <!-- 2. 🟢 صفحة عن الشركة (Monty Go SDN) 🟢 -->
+        <section id="about-page" class="page-section">
+            <div class="glass-panel">
+                <div class="company-hero">
+                    <h2>Monty Go SDN</h2>
+                    <p>شركة متخصصة في صناعة وتطوير المواقع الإلكترونية، التطبيقات الحديثة، والحلول البرمجية متكاملة الخدمات لتلبية احتياجات السوق الرقمي المحلي والعالمي.</p>
+                </div>
+
+                <div class="company-services">
+                    <div class="service-card">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h4>تطوير التطبيقات</h4>
+                        <p>تصميم وبناء تطبيقات الجوال المبتكرة للأندرويد والآيفون بكفاءة عالية وأداء سلس.</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-globe"></i>
+                        <h4>تطوير المواقع</h4>
+                        <p>بناء منصات ومواقع إلكترونية بتصميم عصري ومتجاوب مع جميع المقاسات والشاشات.</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-cogs"></i>
+                        <h4>الخدمات البرمجية</h4>
+                        <p>تقديم حلول برمجية مخصصة، ربط الأنظمة، وإدارة واجهات البرمجة لتسريع أعمالك.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. صفحة المطورين -->
         <section id="developers-page" class="page-section">
             <div class="glass-panel">
                 <div class="developer-header">
                     <h2><i class="fas fa-laptop-code" style="color: var(--primary);"></i> بوابة المطورين</h2>
-                    <p style="color: #475569; margin-top: 5px; font-size: 0.88em;">منصة مخصصة للمطورين السودانيين والشركات لتوزيع التطبيقات.</p>
+                    <p style="color: #475569; margin-top: 5px; font-size: 0.85em;">منصة مخصصة للمطورين والشركات السودانية لنشر وتوزيع التطبيقات.</p>
                 </div>
 
                 <div class="features-grid">
                     <div class="feature-box">
                         <i class="fas fa-rocket" style="color: var(--primary);"></i>
-                        <h4 style="font-size: 0.9em; margin-top: 5px;">نشر سريع</h4>
-                        <p style="font-size: 0.75em; color: #64748b;">مراجعة ونشر خلال ساعات.</p>
+                        <h4 style="font-size: 0.88em; margin-top: 4px;">نشر سريع</h4>
+                        <p style="font-size: 0.72em; color: #64748b;">مراجعة ونشر خلال وقت قياسي.</p>
                     </div>
                     <div class="feature-box">
                         <i class="fas fa-chart-line" style="color: var(--primary);"></i>
-                        <h4 style="font-size: 0.9em; margin-top: 5px;">إحصائيات</h4>
-                        <p style="font-size: 0.75em; color: #64748b;">متابعة عمليات التنزيل مباشرة.</p>
+                        <h4 style="font-size: 0.88em; margin-top: 4px;">إحصائيات</h4>
+                        <p style="font-size: 0.72em; color: #64748b;">متابعة التنزيلات بسهولة.</p>
                     </div>
                 </div>
 
-                <div style="text-align: center; margin-top: 25px;">
-                    <button class="download-modal-btn" style="max-width: 250px;" onclick="openSubmissionModal()">
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="download-modal-btn" style="max-width: 220px;" onclick="openSubmissionModal()">
                         <i class="fas fa-plus-circle"></i> رفع تطبيق جديد
                     </button>
                 </div>
@@ -697,17 +777,17 @@
     <div id="appDetailsModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 15px;">
-                <img id="detailsIcon" src="" alt="Icon" style="width: 50px; height: 50px; border-radius: 10px;">
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
+                <img id="detailsIcon" src="" alt="Icon" style="width: 48px; height: 48px; border-radius: 10px; object-fit: cover;">
                 <div>
-                    <h3 id="detailsTitle" style="font-size: 1.1em;"></h3>
-                    <p id="detailsCategory" style="color: var(--primary); font-size: 0.8em;"></p>
+                    <h3 id="detailsTitle" style="font-size: 1em;"></h3>
+                    <p id="detailsCategory" style="color: var(--primary); font-size: 0.78em;"></p>
                 </div>
             </div>
-            <h4 style="margin-bottom: 5px; font-size: 0.9em;">الوصف</h4>
-            <p id="detailsDescription" style="color: #475569; line-height: 1.5; font-size: 0.82em; margin-bottom: 15px;"></p>
+            <h4 style="margin-bottom: 4px; font-size: 0.85em;">الوصف</h4>
+            <p id="detailsDescription" style="color: #475569; line-height: 1.5; font-size: 0.8em; margin-bottom: 12px;"></p>
             
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 6px;">
                 <a id="detailsAndroidLink" href="#" target="_blank" style="flex:1; text-decoration:none;">
                     <button class="download-modal-btn" style="background:#2ea44f;"><i class="fab fa-android"></i> أندرويد</button>
                 </a>
@@ -721,7 +801,7 @@
     <div id="submissionModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeSubmissionModal()">&times;</span>
-            <h3 style="text-align: center; margin-bottom: 15px; color: var(--dark); font-size: 1.1em;">طلب نشر تطبيق</h3>
+            <h3 style="text-align: center; margin-bottom: 12px; color: var(--dark); font-size: 1em;">طلب نشر تطبيق</h3>
             
             <form id="submissionForm">
                 <fieldset>
@@ -767,6 +847,7 @@
             document.getElementById(pageId).classList.add('active-page');
 
             document.getElementById('nav-main').classList.toggle('active', pageId === 'main-page');
+            document.getElementById('nav-about').classList.toggle('active', pageId === 'about-page');
             document.getElementById('nav-dev').classList.toggle('active', pageId === 'developers-page');
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -778,10 +859,10 @@
             const textElement = document.getElementById('detection-text');
 
             if (/iPad|iPhone|iPod/.test(userAgent)) {
-                textElement.innerHTML = `<i class="fab fa-apple"></i> نظام iOS - تم الترجيح للآيفون.`;
+                textElement.innerHTML = `<i class="fab fa-apple"></i> نظام iOS - تم التوافق مع الآيفون.`;
                 banner.classList.add('show');
             } else if (/android/i.test(userAgent)) {
-                textElement.innerHTML = `<i class="fab fa-android"></i> أندرويد - تم الترجيح للأندرويد.`;
+                textElement.innerHTML = `<i class="fab fa-android"></i> أندرويد - تم التوافق مع الأندرويد.`;
                 banner.classList.add('show');
             }
             setTimeout(() => banner.classList.remove('show'), 3000);
@@ -818,10 +899,10 @@
                     container.innerHTML += `
                         <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" onclick="showAppDetails('${app.id}')">
                             <div class="app-cover">
-                                <img src="${(app.screenshotsPaths && app.screenshotsPaths[0]) || 'https://via.placeholder.com/150x85'}" alt="Cover">
+                                <img src="${(app.screenshotsPaths && app.screenshotsPaths[0]) || 'https://via.placeholder.com/150x75'}" alt="Cover" loading="lazy">
                             </div>
                             <div class="app-info">
-                                <img src="${app.iconPath || 'https://via.placeholder.com/42'}" class="app-icon" alt="Icon">
+                                <img src="${app.iconPath || 'https://via.placeholder.com/40'}" class="app-icon" alt="Icon" loading="lazy">
                                 <h4 class="app-title">${app.name || 'تطبيق'}</h4>
                                 <div class="app-category">${app.category || 'عام'}</div>
                             </div>
@@ -862,7 +943,7 @@
             if (!app) return;
 
             document.getElementById('detailsTitle').textContent = app.name;
-            document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/50';
+            document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/48';
             document.getElementById('detailsCategory').textContent = app.category || 'عام';
             document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
             document.getElementById('detailsAndroidLink').href = app.downloadLink || '#';
