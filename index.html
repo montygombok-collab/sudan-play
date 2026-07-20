@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudan Play - متجر التطبيقات </title>
+    <title>Sudan Play - متجر التطبيقات</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -359,6 +359,109 @@
             cursor: not-allowed;
         }
 
+        /* --- Support & Chat Page Styles --- */
+        #support-page {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 15px;
+        }
+
+        .support-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .support-card i {
+            font-size: 2em;
+            color: var(--primary);
+        }
+
+        .chat-container {
+            background: var(--glass-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: rgba(15, 17, 26, 0.9);
+            color: white;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-msg {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .chat-msg.user {
+            align-self: flex-start;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-msg.agent {
+            align-self: flex-end;
+            background: #e2e8f0;
+            color: #0f111a;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            gap: 8px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            margin-bottom: 0;
+            border-radius: 20px;
+            padding: 10px 15px;
+        }
+
+        .chat-input-area button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         /* --- About Company --- */
         #about-page {
             max-width: 900px;
@@ -493,7 +596,6 @@
             cursor: pointer;
         }
 
-        /* 🟢 شريط تنقل البوابات / المراحل */
         .step-progress-bar {
             display: flex;
             justify-content: space-between;
@@ -793,7 +895,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
-<body onload="detectAndShowDevice()">
+<body onload="detectAndShowDevice(); initCustomerProfile();">
 
     <div id="device-detection-banner">
         <div class="banner-content">
@@ -813,6 +915,7 @@
                 <a href="#" id="nav-main" class="active" onclick="switchPage('main-page')"><i class="fas fa-th"></i> الرئيسية</a>
                 <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
                 <a href="#" id="nav-dev" onclick="switchPage('developers-page')"><i class="fas fa-code"></i> المطورين</a>
+                <a href="#" id="nav-support" onclick="switchPage('support-page')"><i class="fas fa-headset"></i> الدعم</a>
                 <a href="#" class="btn-primary" onclick="openSubmissionModal()"><i class="fas fa-upload"></i> انشر</a>
             </div>
         </nav>
@@ -822,7 +925,7 @@
         <!-- 1. الرئيسية -->
         <section id="main-page" class="page-section active-page">
             <div class="hero">
-                <h2>متجر السودان </h2>
+                <h2>متجر السودان</h2>
                 <p>استكشف وحمّل أحدث التطبيقات المحلية والعالمية سريع.</p>
                 <button onclick="document.getElementById('apps-view').scrollIntoView({behavior: 'smooth'});">تصفح الآن</button>
             </div>
@@ -844,7 +947,33 @@
             </div>
         </section>
 
-        <!-- 2. صفحة عن الشركة (Monty Go SDN) -->
+        <!-- 2. صفحة الدعم والدردشة المباشرة -->
+        <section id="support-page" class="page-section">
+            <div class="support-card">
+                <i class="fas fa-envelope-open-text"></i>
+                <div>
+                    <h3 style="font-size: 1.1em; color: var(--dark);">البريد الإلكتروني للدعم</h3>
+                    <p style="font-size: 0.85em; color: #64748b;">تواصل معنا مباشرة عبر البريد الإلكتروني الرسمي:</p>
+                    <a href="mailto:support@montygo.sd" style="color: var(--primary); font-weight: bold; font-size: 0.9em; text-decoration: none;">support@montygo.sd</a>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <span style="font-size: 0.9em; font-weight: bold;"><i class="fas fa-comments"></i> الدردشة المباشرة مع الدعم</span>
+                    <span id="customer-id-tag" style="font-size: 0.72em; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 10px;">معرف العميل: جاري التعرف...</span>
+                </div>
+                <div class="chat-box" id="chatBox">
+                    <div class="chat-msg agent">مرحباً بك! كيف يمكننا مساعدتك اليوم؟ تم التعرّف على جلسك وستظل محادثتك محفوظة.</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> إرسال</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. صفحة عن الشركة (Monty Go SDN) -->
         <section id="about-page" class="page-section">
             <div class="glass-panel">
                 <div class="company-hero">
@@ -872,7 +1001,7 @@
             </div>
         </section>
 
-        <!-- 3. قسم المطورين -->
+        <!-- 4. قسم المطورين -->
         <section id="developers-page" class="page-section">
             <div class="glass-panel">
                 <div class="developer-header">
@@ -914,7 +1043,7 @@
             <div class="brand-title">Monty Go SDN</div>
         </div>
         <div class="footer-rights">
-            <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة لـ Monty Go SDN-السودان -ولاية الخرطوم </p>
+            <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة لـ Monty Go SDN-السودان -ولاية الخرطوم</p>
         </div>
     </footer>
 
@@ -943,13 +1072,12 @@
         </div>
     </div>
 
-    <!-- نافذة تقديم طلب نشر التطبيق بالبوابات متعددة المراحل -->
+    <!-- نافذة تقديم طلب نشر التطبيق -->
     <div id="submissionModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeSubmissionModal()">&times;</span>
             <h3 style="text-align: center; color: var(--dark); font-size: 1em;">بوابة نشر التطبيقات</h3>
             
-            <!-- شريط خطوات البوابات -->
             <div class="step-progress-bar">
                 <div class="step-item active" id="step-indicator-1">1</div>
                 <div class="step-item" id="step-indicator-2">2</div>
@@ -957,8 +1085,6 @@
             </div>
 
             <form id="submissionForm">
-                
-                <!-- البوابة الأولى: الشروط والأحكام -->
                 <div class="gate-step active-gate" id="gate-1">
                     <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-file-contract"></i> البوابة الأولى: الاتفاقية والشروط</h4>
                     <div class="terms-box">
@@ -977,7 +1103,6 @@
                     </div>
                 </div>
 
-                <!-- البوابة الثانية: معلومات التطبيق -->
                 <div class="gate-step" id="gate-2">
                     <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-info-circle"></i> البوابة الثانية: تفاصيل التطبيق</h4>
                     <fieldset>
@@ -990,7 +1115,7 @@
                             <option value="تعليم">تعليم (Education)</option>
                             <option value="إنتاجية">إنتاجية (Productivity)</option>
                             <option value="خدمات">خدمات (Services)</option>
-                            <option value="اخرى">اخرى (Services)</option>  
+                            <option value="اخرى">اخرى</option>  
                         </select>
                         <input type="url" id="appIconLink" placeholder="رابط الأيقونة المباشر (URL)" required>
                         <textarea id="appDescription" placeholder="وصف التطبيق ووظائفه..." rows="2" required></textarea>
@@ -1008,7 +1133,6 @@
                     </div>
                 </div>
 
-                <!-- البوابة الثالثة: الدفع وتفاصيل المحول والمطور -->
                 <div class="gate-step" id="gate-3">
                     <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-credit-card"></i> البوابة الأخيرة: بوابة الدفع وتأكيد الحساب</h4>
                     
@@ -1034,10 +1158,9 @@
 
                     <div class="modal-btn-row">
                         <button type="button" class="btn-gate btn-prev" onclick="goToGate(2)">السابق</button>
-                        <button type="submit" class="btn-gate btn-next" style="background:var(--accent);">إرسال وتأكيد الطلب (سيكون التطبيق متاحاً خلال 72 ساعة بعد تجاوز الفحص. يتم استرداد الرسوم في حال عدم اجتياز الاختبار) <i class="fas fa-check"></i></button>
+                        <button type="submit" class="btn-gate btn-next" style="background:var(--accent);">إرسال وتأكيد الطلب <i class="fas fa-check"></i></button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
@@ -1046,6 +1169,7 @@
 
     <script>
         let allApps = [];
+        let customerId = "";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
@@ -1059,6 +1183,72 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        /* --- إدارة ملفات التعريف والتعرف على الزائر --- */
+        function getCookie(name) {
+            let nameEQ = name + "=";
+            let ca = document.cookie.split(';');
+            for(let i=0;i < ca.length;i++) {
+                let c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days*24*60*60*1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
+
+        function initCustomerProfile() {
+            customerId = localStorage.getItem('sp_customer_id') || getCookie('sp_customer_id');
+            if (!customerId) {
+                customerId = 'cust_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('sp_customer_id', customerId);
+                setCookie('sp_customer_id', customerId, 365);
+            }
+            document.getElementById('customer-id-tag').textContent = `معرف العميل: ${customerId}`;
+            loadChatHistory();
+        }
+
+        function loadChatHistory() {
+            const chatBox = document.getElementById('chatBox');
+            // استرجاع الرسائل من Firestore
+            db.collection('chats').doc(customerId).collection('messages')
+              .orderBy('timestamp', 'asc')
+              .onSnapshot(snapshot => {
+                  if (snapshot.empty) return;
+                  chatBox.innerHTML = '';
+                  snapshot.forEach(doc => {
+                      const msg = doc.data();
+                      const msgDiv = document.createElement('div');
+                      msgDiv.className = `chat-msg ${msg.sender === 'user' ? 'user' : 'agent'}`;
+                      msgDiv.textContent = msg.text;
+                      chatBox.appendChild(msgDiv);
+                  });
+                  chatBox.scrollTop = chatBox.scrollHeight;
+              });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            db.collection('chats').doc(customerId).collection('messages').add({
+                text: text,
+                sender: 'user',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            input.value = '';
+        }
+
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active-page'));
             document.getElementById(pageId).classList.add('active-page');
@@ -1066,6 +1256,7 @@
             document.getElementById('nav-main').classList.toggle('active', pageId === 'main-page');
             document.getElementById('nav-about').classList.toggle('active', pageId === 'about-page');
             document.getElementById('nav-dev').classList.toggle('active', pageId === 'developers-page');
+            document.getElementById('nav-support').classList.toggle('active', pageId === 'support-page');
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1208,7 +1399,6 @@
             document.getElementById('submissionModal').style.display = 'none'; 
         }
 
-        /* التنقل بين البوابات الثلاث مع التحقق من الشروط والبيانات */
         function goToGate(gateNum) {
             if (gateNum === 2) {
                 const acceptTerms = document.getElementById('acceptTermsCheckbox').checked;
@@ -1246,7 +1436,6 @@
             }
         }
 
-        /* حفظ البيانات النهائية وشاملة تفاصيل الدفع في Firestore */
         document.getElementById('submissionForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -1267,13 +1456,11 @@
                 appDescription: document.getElementById('appDescription').value,
                 appAndroidLink: document.getElementById('appAndroidLink').value,
                 appIosLink: document.getElementById('appIosLink').value || '#',
-                
-                // بيانات بوابة الدفع والمطور
                 transactionId: transactionId,
                 bankName: bankName,
                 devName: devName,
                 devEmail: devEmail,
-                paymentStatus: 'pending', // حالة المراجعة
+                paymentStatus: 'pending',
                 submissionDate: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 closeSubmissionModal();
