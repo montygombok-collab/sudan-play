@@ -564,19 +564,40 @@
         }
 
         .fee-card {
-            background: linear-gradient(135deg, rgba(74, 107, 255, 0.1), rgba(46, 196, 182, 0.1));
+            background: linear-gradient(135deg, rgba(74, 107, 255, 0.08), rgba(46, 196, 182, 0.08));
             border: 1px dashed var(--primary);
-            border-radius: 10px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 14px;
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
-        .fee-card .price {
-            font-size: 1.3em;
-            font-weight: 800;
+        .fee-card .fee-title {
+            font-size: 0.85em;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .fee-card .account-details {
+            font-size: 0.9em;
+            font-weight: 700;
+            color: var(--dark);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-top: 6px;
+            border: 1px solid rgba(74, 107, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .fee-card .account-num {
             color: var(--primary);
-            margin-top: 4px;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            font-family: monospace;
         }
 
         input[type="text"], input[type="email"], input[type="url"], input[type="number"], select, textarea {
@@ -651,22 +672,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .brand-logo-img {
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.1);
             padding: 3px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .brand-title {
-            font-size: 1em;
+            font-size: 1.05em;
             font-weight: 800;
             background: linear-gradient(135deg, #4a6bff, #ff5e7d);
             -webkit-background-clip: text;
@@ -801,7 +823,7 @@
         <section id="main-page" class="page-section active-page">
             <div class="hero">
                 <h2>متجر السودان </h2>
-                <p>استكشف وحمّل أحدث التطبيقات المحلية والعالمية  سريع.</p>
+                <p>استكشف وحمّل أحدث التطبيقات المحلية والعالمية سريع.</p>
                 <button onclick="document.getElementById('apps-view').scrollIntoView({behavior: 'smooth'});">تصفح الآن</button>
             </div>
 
@@ -850,7 +872,7 @@
             </div>
         </section>
 
-        <!-- 3. 🟢 قسم المطورين المحدث ليشمل بوابات ونصوص النشر 🟢 -->
+        <!-- 3. قسم المطورين -->
         <section id="developers-page" class="page-section">
             <div class="glass-panel">
                 <div class="developer-header">
@@ -888,7 +910,7 @@
     <!-- Footer -->
     <footer>
         <div class="footer-branding-box">
-            <img src="https://www.appcreator24.com/srv/imgs/gen/3834410_splash.png?ts=1764707568" alt="Monty Go SDN Logo" class="brand-logo-img">
+            <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png?ts=1784566043" alt="Monty Go SDN Logo" class="brand-logo-img">
             <div class="brand-title">Monty Go SDN</div>
         </div>
         <div class="footer-rights">
@@ -921,7 +943,7 @@
         </div>
     </div>
 
-    <!-- 🟢 🟢 نافذة تقديم طلب نشر التطبيق بالبوابات متعددة المراحل 🟢 🟢 -->
+    <!-- نافذة تقديم طلب نشر التطبيق بالبوابات متعددة المراحل -->
     <div id="submissionModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeSubmissionModal()">&times;</span>
@@ -936,7 +958,7 @@
 
             <form id="submissionForm">
                 
-                <!-- 🔴 البوابة الأولى: الشروط والأحكام -->
+                <!-- البوابة الأولى: الشروط والأحكام -->
                 <div class="gate-step active-gate" id="gate-1">
                     <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-file-contract"></i> البوابة الأولى: الاتفاقية والشروط</h4>
                     <div class="terms-box">
@@ -955,7 +977,7 @@
                     </div>
                 </div>
 
-                <!-- 🟡 البوابة الثانية: معلومات التطبيق -->
+                <!-- البوابة الثانية: معلومات التطبيق -->
                 <div class="gate-step" id="gate-2">
                     <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-info-circle"></i> البوابة الثانية: تفاصيل التطبيق</h4>
                     <fieldset>
@@ -968,7 +990,7 @@
                             <option value="تعليم">تعليم (Education)</option>
                             <option value="إنتاجية">إنتاجية (Productivity)</option>
                             <option value="خدمات">خدمات (Services)</option>
-                         <option value="اخرى">اخرى (Services)</option>  
+                            <option value="اخرى">اخرى (Services)</option>  
                         </select>
                         <input type="url" id="appIconLink" placeholder="رابط الأيقونة المباشر (URL)" required>
                         <textarea id="appDescription" placeholder="وصف التطبيق ووظائفه..." rows="2" required></textarea>
@@ -986,15 +1008,16 @@
                     </div>
                 </div>
 
-                <!-- 🟢 البوابة الثالثة: الدفع وتفاصيل المحول والمطور -->
+                <!-- البوابة الثالثة: الدفع وتفاصيل المحول والمطور -->
                 <div class="gate-step" id="gate-3">
                     <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-credit-card"></i> البوابة الأخيرة: بوابة الدفع وتأكيد الحساب</h4>
                     
                     <div class="fee-card">
-                        <div style="font-size:0.78em; color:#475569;">-  -25,000 ج.س / أو ما يعادلهارسوم معالجة ونشر التطبيق</div>
-                        <div class="price">
-                          رقم حساب الناشر ابولقاسم/مونتي غو اس دي ان |Montygo sdn tradning worke 
-                            - 8437856- </div>
+                        <div class="fee-title"><i class="fas fa-receipt"></i> رسوم معالجة ونشر التطبيق: <b>25,000 ج.س</b></div>
+                        <div class="account-details">
+                            <span>حساب الناشر: <b>أبو القاسم / Monty Go SDN Trading Works</b></span>
+                            <span>رقم الحساب: <span class="account-num">8437856</span></span>
+                        </div>
                     </div>
 
                     <fieldset>
@@ -1011,7 +1034,7 @@
 
                     <div class="modal-btn-row">
                         <button type="button" class="btn-gate btn-prev" onclick="goToGate(2)">السابق</button>
-                        <button type="submit" class="btn-gate btn-next" style="background:var(--accent);">إرسال وتأكيد الطلب سيكون التطبيق متاح خلال 72 بعد تجاوز الفحص سيتم استرداد الرسوم  في حال لم يتجاوز الاختبار  <i class="fas fa-check"></i></button>
+                        <button type="submit" class="btn-gate btn-next" style="background:var(--accent);">إرسال وتأكيد الطلب (سيكون التطبيق متاحاً خلال 72 ساعة بعد تجاوز الفحص. يتم استرداد الرسوم في حال عدم اجتياز الاختبار) <i class="fas fa-check"></i></button>
                     </div>
                 </div>
 
@@ -1185,7 +1208,7 @@
             document.getElementById('submissionModal').style.display = 'none'; 
         }
 
-        /* 🟢 التنقل بين البوابات الثلاث مع التحقق من الشروط والبيانات */
+        /* التنقل بين البوابات الثلاث مع التحقق من الشروط والبيانات */
         function goToGate(gateNum) {
             if (gateNum === 2) {
                 const acceptTerms = document.getElementById('acceptTermsCheckbox').checked;
@@ -1223,7 +1246,7 @@
             }
         }
 
-        /* 🟢 حفظ البيانات النهائية وشاملة تفاصيل الدفع في Firestore */
+        /* حفظ البيانات النهائية وشاملة تفاصيل الدفع في Firestore */
         document.getElementById('submissionForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
