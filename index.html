@@ -1,376 +1,1035 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Developer Interface - Advanced Liquid Glass Environment</title>
-  <style>
-    /* ----------------------------------------------------
-       1. إعادة ضبط الأساسيات (Reset & Base Styles)
-    ---------------------------------------------------- */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      user-select: none;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudan Play - متجر التطبيقات الحديث</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* أنماط CSS الموحدة والمحسنة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    body {
-      min-height: 100vh;
-      background: #090d16;
-      overflow-x: hidden;
-      color: #f8fafc;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      perspective: 1200px;
-    }
+        :root {
+            --primary: #4a6bff;
+            --secondary: #ff5e7d;
+            --accent: #2ec4b6;
+            --dark: #1e1e2d;
+            --light: #f8f9fe;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-light: linear-gradient(135deg, rgba(74, 107, 255, 0.08) 0%, rgba(255, 94, 125, 0.08) 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --radius: 14px;
+        }
 
-    /* ----------------------------------------------------
-       2. شريط المطورين بالأعلى فقط (Dev Console Header)
-    ---------------------------------------------------- */
-    .dev-header {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.75);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 12px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      position: fixed;
-      top: 0;
-      left: 0;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    }
+        body {
+            background-color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
 
-    .dev-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+        /* --- شريط التعرف على الجهاز --- */
+        #device-detection-banner {
+            background: var(--accent);
+            color: white;
+            text-align: center;
+            padding: 0;
+            font-size: 1em;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .dev-badge {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #fff;
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
-    }
+        #device-detection-banner.show {
+            opacity: 1;
+            height: auto;
+            padding: 10px;
+        }
 
-    .dev-stats {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      display: flex;
-      gap: 15px;
-    }
+        .banner-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
 
-    .dev-controls {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+        /* --- Header / Navigation --- */
+        header {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    .dev-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      color: #38bdf8;
-      padding: 6px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-    .dev-btn:hover {
-      background: #38bdf8;
-      color: #0f172a;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
-      transform: translateY(-1px);
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            text-decoration: none;
+            gap: 12px;
+        }
+        
+        .logo img {
+            height: 42px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(74, 107, 255, 0.5);
+        }
+        
+        .logo h1 {
+            color: var(--light);
+            font-size: 1.4em;
+        }
 
-    /* ----------------------------------------------------
-       3. خلفية السوائل المتحركة (Liquid Fluid Blobs)
-    ---------------------------------------------------- */
-    .background-canvas {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      overflow: hidden;
-      pointer-events: none;
-    }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.6;
-      animation: fluidMove 14s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
-    }
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.3s, border-bottom 0.3s;
+            white-space: nowrap;
+            padding: 5px 0;
+        }
 
-    .blob-1 {
-      width: 380px;
-      height: 380px;
-      background: #3b82f6;
-      top: 10%;
-      left: 15%;
-    }
+        .nav-links a.btn-primary {
+            background: var(--secondary);
+            color: var(--light);
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
 
-    .blob-2 {
-      width: 420px;
-      height: 420px;
-      background: #8b5cf6;
-      bottom: 10%;
-      right: 15%;
-      animation-delay: -5s;
-    }
+        .nav-links a.btn-primary:hover {
+            background: rgb(200, 70, 95);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 94, 125, 0.3);
+        }
 
-    .blob-3 {
-      width: 300px;
-      height: 300px;
-      background: #ec4899;
-      top: 35%;
-      right: 30%;
-      animation-delay: -9s;
-    }
+        .nav-links a:hover:not(.btn-primary) {
+            color: var(--secondary);
+        }
 
-    @keyframes fluidMove {
-      0% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-      }
-      50% {
-        transform: translate(100px, -60px) scale(1.15) rotate(180deg);
-      }
-      100% {
-        transform: translate(-50px, 80px) scale(0.9) rotate(360deg);
-      }
-    }
+        /* --- Hero Section --- */
+        .hero {
+            background: var(--gradient);
+            color: var(--light);
+            padding: 90px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* ----------------------------------------------------
-       4. واجهة بطاقة الزجاج السائل (Liquid Glass Card)
-    ---------------------------------------------------- */
-    .main-container {
-      position: relative;
-      z-index: 10;
-      padding: 20px;
-      width: 100%;
-      max-width: 520px;
-      margin-top: 50px;
-    }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-    .liquid-glass-card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(24px) saturate(200%);
-      -webkit-backdrop-filter: blur(24px) saturate(200%);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-top: 1px solid rgba(255, 255, 255, 0.4);
-      border-left: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 32px;
-      padding: 45px 35px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5),
-                  inset 0 1px 2px rgba(255, 255, 255, 0.5);
-      transition: transform 0.15s ease-out, box-shadow 0.3s ease;
-      transform-style: preserve-3d;
-      position: relative;
-      overflow: hidden;
-    }
+        .hero h2 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            font-weight: 800;
+        }
 
-    /* لمعة الضوء الانكسارية فوق الزجاج */
-    .liquid-glass-card::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
-      pointer-events: none;
-      transform: rotate(30deg);
-    }
+        .hero p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
 
-    .glass-title {
-      font-size: 1.8rem;
-      font-weight: 800;
-      margin-bottom: 15px;
-      background: linear-gradient(135deg, #ffffff 40%, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
-    }
+        .hero button {
+            background-color: var(--dark);
+            color: var(--light);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-weight: 600;
+        }
 
-    .glass-desc {
-      color: #cbd5e1;
-      font-size: 1rem;
-      line-height: 1.7;
-      margin-bottom: 30px;
-    }
+        .hero button:hover {
+            background-color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
 
-    .status-box {
-      background: rgba(0, 0, 0, 0.35);
-      border-radius: 16px;
-      padding: 16px 20px;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.85rem;
-      color: #4ade80;
-      border: 1px solid rgba(74, 222, 128, 0.2);
-      line-height: 1.6;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
+        /* --- App Showcase --- */
+        #apps {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-    /* موجات الماء عند الضغط على الزجاج */
-    .ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(0);
-      animation: rippleEffect 0.6s linear;
-      pointer-events: none;
-    }
+        #apps h2 {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 30px;
+            font-size: 2.3em;
+            font-weight: 700;
+        }
 
-    @keyframes rippleEffect {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
-    }
-  </style>
+        #apps h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            margin: 12px auto;
+            border-radius: 2px;
+        }
+
+        .search-filter-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 45px 14px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 30px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(74, 107, 255, 0.15);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 1.2em;
+        }
+
+        .filter-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #categoryFilter {
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: 2px solid #e2e8f0;
+            font-size: 0.95em;
+            min-width: 180px;
+            background: white;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #categoryFilter:focus {
+            border-color: var(--primary);
+        }
+
+        #apps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 25px;
+        }
+
+        .app-card {
+            background-color: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #edf2f7;
+        }
+
+        .app-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow);
+            border-color: rgba(74, 107, 255, 0.3);
+        }
+
+        .app-cover {
+            height: 150px;
+            overflow: hidden;
+            position: relative;
+            background-color: #e2e8f0;
+        }
+
+        .app-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .app-card:hover .app-cover img {
+            transform: scale(1.05);
+        }
+
+        .app-info {
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .app-text {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .app-title {
+            font-size: 1.1em;
+            color: var(--dark);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 700;
+        }
+
+        .app-category {
+            font-size: 0.85em;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .app-rating {
+            font-size: 0.85em;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .app-rating i.filled {
+            color: #f6ad55;
+        }
+        
+        .download-buttons-container {
+            display: flex;
+            gap: 8px;
+            padding: 0 18px 18px 18px;
+        }
+
+        .download-btn-split {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .download-btn-android {
+            background: #2ea44f;
+        }
+        .download-btn-android:hover {
+            background: #2c974b;
+        }
+
+        .download-btn-ios {
+            background: #007AFF;
+        }
+        .download-btn-ios:hover {
+            background: #0062cc;
+        }
+        
+        .download-btn-split.unavailable {
+            background: #e2e8f0 !important;
+            color: #a0aec0 !important;
+            cursor: not-allowed;
+        }
+
+        .hidden-link, .hidden-by-device {
+            display: none !important;
+        }
+
+        /* --- قسم الموردين --- */
+        #suppliers {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        #suppliers h2 {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 2.3em;
+            font-weight: 700;
+        }
+
+        #suppliers h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            margin: 12px auto;
+            border-radius: 2px;
+        }
+
+        .coming-soon-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 50px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px dashed #cbd5e0;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .coming-soon-card i {
+            font-size: 3.5em;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .coming-soon-card h3 {
+            font-size: 1.8em;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .coming-soon-card p {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* --- Modals --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 18px;
+            width: 90%;
+            max-width: 650px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            color: #a0aec0;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--secondary);
+        }
+
+        /* Form Controls */
+        input[type="text"], input[type="email"], input[type="url"], textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        fieldset {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0 10px;
+        }
+
+        .download-modal-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 700;
+            transition: opacity 0.3s;
+        }
+
+        .download-modal-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Contact Section --- */
+        #contact {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 70px 20px;
+            text-align: center;
+        }
+
+        #contact h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 2.2em;
+        }
+
+        .contact-form {
+            max-width: 550px;
+            margin: 30px auto 0 auto;
+            text-align: right;
+        }
+
+        .contact-form input, .contact-form textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .contact-form button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 700;
+            width: 100%;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #141421;
+            color: var(--light);
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: auto;
+            border-top: 3px solid var(--primary);
+        }
+
+        .glowing-text {
+            font-weight: 800;
+            font-size: 1.2em;
+            color: var(--secondary);
+        }
+
+        .footer-branding {
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #a0aec0;
+        }
+
+        /* Toast */
+        #toast-message {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 15px;
+            position: fixed;
+            z-index: 3000;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 30px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            border-right: 4px solid var(--accent);
+        }
+
+        #toast-message.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { gap: 10px; }
+            .hero h2 { font-size: 2em; }
+            .search-filter-wrapper { flex-direction: column; align-items: stretch; }
+            #categoryFilter { width: 100%; }
+        }
+    </style>
+    <meta name="google-site-verification" content="3bdicImX4ybIsv_8xPJO-GhAS3h34XpqJQfQYXSU338" />
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
-<body>
+<body onload="detectAndShowDevice()">
 
-  <!-- شريط المطورين في الأعلى فقط -->
-  <header class="dev-header">
-    <div class="dev-brand">
-      <span class="dev-badge">Dev Engine</span>
-      <div class="dev-stats">
-        <span>FPS: <strong id="fps-counter" style="color: #4ade80;">60</strong></span>
-        <span>Render: <strong style="color: #38bdf8;">GPU</strong></span>
-      </div>
+    <div id="device-detection-banner">
+        <div class="banner-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span id="detection-text">جاري التعرف على نوع الجهاز...</span>
+        </div>
     </div>
+
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <img src="https://www.appcreator24.com/srv/imgs/gen/3834410_splash.png?ts=1764707568" alt="Sudan Play Logo">
+                <h1>Sudan Play</h1>
+            </a>
+            <div class="nav-links">
+                <a href="#apps"><i class="fas fa-th"></i> التطبيقات</a>
+                <a href="#suppliers"><i class="fas fa-truck-loading"></i> الموردين</a>
+                <a href="#contact"><i class="fas fa-envelope"></i> التواصل</a>
+                <a href="#" class="btn-primary" onclick="openSubmissionModal()">
+                    <i class="fas fa-cloud-upload-alt"></i> انشر تطبيقك
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>متجر التطبيقات السوداني الشامل</h2>
+                <p>منصتك الحديثة لاكتشاف وتنزيل أفضل التطبيقات والخدمات الرقمية المحلية والعالمية بسرعة وسهولة.</p>
+                <button onclick="document.getElementById('apps').scrollIntoView({behavior: 'smooth'});">ابدأ التصفح</button>
+            </div>
+        </section>
+
+        <section id="apps">
+            <h2>التطبيقات المتاحة</h2>
+
+            <div class="search-filter-wrapper">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="ابحث باسم التطبيق أو الوصف..." aria-label="البحث عن التطبيق">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="filter-section">
+                    <select id="categoryFilter" onchange="filterApps()">
+                        <option value="الكل">جميع الفئات</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="apps-container">
+                <h3 style="text-align: center; grid-column: 1/-1; color: #718096;">جاري تحميل التطبيقات...</h3>
+            </div>
+            
+            <div id="noAppsMessage" style="text-align: center; grid-column: 1/-1; color: #718096; display: none; padding: 40px 0;">
+                <i class="fas fa-search" style="font-size: 40px; margin-bottom: 15px; color: #cbd5e0;"></i>
+                <h3>لم يتم العثور على نتائج مطابقة</h3>
+                <p>جرب البحث بكلمات أخرى أو تغيير الفئة المحددة.</p>
+            </div>
+        </section>
+
+        <section id="suppliers">
+            <h2>واجهة الموردين</h2>
+            <div class="coming-soon-card">
+                <i class="fas fa-tools"></i>
+                <h3>قريباً...</h3>
+                <p>نعمل على إطلاق لوحة تحكم متكاملة للموردين والمطورين لإدارة خدماتهم وتطبيقاتهم ومتابعة الإحصائيات مباشرة.</p>
+            </div>
+        </section>
+        
+        <section id="contact">
+            <h2>تواصل معنا</h2>
+            <p>هل لديك استفسار أو اقتراح؟ نحن هنا للمساعدة دائماً.</p>
+            <form class="contact-form" id="contactForm">
+                <input type="text" placeholder="اسمك الكامل" required>
+                <input type="email" placeholder="بريدك الإلكتروني" required>
+                <textarea placeholder="رسالتك..." rows="4" required></textarea>
+                <button type="submit">إرسال الرسالة</button>
+            </form>
+        </section>
+    </main>
     
-    <div class="dev-controls">
-      <button class="dev-btn" onclick="togglePhysics()">تسريع السائل</button>
-      <button class="dev-btn" onclick="toggleBlurMode()">تبديل الضبابية</button>
-      <button class="dev-btn" onclick="resetCard()">إعادة ضبط</button>
+    <footer>
+        <div class="glowing-container">
+            <p class="glowing-text">Monty Go SDN</p>
+        </div>
+        <div class="footer-branding">
+            <p>&copy; 2026 Sudan Play - Monty Go SDN Co-Ltd. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- Details Modal -->
+    <div id="appDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+                <img id="detailsIcon" src="" alt="Icon" style="width: 70px; height: 70px; border-radius: 12px;">
+                <div>
+                    <h3 id="detailsTitle" style="font-size: 1.4em;"></h3>
+                    <p id="detailsCategory" style="color: var(--primary); font-size: 0.9em;"></p>
+                </div>
+            </div>
+            <h4 style="margin-bottom: 8px;">الوصف</h4>
+            <p id="detailsDescription" style="color: #4a5568; line-height: 1.6; margin-bottom: 20px;"></p>
+            
+            <div style="display: flex; gap: 10px;">
+                <a id="detailsAndroidLink" href="#" target="_blank" style="flex:1; text-decoration:none;">
+                    <button class="download-modal-btn" style="background:#2ea44f;"><i class="fab fa-android"></i> أندرويد</button>
+                </a>
+                <a id="detailsIosLink" href="#" target="_blank" style="flex:1; text-decoration:none;">
+                    <button class="download-modal-btn" style="background:#007AFF;"><i class="fab fa-apple"></i> آيفون</button>
+                </a>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <!-- خلفية السوائل Dynamic Liquid Blobs -->
-  <div class="background-canvas">
-    <div class="blob blob-1" id="b1"></div>
-    <div class="blob blob-2" id="b2"></div>
-    <div class="blob blob-3" id="b3"></div>
-  </div>
+    <!-- Submission Modal -->
+    <div id="submissionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSubmissionModal()">&times;</span>
+            <h2 style="text-align: center; margin-bottom: 20px; color: var(--dark);">تقديم طلب نشر تطبيق</h2>
+            
+            <div style="background: var(--gradient-light); padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; border: 1px dashed var(--primary);">
+                <p style="font-weight: bold; margin-bottom: 5px;">رسوم النشر: 25,000 ج.س</p>
+                <p style="font-size: 0.9em; color: #4a5568;">الحساب: <strong>8437856</strong> (Monty Go SDN)</p>
+            </div>
+            
+            <form id="submissionForm">
+                <fieldset>
+                    <legend>معلومات التطبيق</legend>
+                    <input type="text" id="appType" placeholder="الفئة (مثال: أدوات / ألعاب)" required>
+                    <input type="text" id="appName" placeholder="اسم التطبيق" required>
+                    <input type="url" id="appIconLink" placeholder="رابط صورة الأيقونة (URL)" required>
+                    <textarea id="appDescription" placeholder="وصف قصير للتطبيق" rows="3" required></textarea>
+                </fieldset>
+                
+                <fieldset>
+                    <legend>روابط التنزيل والبيانات</legend>
+                    <input type="url" id="appAndroidLink" placeholder="رابط تنزيل الأندرويد" required>
+                    <input type="url" id="appIosLink" placeholder="رابط الآيفون (اختياري)">
+                    <input type="text" id="devName" placeholder="اسم المطور / الجهة" required>
+                    <input type="email" id="devEmail" placeholder="البريد الإلكتروني للتواصل" required>
+                    <input type="text" id="transactionId" placeholder="رقم عملية التحويل المصرفي" required>
+                </fieldset>
 
-  <!-- بطاقة الزجاج السائل Main Liquid Card -->
-  <main class="main-container">
-    <div class="liquid-glass-card" id="glassCard">
-      <h2 class="glass-title">تأثير الزجاج السائل</h2>
-      <p class="glass-desc">
-        تجربة تفاعلية تمزج بين محاكاة حركة السوائل والانكسار الضوئي للزجاج ثلاثي الأبعاد. حرك المؤشر أو اضغط لتوليد تموجات زجاجية.
-      </p>
-      <div class="status-box">
-        &gt; Liquid Physics: Interactive<br>
-        &gt; Backdrop Blur: 24px (Saturate 200%)<br>
-        &gt; Dev Interface: Active On Top
-      </div>
+                <button type="submit" class="download-modal-btn">إرسال الطلب للمراجعة</button>
+            </form>
+        </div>
     </div>
-  </main>
 
-  <script>
-    // ----------------------------------------------------
-    // 1. حركة الانكسار ثلاثية الأبعاد (3D Parallax Tilt)
-    // ----------------------------------------------------
-    const card = document.getElementById('glassCard');
+    <div id="toast-message"></div>
 
-    document.addEventListener('mousemove', (e) => {
-      const xAxis = (window.innerWidth / 2 - e.pageX) / 22;
-      const yAxis = (window.innerHeight / 2 - e.pageY) / 22;
-      card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-    });
+    <script>
+        let isIOSDevice = false;
+        let isAndroidDevice = false;
+        let allApps = [];
 
-    document.addEventListener('mouseleave', () => {
-      card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-    });
+        // 1. Firebase Initialization
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
+            authDomain: "sudan-play.firebaseapp.com",
+            projectId: "sudan-play",
+            storageBucket: "sudan-play.firebasestorage.app",
+            messagingSenderId: "981764948623",
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
+        };
 
-    // ----------------------------------------------------
-    // 2. تأثير تموج الماء عند الضغط (Liquid Ripple Effect)
-    // ----------------------------------------------------
-    card.addEventListener('click', function (e) {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
 
-      const ripple = document.createElement('span');
-      ripple.classList.add('ripple');
-      ripple.style.left = `${x}px`;
-      ripple.style.top = `${y}px`;
-      ripple.style.width = ripple.style.height = `${Math.max(rect.width, rect.height)}px`;
+        // 2. Device Detection
+        function detectDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                isIOSDevice = true;
+                return 'iOS';
+            }
+            if (/android/i.test(userAgent)) {
+                isAndroidDevice = true;
+                return 'Android';
+            }
+            return 'Desktop';
+        }
 
-      this.appendChild(ripple);
+        function detectAndShowDevice() {
+            const device = detectDevice();
+            const banner = document.getElementById('device-detection-banner');
+            const textElement = document.getElementById('detection-text');
+            
+            if (device === 'iOS') {
+                textElement.innerHTML = `<i class="fab fa-apple"></i> نظام iOS - سيتم ترجيح روابط الآيفون.`;
+                banner.classList.add('show');
+            } else if (device === 'Android') {
+                textElement.innerHTML = `<i class="fab fa-android"></i> نظام أندرويد - سيتم ترجيح روابط الأندرويد.`;
+                banner.classList.add('show');
+            }
+            
+            setTimeout(() => banner.classList.remove('show'), 3500);
+            loadApps();
+        }
 
-      setTimeout(() => {
-        ripple.remove();
-      }, 600);
-    });
+        // 3. UI Helpers
+        function showToast(message) {
+            const toast = document.getElementById("toast-message");
+            toast.textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 4000);
+        }
 
-    // ----------------------------------------------------
-    // 3. أدوات المطورين في الأعلى (Dev Controls Functions)
-    // ----------------------------------------------------
-    let isFast = false;
-    function togglePhysics() {
-      const blobs = document.querySelectorAll('.blob');
-      isFast = !isFast;
-      blobs.forEach(b => {
-        b.style.animationDuration = isFast ? '3s' : '14s';
-      });
-    }
+        function getStarRating(rating) {
+            let stars = '';
+            const full = Math.floor(rating);
+            for (let i = 0; i < 5; i++) {
+                stars += `<i class="${i < full ? 'fas' : 'far'} fa-star filled"></i>`;
+            }
+            return stars;
+        }
 
-    let isBlurHigh = true;
-    function toggleBlurMode() {
-      isBlurHigh = !isBlurHigh;
-      const blurVal = isBlurHigh ? 'blur(24px) saturate(200%)' : 'blur(4px) saturate(100%)';
-      card.style.backdropFilter = blurVal;
-      card.style.webkitBackdropFilter = blurVal;
-    }
+        // 4. Load Apps from Firebase
+        function loadApps() {
+            const appsContainer = document.getElementById('apps-container');
+            const categoryFilter = document.getElementById('categoryFilter');
 
-    function resetCard() {
-      card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-      if (!isBlurHigh) toggleBlurMode();
-      if (isFast) togglePhysics();
-    }
+            db.collection('apps').get().then(snapshot => {
+                appsContainer.innerHTML = '';
+                const categories = new Set(['الكل']);
+                allApps = [];
+                let html = '';
 
-    // ----------------------------------------------------
-    // 4. مادي المحاكاة لحساب FPS (Frames Per Second)
-    // ----------------------------------------------------
-    let lastTime = performance.now();
-    let frameCount = 0;
-    const fpsDisplay = document.getElementById('fps-counter');
+                if (snapshot.empty) {
+                    appsContainer.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: #718096;">لا توجد تطبيقات متاحة حاليًا.</p>';
+                    return;
+                }
 
-    function calculateFPS() {
-      const now = performance.now();
-      frameCount++;
-      if (now - lastTime >= 1000) {
-        fpsDisplay.textContent = frameCount;
-        frameCount = 0;
-        lastTime = now;
-      }
-      requestAnimationFrame(calculateFPS);
-    }
-    requestAnimationFrame(calculateFPS);
-  </script>
+                snapshot.forEach(doc => {
+                    const app = { id: doc.id, ...doc.data() };
+                    allApps.push(app);
+                    if (app.category) categories.add(app.category);
 
+                    const androidLink = app.downloadLink || '#';
+                    const iosLink = app.iphoneDownloadLink || '#';
+
+                    html += `
+                        <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" onclick="showAppDetails('${app.id}')">
+                            <div class="app-cover">
+                                <img src="${(app.screenshotsPaths && app.screenshotsPaths[0]) || 'https://via.placeholder.com/300x150'}" alt="Cover">
+                            </div>
+                            <div class="app-info">
+                                <img src="${app.iconPath || 'https://via.placeholder.com/60'}" class="app-icon" alt="Icon">
+                                <div class="app-text">
+                                    <h4 class="app-title">${app.name || 'بدون اسم'}</h4>
+                                    <div class="app-category">${app.category || 'عام'}</div>
+                                    <div class="app-rating">${getStarRating(app.rating || 5)}</div>
+                                </div>
+                            </div>
+                            <div class="download-buttons-container">
+                                <button class="download-btn-split download-btn-android ${androidLink === '#' ? 'unavailable' : ''}" 
+                                        onclick="event.stopPropagation(); if('${androidLink}'!='#') window.open('${androidLink}', '_blank');">
+                                    <i class="fab fa-android"></i> أندرويد
+                                </button>
+                                <button class="download-btn-split download-btn-ios ${iosLink === '#' ? 'unavailable' : ''}" 
+                                        onclick="event.stopPropagation(); if('${iosLink}'!='#') window.open('${iosLink}', '_blank');">
+                                    <i class="fab fa-apple"></i> آيفون
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                appsContainer.innerHTML = html;
+
+                // Update Category Dropdown
+                categoryFilter.innerHTML = '';
+                categories.forEach(cat => {
+                    categoryFilter.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+
+                document.getElementById('searchInput').addEventListener('input', filterApps);
+            }).catch(err => {
+                appsContainer.innerHTML = '<p style="color:red; text-align:center; grid-column: 1/-1;">خطأ في الاتصال بقاعدة البيانات.</p>';
+            });
+        }
+
+        // 5. Filter Logic
+        function filterApps() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            let count = 0;
+
+            document.querySelectorAll('.app-card').forEach(card => {
+                const matchesCategory = (category === 'الكل' || card.dataset.category === category);
+                const matchesSearch = card.dataset.name.toLowerCase().includes(query);
+
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = 'flex';
+                    count++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('noAppsMessage').style.display = count === 0 ? 'block' : 'none';
+        }
+
+        // 6. Modals Control
+        function showAppDetails(appId) {
+            const app = allApps.find(a => a.id === appId);
+            if (!app) return;
+
+            document.getElementById('detailsTitle').textContent = app.name;
+            document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/70';
+            document.getElementById('detailsCategory').textContent = app.category || 'عام';
+            document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
+            
+            document.getElementById('detailsAndroidLink').href = app.downloadLink || '#';
+            document.getElementById('detailsIosLink').href = app.iphoneDownloadLink || '#';
+
+            document.getElementById('appDetailsModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('appDetailsModal').style.display = 'none';
+        }
+
+        function openSubmissionModal() {
+            document.getElementById('submissionModal').style.display = 'block';
+        }
+
+        function closeSubmissionModal() {
+            document.getElementById('submissionModal').style.display = 'none';
+            document.getElementById('submissionForm').reset();
+        }
+
+        // Event Handlers
+        document.getElementById('submissionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submissionData = {
+                appType: document.getElementById('appType').value,
+                appName: document.getElementById('appName').value,
+                appAndroidLink: document.getElementById('appAndroidLink').value,
+                appIosLink: document.getElementById('appIosLink').value || '#',
+                appIconLink: document.getElementById('appIconLink').value,
+                appDescription: document.getElementById('appDescription').value,
+                devName: document.getElementById('devName').value,
+                devEmail: document.getElementById('devEmail').value,
+                transactionId: document.getElementById('transactionId').value,
+                submissionDate: firebase.firestore.FieldValue.serverTimestamp(),
+                reviewStatus: 'Pending'
+            };
+
+            db.collection('submissions').add(submissionData).then(() => {
+                closeSubmissionModal();
+                showToast('✅ تم إرسال الطلب بنجاح، سيتم تدقيقه قريباً.');
+            }).catch(() => {
+                showToast('❌ تعذر إرسال الطلب، تأكد من الاتصال بالشبكة.');
+            });
+        });
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('شكراً لتواصلك! تم استلام رسالتك.');
+            this.reset();
+        });
+
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        };
+    </script>
 </body>
 </html>
