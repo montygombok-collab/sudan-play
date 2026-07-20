@@ -125,7 +125,7 @@
             font-weight: 600;
         }
 
-        /* --- Sections Control --- */
+        /* --- Page Transitions --- */
         .page-section {
             display: none;
             animation: fadeIn 0.3s ease-in-out;
@@ -141,7 +141,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Hero Section --- */
+        /* --- Hero --- */
         .hero {
             margin: 15px auto;
             max-width: 1200px;
@@ -229,14 +229,14 @@
             outline: none;
         }
 
-        /* 🟢 شبكة التطبيقات للأجهزة المتوسطة والكبيرة */
+        /* 🟢 شبكة التطبيقات */
         #apps-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 12px;
         }
 
-        /* 🟢 تحسين كرت التطبيقات وزيادة الوضوح */
+        /* 🟢 كرت التطبيقات المحدث ليشمل التقييمات والتنزيلات */
         .app-card {
             background: var(--glass-card);
             backdrop-filter: blur(14px);
@@ -276,7 +276,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 3px;
+            gap: 2px;
             flex-grow: 1;
         }
 
@@ -302,10 +302,30 @@
             margin-top: 2px;
         }
 
-        .app-category {
+        /* 🟢 شريط التقييم والتنزيلات المصغر */
+        .app-stats-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             font-size: 0.68em;
-            color: var(--primary);
-            font-weight: 600;
+            color: #475569;
+            margin-top: 1px;
+        }
+
+        .app-rating {
+            color: #f59e0b;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .app-downloads-badge {
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 2px;
         }
 
         .download-buttons-container {
@@ -342,7 +362,7 @@
             cursor: not-allowed;
         }
 
-        /* --- 🟢 قسم عن الشركة (Monty Go SDN) 🟢 --- */
+        /* --- About Company --- */
         #about-page {
             max-width: 900px;
             margin: 20px auto;
@@ -385,9 +405,7 @@
             transition: transform 0.2s;
         }
 
-        .service-card:hover {
-            transform: translateY(-4px);
-        }
+        .service-card:hover { transform: translateY(-4px); }
 
         .service-card i {
             font-size: 2.2em;
@@ -582,7 +600,7 @@
             opacity: 1;
         }
 
-        /* 📱 🟢 تحسينات خاصة جداً بالهواتف (عرض 4 تطبيقات متناسقة) 📱 */
+        /* 📱 🟢 التنسيقات للشاشات الصغيرة والهواتف 📱 */
         @media (max-width: 600px) {
             header { padding: 8px 10px; }
 
@@ -593,7 +611,6 @@
 
             .logo span { font-size: 0.85em; }
 
-            /* 🟢 ضبط الشبكة لجعل الصف يحوي 4 تطبيقات بدقة ومتانة دون تكدس */
             #apps-container {
                 grid-template-columns: repeat(4, 1fr) !important;
                 gap: 5px !important;
@@ -621,7 +638,10 @@
                 font-weight: 700;
             }
 
-            .app-category { display: none; } /* إخفاء قسم التصنيف في الأجهزة الصغيرة */
+            .app-stats-row {
+                font-size: 0.58em;
+                gap: 3px;
+            }
 
             .download-buttons-container {
                 padding: 3px 2px;
@@ -704,7 +724,7 @@
             </div>
         </section>
 
-        <!-- 2. 🟢 صفحة عن الشركة (Monty Go SDN) 🟢 -->
+        <!-- 2. صفحة عن الشركة (Monty Go SDN) -->
         <section id="about-page" class="page-section">
             <div class="glass-panel">
                 <div class="company-hero">
@@ -782,18 +802,18 @@
                 <div>
                     <h3 id="detailsTitle" style="font-size: 1em;"></h3>
                     <p id="detailsCategory" style="color: var(--primary); font-size: 0.78em;"></p>
+                    <div style="display: flex; gap: 8px; font-size: 0.75em; color: #64748b; margin-top: 2px;">
+                        <span id="detailsRating" style="color: #f59e0b; font-weight: 700;"><i class="fas fa-star"></i> 5.0</span>
+                        <span id="detailsDownloads"><i class="fas fa-download"></i> 0 تنزيل</span>
+                    </div>
                 </div>
             </div>
             <h4 style="margin-bottom: 4px; font-size: 0.85em;">الوصف</h4>
             <p id="detailsDescription" style="color: #475569; line-height: 1.5; font-size: 0.8em; margin-bottom: 12px;"></p>
             
             <div style="display: flex; gap: 6px;">
-                <a id="detailsAndroidLink" href="#" target="_blank" style="flex:1; text-decoration:none;">
-                    <button class="download-modal-btn" style="background:#2ea44f;"><i class="fab fa-android"></i> أندرويد</button>
-                </a>
-                <a id="detailsIosLink" href="#" target="_blank" style="flex:1; text-decoration:none;">
-                    <button class="download-modal-btn" style="background:#007AFF;"><i class="fab fa-apple"></i> آيفون</button>
-                </a>
+                <button id="detailsAndroidBtn" class="download-modal-btn" style="background:#2ea44f;"><i class="fab fa-android"></i> أندرويد</button>
+                <button id="detailsIosBtn" class="download-modal-btn" style="background:#007AFF;"><i class="fab fa-apple"></i> آيفون</button>
             </div>
         </div>
     </div>
@@ -876,6 +896,26 @@
             setTimeout(() => t.classList.remove("show"), 3000);
         }
 
+        // 🟢 تنسيق أرقام التنزيلات (مثال: 1200 تصبح 1.2K)
+        function formatDownloads(count) {
+            if (!count) return '0';
+            if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
+            if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
+            return count.toString();
+        }
+
+        // 🟢 زيادة حساب التنزيلات في الفايربيس عند الضغط
+        function triggerDownload(appId, url) {
+            if (!url || url === '#') return;
+            
+            // تحديث التنزيلات في لوحة التحكم / الفايربيس
+            db.collection('apps').doc(appId).update({
+                downloads: firebase.firestore.FieldValue.increment(1)
+            }).catch(err => console.log('Update downloads error:', err));
+
+            window.open(url, '_blank');
+        }
+
         function loadApps() {
             const container = document.getElementById('apps-container');
             db.collection('apps').get().then(snapshot => {
@@ -895,6 +935,10 @@
 
                     const androidLink = app.downloadLink || '#';
                     const iosLink = app.iphoneDownloadLink || '#';
+                    
+                    // 🟢 جلب القيمة من الفايربيس أو وضع افتراضي
+                    const rating = app.rating ? Number(app.rating).toFixed(1) : '5.0';
+                    const downloadsCount = app.downloads || 0;
 
                     container.innerHTML += `
                         <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" onclick="showAppDetails('${app.id}')">
@@ -904,15 +948,21 @@
                             <div class="app-info">
                                 <img src="${app.iconPath || 'https://via.placeholder.com/40'}" class="app-icon" alt="Icon" loading="lazy">
                                 <h4 class="app-title">${app.name || 'تطبيق'}</h4>
-                                <div class="app-category">${app.category || 'عام'}</div>
+                                
+                                <!-- 🟢 شريط التقييم والتنزيلات -->
+                                <div class="app-stats-row">
+                                    <span class="app-rating"><i class="fas fa-star"></i> ${rating}</span>
+                                    <span>•</span>
+                                    <span class="app-downloads-badge"><i class="fas fa-download"></i> ${formatDownloads(downloadsCount)}</span>
+                                </div>
                             </div>
                             <div class="download-buttons-container">
                                 <button class="download-btn-split download-btn-android ${androidLink === '#' ? 'unavailable' : ''}" 
-                                        onclick="event.stopPropagation(); if('${androidLink}'!='#') window.open('${androidLink}', '_blank');">
+                                        onclick="event.stopPropagation(); triggerDownload('${app.id}', '${androidLink}')">
                                     <i class="fab fa-android"></i> أندرويد
                                 </button>
                                 <button class="download-btn-split download-btn-ios ${iosLink === '#' ? 'unavailable' : ''}" 
-                                        onclick="event.stopPropagation(); if('${iosLink}'!='#') window.open('${iosLink}', '_blank');">
+                                        onclick="event.stopPropagation(); triggerDownload('${app.id}', '${iosLink}')">
                                     <i class="fab fa-apple"></i> آيفون
                                 </button>
                             </div>
@@ -946,8 +996,16 @@
             document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/48';
             document.getElementById('detailsCategory').textContent = app.category || 'عام';
             document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
-            document.getElementById('detailsAndroidLink').href = app.downloadLink || '#';
-            document.getElementById('detailsIosLink').href = app.iphoneDownloadLink || '#';
+            
+            // 🟢 إظهار التقييم والتنزيلات في المودال
+            document.getElementById('detailsRating').innerHTML = `<i class="fas fa-star"></i> ${app.rating ? Number(app.rating).toFixed(1) : '5.0'}`;
+            document.getElementById('detailsDownloads').innerHTML = `<i class="fas fa-download"></i> ${formatDownloads(app.downloads || 0)} تنزيل`;
+
+            const androidBtn = document.getElementById('detailsAndroidBtn');
+            const iosBtn = document.getElementById('detailsIosBtn');
+
+            androidBtn.onclick = () => triggerDownload(app.id, app.downloadLink || '#');
+            iosBtn.onclick = () => triggerDownload(app.id, app.iphoneDownloadLink || '#');
 
             document.getElementById('appDetailsModal').style.display = 'block';
         }
