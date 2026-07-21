@@ -82,12 +82,7 @@
             transition: all 0.3s ease;
         }
 
-        .nav-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .nav-btn.active {
+        .nav-btn:hover, .nav-btn.active {
             background: var(--primary);
             color: white;
         }
@@ -151,7 +146,7 @@
             font-size: 14px;
         }
 
-        .form-control, .form-textarea {
+        .form-control, .form-textarea, .form-select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -160,7 +155,7 @@
             resize: vertical;
         }
 
-        .form-control:focus, .form-textarea:focus {
+        .form-control:focus, .form-textarea:focus, .form-select:focus {
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 2px rgba(74, 107, 255, 0.2);
@@ -295,6 +290,14 @@
         .action-btn.delete:hover {
             background: rgba(255, 94, 125, 0.1);
         }
+
+        .action-btn.visibility-on {
+            color: #28a745;
+        }
+
+        .action-btn.visibility-off {
+            color: #6c757d;
+        }
         
         .submission-card {
             background-color: #fff;
@@ -367,6 +370,8 @@
         }
 
         .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .status-active { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-hidden { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
 
         .empty-state {
             text-align: center;
@@ -646,7 +651,7 @@
     <section id="apps-management-section" class="content-section">
         <div class="container" style="display: flex; gap: 20px; flex-wrap: wrap;"> 
             <div class="app-form-panel">
-                <h2 id="formTitle">إضافة تطبيق جديد</h2>
+                <h2 id="formTitle">إضافة تطبيق جديد (خاص بـ Sudan Play)</h2>
                 <form id="appForm" data-editing-id="">
                     <div class="form-group">
                         <label for="name">اسم التطبيق</label>
@@ -655,6 +660,13 @@
                     <div class="form-group">
                         <label for="category">الفئة</label>
                         <input type="text" id="category" name="category" class="form-control" required placeholder="مثل: ألعاب، أدوات، تواصل">
+                    </div>
+                    <div class="form-group">
+                        <label for="isVisible">حالة إظهار التطبيق في المتجر</label>
+                        <select id="isVisible" name="isVisible" class="form-select">
+                            <option value="true">ظاهر (معروض للمستخدمين)</option>
+                            <option value="false">مخفي (غير متاح حالياً)</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="iconPath">رابط الأيقونة (URL)</label>
@@ -669,7 +681,7 @@
                         <textarea id="fullDescription" name="fullDescription" class="form-textarea" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="downloadLink">رابط ملف التحميل (APK/متجر)</label>
+                        <label for="downloadLink">رابط ملف التحميل (APK/مباشر)</label>
                         <input type="url" id="downloadLink" name="downloadLink" class="form-control" required>
                     </div>
                     <div class="form-group">
@@ -682,10 +694,10 @@
                     </div>
                     <div class="form-group">
                         <label for="rating">التقييم (من 5)</label>
-                        <input type="number" step="0.1" max="5" min="0" id="rating" name="rating" class="form-control" value="0" required>
+                        <input type="number" step="0.1" max="5" min="0" id="rating" name="rating" class="form-control" value="5.0" required>
                     </div>
                     <div class="form-group">
-                        <label for="downloads">عدد التنزيلات</label>
+                        <label for="downloads">عدد التنزيلات الأولي</label>
                         <input type="number" id="downloads" name="downloads" class="form-control" value="0" required>
                     </div>
                     <div class="form-group">
@@ -693,21 +705,21 @@
                         <textarea id="screenshotsPaths" name="screenshotsPaths" class="form-textarea" rows="2" placeholder="URL1, URL2, URL3"></textarea>
                     </div>
                     <div class="form-buttons">
-                        <button type="submit" class="btn-primary" id="submitButton">حفظ التطبيق</button>
+                        <button type="submit" class="btn-primary" id="submitButton">نشر التطبيق مباشرة</button>
                         <button type="button" class="btn-secondary" id="resetButton">إعادة ضبط</button>
                     </div>
                 </form>
             </div>
 
             <div class="app-list-panel">
-                <h2>قائمة التطبيقات المنشورة</h2>
+                <h2>قائمة التطبيقات المسجلة</h2>
                 <div id="appsList"></div>
             </div>
         </div>
     </section>
     
     <section id="submissions-section" class="content-section" style="display: none;">
-        <h2>طلبات نشر التطبيقات الجديدة</h2>
+        <h2>طلبات نشر التطبيقات الجديدة (من المطورين)</h2>
         <div class="submissions-list" id="submissionsList"></div>
     </section>
 
@@ -776,12 +788,10 @@
         }
         const db = firebase.firestore();
 
-        // **دالة تنظيف وتعديل الروابط لتجاوز حظر 403 Forbidden**
         function formatDownloadUrl(url) {
             if (!url) return '#';
             let cleanUrl = url.trim();
 
-            // إصلاح روابط Google Drive إذا وُجدت
             if (cleanUrl.includes('drive.google.com')) {
                 const matches = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
                 if (matches && matches[1]) {
@@ -823,6 +833,16 @@
                 })
                 .catch(error => showToast(`❌ خطأ في الحذف: ${error.message}`));
         }
+
+        // دالة التبديل السريع لحالة إظهار التطبيق
+        function toggleAppVisibility(appId, currentVisibility) {
+            const newVisibility = !currentVisibility;
+            db.collection('apps').doc(appId).update({
+                isVisible: newVisibility
+            }).then(() => {
+                showToast(newVisibility ? '👁️ تم إظهار التطبيق في المتجر' : '🙈 تم إخفاء التطبيق من المتجر');
+            }).catch(error => showToast(`❌ خطأ: ${error.message}`));
+        }
         
         function loadApps() {
             const appsList = document.getElementById('appsList');
@@ -838,10 +858,15 @@
                 snapshot.forEach(doc => {
                     const app = doc.data();
                     const appId = doc.id;
+                    const isVisible = app.isVisible !== false; // افتراضياً يكون ظاهراً
                     const isIosAvailable = app.iphoneDownloadLink && app.iphoneDownloadLink.trim().length > 0;
                     const iosStatusHtml = isIosAvailable 
                         ? '<i class="fab fa-apple" style="color: #555;"></i> iOS: متاح' 
                         : '<i class="fas fa-ban" style="color: #dc3545;"></i> iOS: غير متاح';
+
+                    const visibilityBadge = isVisible 
+                        ? '<span class="status-badge status-active">ظاهر</span>' 
+                        : '<span class="status-badge status-hidden">مخفي</span>';
 
                     const safeDownloadUrl = formatDownloadUrl(app.downloadLink);
 
@@ -853,10 +878,15 @@
                             <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name}">
                         </div>
                         <div class="app-details">
-                            <h3>${app.name}</h3>
+                            <h3>${app.name} ${visibilityBadge}</h3>
                             <p>الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()} <span style="margin-right: 10px;">${iosStatusHtml}</span></p>
                         </div>
                         <div class="app-actions">
+                            <button class="action-btn ${isVisible ? 'visibility-on' : 'visibility-off'}" 
+                                    title="${isVisible ? 'إخفاء من المتجر' : 'إظهار في المتجر'}" 
+                                    onclick="toggleAppVisibility('${appId}', ${isVisible})">
+                                <i class="fas ${isVisible ? 'fa-eye' : 'fa-eye-slash'}"></i>
+                            </button>
                             <a class="action-btn" href="${safeDownloadUrl}" target="_blank" rel="noreferrer noopener" title="تنزيل"><i class="fas fa-download"></i></a>
                             <button class="action-btn" title="تعديل" onclick="editApp('${appId}')"><i class="fas fa-edit"></i></button>
                             <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name}')"><i class="fas fa-trash-alt"></i></button>
@@ -875,13 +905,14 @@
                     document.getElementById('appForm').setAttribute('data-editing-id', appId);
                     document.getElementById('name').value = app.name || '';
                     document.getElementById('category').value = app.category || '';
+                    document.getElementById('isVisible').value = (app.isVisible !== false).toString();
                     document.getElementById('iconPath').value = app.iconPath || '';
                     document.getElementById('shortDescription').value = app.shortDescription || '';
                     document.getElementById('fullDescription').value = app.fullDescription || '';
                     document.getElementById('downloadLink').value = app.downloadLink || '';
                     document.getElementById('iphoneDownloadLink').value = app.iphoneDownloadLink || '';
                     document.getElementById('size').value = app.size || 0;
-                    document.getElementById('rating').value = app.rating || 0;
+                    document.getElementById('rating').value = app.rating || 5.0;
                     document.getElementById('downloads').value = app.downloads || 0;
                     document.getElementById('screenshotsPaths').value = Array.isArray(app.screenshotsPaths) ? app.screenshotsPaths.join(', ') : (app.screenshotsPaths || '');
                     document.getElementById('submitButton').textContent = 'حفظ التعديلات';
@@ -890,10 +921,10 @@
         }
         
         function resetForm() {
-            document.getElementById('formTitle').textContent = 'إضافة تطبيق جديد';
+            document.getElementById('formTitle').textContent = 'إضافة تطبيق جديد (خاص بـ Sudan Play)';
             document.getElementById('appForm').removeAttribute('data-editing-id');
             document.getElementById('appForm').reset();
-            document.getElementById('submitButton').textContent = 'حفظ التطبيق';
+            document.getElementById('submitButton').textContent = 'نشر التطبيق مباشرة';
         }
 
         function loadSubmissions() {
@@ -967,12 +998,13 @@
                         const appData = {
                             name: submissionData.appName || 'تطبيق جديد',
                             category: submissionData.appType || 'عام', 
+                            isVisible: true,
                             downloadLink: formatDownloadUrl(submissionData.appAndroidLink) || '#',
                             iphoneDownloadLink: formatDownloadUrl(submissionData.appIosLink) || '',
                             iconPath: submissionData.appIconLink || 'placeholder-icon.png',
                             shortDescription: submissionData.appDescription || '',
                             fullDescription: submissionData.appDescription || '',
-                            developerName: submissionData.devName || 'مطور',
+                            developerName: submissionData.devName || 'مطور خارجي',
                             size: 0, rating: 5.0, downloads: 0,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         };
@@ -1140,15 +1172,17 @@
                 const appData = {
                     name: form.name.value,
                     category: form.category.value,
+                    isVisible: form.isVisible.value === "true",
                     iconPath: form.iconPath.value,
                     shortDescription: form.shortDescription.value,
                     fullDescription: form.fullDescription.value,
                     downloadLink: formatDownloadUrl(form.downloadLink.value),
                     iphoneDownloadLink: formatDownloadUrl(form.iphoneDownloadLink.value),
                     size: parseFloat(form.size.value) || 0,
-                    rating: parseFloat(form.rating.value) || 0,
+                    rating: parseFloat(form.rating.value) || 5.0,
                     downloads: parseInt(form.downloads.value) || 0,
                     screenshotsPaths: form.screenshotsPaths.value.split(',').map(s => s.trim()).filter(s => s.length > 0),
+                    developerName: "Sudan Play Admin",
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -1157,9 +1191,11 @@
                     : db.collection('apps').add(appData);
 
                 promise.then(() => {
-                    showToast('✅ تم حفظ التطبيق بنجاح!');
+                    showToast('✅ تم حفظ ونشر التطبيق بنجاح!');
                     resetForm();
                     loadApps(); 
+                }).catch(err => {
+                    showToast(`❌ خطأ أثناء الحفظ: ${err.message}`);
                 });
             });
             
