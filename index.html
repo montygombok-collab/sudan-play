@@ -865,43 +865,43 @@
             .logo span { font-size: 0.85em; }
 
             #apps-container {
-                grid-template-columns: repeat(4, 1fr) !important;
-                gap: 5px !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
             }
 
             #apps-view { padding: 4px; }
 
             .app-card { border-radius: 8px; }
 
-            .app-cover { height: 48px; }
+            .app-cover { height: 55px; }
 
             .app-icon {
-                width: 28px;
-                height: 28px;
-                margin-top: -15px;
+                width: 32px;
+                height: 32px;
+                margin-top: -16px;
                 border-width: 1.5px;
                 border-radius: 6px;
             }
 
-            .app-info { padding: 3px 2px; }
+            .app-info { padding: 4px 2px; }
 
             .app-title {
-                font-size: 0.65em;
+                font-size: 0.72em;
                 margin-top: 1px;
                 font-weight: 700;
             }
 
-            .app-stats-row { font-size: 0.58em; gap: 3px; }
+            .app-stats-row { font-size: 0.62em; gap: 3px; }
 
             .download-buttons-container {
-                padding: 3px 2px;
-                gap: 2px;
-                flex-direction: column;
+                padding: 4px 2px;
+                gap: 3px;
+                flex-direction: row;
             }
 
             .download-btn-split {
-                font-size: 0.58em;
-                padding: 2.5px 0;
+                font-size: 0.62em;
+                padding: 3px 0;
                 border-radius: 4px;
             }
 
@@ -915,7 +915,7 @@
             #categoryFilter {
                 padding: 6px;
                 font-size: 0.72em;
-                max-width: 95px;
+                max-width: 110px;
             }
         }
     </style>
@@ -1124,7 +1124,7 @@
                         4. تحتفظ منصة Monty Go SDN بحق قبول أو رفض التطبيق في حال عدم استيفاء المعايير.
                     </div>
                     <label style="font-size: 0.78em; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                        <input type="checkbox" id="acceptTermsCheckbox"> أوافق على كافة الشروط والأحكام المذكورة أصلها.
+                        <input type="checkbox" id="acceptTermsCheckbox"> أوافق على كافة الشروط والأحكام المذكورة أعلاه.
                     </label>
 
                     <div class="modal-btn-row">
@@ -1146,7 +1146,7 @@
                             <option value="خدمات">خدمات (Services)</option>
                             <option value="اخرى">أخرى</option>  
                         </select>
-                        <input type="url" id="appIconLink" placeholder="رابط الأيقونة المباشر (URL)" required>
+                        <input type="url" id="appIconLink" placeholder="رابط الأيقونة المباشر (URL)">
                         <textarea id="appDescription" placeholder="وصف التطبيق ووظائفه..." rows="2" required></textarea>
                     </fieldset>
 
@@ -1165,7 +1165,7 @@
                             <div class="progress-text" id="devUploadStatus">جاري رفع الملف...</div>
                         </div>
 
-                        <input type="url" id="appAndroidLink" placeholder="أو ضع رابط تنزيل أندرويد خارجي (.apk)" required>
+                        <input type="url" id="appAndroidLink" placeholder="أو ضع رابط تنزيل أندرويد خارجي (.apk)">
                         <input type="url" id="appIosLink" placeholder="رابط الآيفون iOS (اختياري)">
                     </fieldset>
 
@@ -1213,7 +1213,6 @@
         let allApps = [];
         let customerId = "";
 
-        // تعديل كود التهيئة والرابط ليتوافق مع أحدث بنية حظر وإتاحية لدى Storage و Firestore
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
@@ -1379,7 +1378,10 @@
         }
 
         function triggerDownload(appId, url) {
-            if (!url || url === '#') return;
+            if (!url || url === '#' || url.trim() === '') {
+                showToast('⚠️ رابط التحميل غير متاح حالياً.');
+                return;
+            }
             db.collection('apps').doc(appId).update({
                 downloads: firebase.firestore.FieldValue.increment(1)
             }).catch(err => console.log('Update error:', err));
@@ -1396,32 +1398,35 @@
                 const categories = new Set(['الكل']);
 
                 if (snapshot.empty) {
-                    container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em;">لا توجد تطبيقات حالياً.</p>';
+                    container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em; padding:20px;">لا توجد تطبيقات حالياً.</p>';
                     return;
                 }
 
                 snapshot.forEach(doc => {
                     const app = { id: doc.id, ...doc.data() };
                     
-                    // التجاوز الآمن: إظهار التطبيق طالما لم يحدد صراحةً أنه غير متاح (isVisible === false)
                     if (app.isVisible === false) return;
 
                     allApps.push(app);
-                    if (app.category) categories.add(app.category);
+                    const catName = app.category || app.appType || 'عام';
+                    categories.add(catName);
 
+                    const name = app.name || app.appName || 'تطبيق بدون عنوان';
+                    const icon = app.iconPath || app.appIconLink || 'https://via.placeholder.com/40';
+                    const cover = (app.screenshotsPaths && app.screenshotsPaths[0]) || app.coverPath || icon;
                     const androidLink = app.downloadLink || app.appAndroidLink || '#';
                     const iosLink = app.iphoneDownloadLink || app.appIosLink || '#';
                     const rating = app.rating ? Number(app.rating).toFixed(1) : '5.0';
                     const downloadsCount = app.downloads || 0;
 
                     container.innerHTML += `
-                        <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || app.appName || ''}" onclick="showAppDetails('${app.id}')">
+                        <div class="app-card" data-category="${catName}" data-name="${name}" onclick="showAppDetails('${app.id}')">
                             <div class="app-cover">
-                                <img src="${(app.screenshotsPaths && app.screenshotsPaths[0]) || app.iconPath || 'https://via.placeholder.com/150x75'}" alt="Cover" loading="lazy">
+                                <img src="${cover}" alt="Cover" loading="lazy">
                             </div>
                             <div class="app-info">
-                                <img src="${app.iconPath || app.appIconLink || 'https://via.placeholder.com/40'}" class="app-icon" alt="Icon" loading="lazy">
-                                <h4 class="app-title">${app.name || app.appName || 'تطبيق'}</h4>
+                                <img src="${icon}" class="app-icon" alt="Icon" loading="lazy">
+                                <h4 class="app-title">${name}</h4>
                                 <div class="app-stats-row">
                                     <span class="app-rating"><i class="fas fa-star"></i> ${rating}</span>
                                     <span>•</span>
@@ -1448,7 +1453,7 @@
                 document.getElementById('searchInput').addEventListener('input', filterApps);
             }, err => {
                 console.error("Firestore Listen Error:", err);
-                container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em; color:red;">تعذر جلب التطبيقات، يرجى التحديث.</p>';
+                container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em; color:red; padding:20px;">تعذر جلب التطبيقات، يرجى التحديث.</p>';
             });
         }
 
@@ -1467,7 +1472,7 @@
             const app = allApps.find(a => a.id === appId);
             if (!app) return;
 
-            document.getElementById('detailsTitle').textContent = app.name || app.appName;
+            document.getElementById('detailsTitle').textContent = app.name || app.appName || 'تطبيق';
             document.getElementById('detailsIcon').src = app.iconPath || app.appIconLink || 'https://via.placeholder.com/48';
             document.getElementById('detailsCategory').textContent = app.category || app.appType || 'عام';
             document.getElementById('detailsDescription').textContent = app.fullDescription || app.appDescription || 'لا يوجد وصف متاح.';
@@ -1507,11 +1512,10 @@
             } else if (gateNum === 3) {
                 const appName = document.getElementById('appName').value;
                 const appType = document.getElementById('appType').value;
-                const appIconLink = document.getElementById('appIconLink').value;
                 const appAndroidLink = document.getElementById('appAndroidLink').value;
 
-                if (!appName || !appType || !appIconLink || !appAndroidLink) {
-                    showToast('⚠️ يرجى ملء كافة الخانات المطلوبة للتطبيق أو رفع الملف.');
+                if (!appName || !appType || !appAndroidLink) {
+                    showToast('⚠️ يرجى ملء الخانات الأساسية للتطبيق أو رفع ملف APK.');
                     return;
                 }
             }
@@ -1550,7 +1554,7 @@
             db.collection('submissions').add({
                 appName: document.getElementById('appName').value,
                 appType: document.getElementById('appType').value,
-                appIconLink: document.getElementById('appIconLink').value,
+                appIconLink: document.getElementById('appIconLink').value || '',
                 appDescription: document.getElementById('appDescription').value,
                 appAndroidLink: document.getElementById('appAndroidLink').value,
                 appIosLink: document.getElementById('appIosLink').value || '#',
