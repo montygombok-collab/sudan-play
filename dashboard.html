@@ -680,8 +680,8 @@
                         <textarea id="fullDescription" name="fullDescription" class="form-textarea" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="downloadLink">رابط ملف التحميل (APK/مباشر)</label>
-                        <input type="url" id="downloadLink" name="downloadLink" class="form-control" required>
+                        <label for="downloadLink">رابط ملف التحميل (GitHub / APK)</label>
+                        <input type="url" id="downloadLink" name="downloadLink" class="form-control" required placeholder="ضع رابط جيت هوب هنا">
                     </div>
                     <div class="form-group">
                         <label for="iphoneDownloadLink">رابط نسخة الآيفون (iOS Store)</label>
@@ -718,7 +718,7 @@
     </section>
     
     <section id="submissions-section" class="content-section" style="display: none;">
-        <h2>طلبات نشر التطبيقات الجديدة (من المطورين)</h2>
+        <h2>طلبات نشر التطبيقات الجديدة (من المطورين عبر جيت هوب)</h2>
         <div class="submissions-list" id="submissionsList"></div>
     </section>
 
@@ -798,6 +798,11 @@
         function formatDownloadUrl(url) {
             if (!url) return '#';
             let cleanUrl = url.trim();
+
+            // تحويل روابط جيت هوب العادية إلى روابط تحميل مباشر إذا لزم الأمر
+            if (cleanUrl.includes('github.com') && cleanUrl.includes('/blob/')) {
+                cleanUrl = cleanUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+            }
 
             if (cleanUrl.includes('drive.google.com')) {
                 const matches = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -1006,7 +1011,7 @@
                             <p><strong>المطور:</strong> ${submission.devName || 'غير متوفر'} | <strong>البريد:</strong> ${submission.devEmail || 'غير متوفر'}</p>
                             <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code> (بنك: ${submission.bankName || 'غير محدد'})</p>
                             <p><strong>الوصف:</strong> ${submission.appDescription || 'بدون وصف'}</p>
-                            <p><strong>رابط التطبيق:</strong> ${submission.appAndroidLink ? `<a href="${safeSubmissionLink}" target="_blank" rel="noreferrer noopener">رابط التحميل (.APK)</a>` : 'غير متوفر'}</p>
+                            <p><strong>رابط التطبيق (GitHub):</strong> ${submission.appAndroidLink ? `<a href="${safeSubmissionLink}" target="_blank" rel="noreferrer noopener">رابط التحميل (.APK)</a>` : 'غير متوفر'}</p>
                             <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
                         </div>
                         <div class="submission-actions">
@@ -1021,7 +1026,6 @@
             });
         }
 
-        // تحويل الطلب فور الموافقة عليه إلى قواعد بيانات التطبيقات المعروضة
         function reviewSubmission(submissionId, status) {
             if (status === 'rejected') {
                 db.collection('submissions').doc(submissionId).update({
