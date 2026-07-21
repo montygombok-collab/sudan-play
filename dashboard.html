@@ -799,7 +799,6 @@
             if (!url) return '#';
             let cleanUrl = url.trim();
 
-            // تحويل روابط جيت هوب العادية إلى روابط تحميل مباشر إذا لزم الأمر
             if (cleanUrl.includes('github.com') && cleanUrl.includes('/blob/')) {
                 cleanUrl = cleanUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
             }
