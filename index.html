@@ -1213,11 +1213,12 @@
         let allApps = [];
         let customerId = "";
 
+        // تعديل كود التهيئة والرابط ليتوافق مع أحدث بنية حظر وإتاحية لدى Storage و Firestore
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
             projectId: "sudan-play",
-            storageBucket: "sudan-play.firebasestorage.app",
+            storageBucket: "sudan-play.appspot.com",
             messagingSenderId: "981764948623",
             appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
         };
@@ -1226,7 +1227,7 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        /* --- معالجة رفع APK من بوابة المطورين المحدثة --- */
+        /* --- معالجة رفع APK من بوابة المطورين المحدثة مع دعم الاستئناف المباشر --- */
         document.getElementById('submissionApkFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1386,9 +1387,10 @@
             window.open(url, '_blank');
         }
 
+        /* --- تحسين الاستعلام وضمان إظهار التطبيقات النشطة ومنع اختفائها --- */
         function loadApps() {
             const container = document.getElementById('apps-container');
-            db.collection('apps').get().then(snapshot => {
+            db.collection('apps').onSnapshot(snapshot => {
                 container.innerHTML = '';
                 allApps = [];
                 const categories = new Set(['الكل']);
@@ -1400,22 +1402,26 @@
 
                 snapshot.forEach(doc => {
                     const app = { id: doc.id, ...doc.data() };
+                    
+                    // التجاوز الآمن: إظهار التطبيق طالما لم يحدد صراحةً أنه غير متاح (isVisible === false)
+                    if (app.isVisible === false) return;
+
                     allApps.push(app);
                     if (app.category) categories.add(app.category);
 
-                    const androidLink = app.downloadLink || '#';
-                    const iosLink = app.iphoneDownloadLink || '#';
+                    const androidLink = app.downloadLink || app.appAndroidLink || '#';
+                    const iosLink = app.iphoneDownloadLink || app.appIosLink || '#';
                     const rating = app.rating ? Number(app.rating).toFixed(1) : '5.0';
                     const downloadsCount = app.downloads || 0;
 
                     container.innerHTML += `
-                        <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || ''}" onclick="showAppDetails('${app.id}')">
+                        <div class="app-card" data-category="${app.category || ''}" data-name="${app.name || app.appName || ''}" onclick="showAppDetails('${app.id}')">
                             <div class="app-cover">
-                                <img src="${(app.screenshotsPaths && app.screenshotsPaths[0]) || 'https://via.placeholder.com/150x75'}" alt="Cover" loading="lazy">
+                                <img src="${(app.screenshotsPaths && app.screenshotsPaths[0]) || app.iconPath || 'https://via.placeholder.com/150x75'}" alt="Cover" loading="lazy">
                             </div>
                             <div class="app-info">
-                                <img src="${app.iconPath || 'https://via.placeholder.com/40'}" class="app-icon" alt="Icon" loading="lazy">
-                                <h4 class="app-title">${app.name || 'تطبيق'}</h4>
+                                <img src="${app.iconPath || app.appIconLink || 'https://via.placeholder.com/40'}" class="app-icon" alt="Icon" loading="lazy">
+                                <h4 class="app-title">${app.name || app.appName || 'تطبيق'}</h4>
                                 <div class="app-stats-row">
                                     <span class="app-rating"><i class="fas fa-star"></i> ${rating}</span>
                                     <span>•</span>
@@ -1440,6 +1446,9 @@
                 catFilter.innerHTML = '';
                 categories.forEach(c => catFilter.innerHTML += `<option value="${c}">${c}</option>`);
                 document.getElementById('searchInput').addEventListener('input', filterApps);
+            }, err => {
+                console.error("Firestore Listen Error:", err);
+                container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em; color:red;">تعذر جلب التطبيقات، يرجى التحديث.</p>';
             });
         }
 
@@ -1458,18 +1467,21 @@
             const app = allApps.find(a => a.id === appId);
             if (!app) return;
 
-            document.getElementById('detailsTitle').textContent = app.name;
-            document.getElementById('detailsIcon').src = app.iconPath || 'https://via.placeholder.com/48';
-            document.getElementById('detailsCategory').textContent = app.category || 'عام';
-            document.getElementById('detailsDescription').textContent = app.fullDescription || 'لا يوجد وصف متاح.';
+            document.getElementById('detailsTitle').textContent = app.name || app.appName;
+            document.getElementById('detailsIcon').src = app.iconPath || app.appIconLink || 'https://via.placeholder.com/48';
+            document.getElementById('detailsCategory').textContent = app.category || app.appType || 'عام';
+            document.getElementById('detailsDescription').textContent = app.fullDescription || app.appDescription || 'لا يوجد وصف متاح.';
             document.getElementById('detailsRating').innerHTML = `<i class="fas fa-star"></i> ${app.rating ? Number(app.rating).toFixed(1) : '5.0'}`;
             document.getElementById('detailsDownloads').innerHTML = `<i class="fas fa-download"></i> ${formatDownloads(app.downloads || 0)} تنزيل`;
 
             const androidBtn = document.getElementById('detailsAndroidBtn');
             const iosBtn = document.getElementById('detailsIosBtn');
 
-            androidBtn.onclick = () => triggerDownload(app.id, app.downloadLink || '#');
-            iosBtn.onclick = () => triggerDownload(app.id, app.iphoneDownloadLink || '#');
+            const androidLink = app.downloadLink || app.appAndroidLink || '#';
+            const iosLink = app.iphoneDownloadLink || app.appIosLink || '#';
+
+            androidBtn.onclick = () => triggerDownload(app.id, androidLink);
+            iosBtn.onclick = () => triggerDownload(app.id, iosLink);
 
             document.getElementById('appDetailsModal').style.display = 'block';
         }
