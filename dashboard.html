@@ -607,7 +607,6 @@
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
 <body>
@@ -618,7 +617,7 @@
         <div class="modal-content">
             <h3>تأكيد الحذف</h3>
             <p>هل أنت متأكد أنك تريد حذف التطبيق <strong id="appNamePlaceholder"></strong>؟</p>
-            <div class="modal-buttons">
+            <div class="modal-buttons" style="margin-top: 20px;">
                 <button class="modal-btn cancel" onclick="closeDeleteModal()">إلغاء</button>
                 <button class="modal-btn confirm" id="confirmDeleteBtn">حذف نهائي</button>
             </div>
@@ -627,7 +626,7 @@
 
     <div class="header">
         <h1>لوحة تحكم Sudan Play</h1>
-        <button class="logout-btn" onclick="logout()">
+        <button class="logout-btn" onclick="alert('تم تسجيل الخروج')">
             <i class="fas fa-sign-out-alt"></i> تسجيل خروج
         </button>
     </div>
@@ -649,7 +648,7 @@
     </div>
 
     <section id="apps-management-section" class="content-section">
-        <div class="container" style="display: flex; gap: 20px; flex-wrap: wrap;"> 
+        <div class="container" style="display: flex; gap: 20px; flex-wrap: wrap; width: 100%;"> 
             <div class="app-form-panel">
                 <h2 id="formTitle">إضافة تطبيق جديد (خاص بـ Sudan Play)</h2>
                 <form id="appForm" data-editing-id="">
@@ -706,7 +705,7 @@
                     </div>
                     <div class="form-buttons">
                         <button type="submit" class="btn-primary" id="submitButton">نشر التطبيق مباشرة</button>
-                        <button type="button" class="btn-secondary" id="resetButton">إعادة ضبط</button>
+                        <button type="button" class="btn-secondary" id="resetButton" onclick="resetForm()">إعادة ضبط</button>
                     </div>
                 </form>
             </div>
@@ -777,16 +776,24 @@
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
             projectId: "sudan-play",
-            storageBucket: "sudan-play.firebasestorage.app",
+            storageBucket: "sudan-play.appspot.com",
             messagingSenderId: "981764948623",
-            appId: "1:981764948623:web:00e5c9268198f70e39a6fa",
-            measurementId: "G-Y6NP2MNQR9"
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
         };
         
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (sectionId === 'stats-section') loadStats();
+        }
 
         function formatDownloadUrl(url) {
             if (!url) return '#';
@@ -829,7 +836,6 @@
                 .then(() => {
                     showToast('✅ تم حذف التطبيق بنجاح!', 4000);
                     closeDeleteModal();
-                    loadApps(); 
                 })
                 .catch(error => showToast(`❌ خطأ في الحذف: ${error.message}`));
         }
@@ -842,15 +848,15 @@
                 showToast(newVisibility ? '👁️ تم إظهار التطبيق في المتجر' : '🙈 تم إخفاء التطبيق من المتجر');
             }).catch(error => showToast(`❌ خطأ: ${error.message}`));
         }
-        
+
         function loadApps() {
             const appsList = document.getElementById('appsList');
             appsList.innerHTML = '<h3>جاري تحميل التطبيقات...</h3>';
             
-            db.collection('apps').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            db.collection('apps').onSnapshot(snapshot => {
                 appsList.innerHTML = '';
                 if (snapshot.empty) {
-                    appsList.innerHTML = '<p>لا توجد تطبيقات منشورة حاليًا.</p>';
+                    appsList.innerHTML = '<p style="padding:15px; color:#777;">لا توجد تطبيقات منشورة حاليًا.</p>';
                     return;
                 }
                 
@@ -874,10 +880,10 @@
                     
                     appItem.innerHTML = `
                         <div class="app-icon">
-                            <img src="${app.iconPath || 'placeholder.png'}" alt="${app.name}">
+                            <img src="${app.iconPath || 'https://via.placeholder.com/60'}" alt="${app.name}">
                         </div>
                         <div class="app-details">
-                            <h3>${app.name} ${visibilityBadge}</h3>
+                            <h3>${app.name || 'تطبيق'} ${visibilityBadge}</h3>
                             <p>الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()} <span style="margin-right: 10px;">${iosStatusHtml}</span></p>
                         </div>
                         <div class="app-actions">
@@ -888,13 +894,49 @@
                             </button>
                             <a class="action-btn" href="${safeDownloadUrl}" target="_blank" rel="noreferrer noopener" title="تنزيل"><i class="fas fa-download"></i></a>
                             <button class="action-btn" title="تعديل" onclick="editApp('${appId}')"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name}')"><i class="fas fa-trash-alt"></i></button>
+                            <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name || 'التطبيق'}')"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     `;
                     appsList.appendChild(appItem);
                 });
             }, err => console.error("خطأ في جلب التطبيقات:", err));
         }
+
+        document.getElementById('appForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const editingId = this.getAttribute('data-editing-id');
+
+            const screenshotsInput = document.getElementById('screenshotsPaths').value;
+            const screenshotsArray = screenshotsInput ? screenshotsInput.split(',').map(s => s.trim()) : [];
+
+            const appData = {
+                name: document.getElementById('name').value,
+                category: document.getElementById('category').value,
+                isVisible: document.getElementById('isVisible').value === 'true',
+                iconPath: document.getElementById('iconPath').value,
+                shortDescription: document.getElementById('shortDescription').value,
+                fullDescription: document.getElementById('fullDescription').value,
+                downloadLink: formatDownloadUrl(document.getElementById('downloadLink').value),
+                iphoneDownloadLink: formatDownloadUrl(document.getElementById('iphoneDownloadLink').value),
+                size: parseFloat(document.getElementById('size').value) || 0,
+                rating: parseFloat(document.getElementById('rating').value) || 5.0,
+                downloads: parseInt(document.getElementById('downloads').value) || 0,
+                screenshotsPaths: screenshotsArray
+            };
+
+            if (editingId) {
+                db.collection('apps').doc(editingId).update(appData).then(() => {
+                    showToast('✅ تم تحديث بيانات التطبيق بنجاح!');
+                    resetForm();
+                }).catch(err => showToast('❌ خطأ في التحديث: ' + err.message));
+            } else {
+                appData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                db.collection('apps').add(appData).then(() => {
+                    showToast('🎉 تم نشر التطبيق في المتجر مباشرة!');
+                    resetForm();
+                }).catch(err => showToast('❌ خطأ في إضافة التطبيق: ' + err.message));
+            }
+        });
 
         function editApp(appId) {
             db.collection('apps').doc(appId).get().then(doc => {
@@ -962,8 +1004,9 @@
                         </div>
                         <div class="submission-details">
                             <p><strong>المطور:</strong> ${submission.devName || 'غير متوفر'} | <strong>البريد:</strong> ${submission.devEmail || 'غير متوفر'}</p>
-                            <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code></p>
-                            <p><strong>رابط التطبيق:</strong> ${submission.appAndroidLink ? `<a href="${safeSubmissionLink}" target="_blank" rel="noreferrer noopener">رابط التحميل</a>` : 'غير متوفر'}</p>
+                            <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code> (بنك: ${submission.bankName || 'غير محدد'})</p>
+                            <p><strong>الوصف:</strong> ${submission.appDescription || 'بدون وصف'}</p>
+                            <p><strong>رابط التطبيق:</strong> ${submission.appAndroidLink ? `<a href="${safeSubmissionLink}" target="_blank" rel="noreferrer noopener">رابط التحميل (.APK)</a>` : 'غير متوفر'}</p>
                             <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
                         </div>
                         <div class="submission-actions">
@@ -978,38 +1021,49 @@
             });
         }
 
+        // تحويل الطلب فور الموافقة عليه إلى قواعد بيانات التطبيقات المعروضة
         function reviewSubmission(submissionId, status) {
-            const updatePromise = db.collection('submissions').doc(submissionId).update({
-                reviewStatus: status,
-                reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
             if (status === 'rejected') {
-                updatePromise.then(() => showToast('✅ تم رفض الطلب بنجاح.'));
+                db.collection('submissions').doc(submissionId).update({
+                    reviewStatus: 'rejected',
+                    reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => showToast('✅ تم رفض الطلب بنجاح.'));
                 return; 
             }
             
             if (status === 'approved') {
-                updatePromise
-                    .then(() => db.collection('submissions').doc(submissionId).get())
-                    .then(doc => {
-                        const submissionData = doc.data();
-                        const appData = {
-                            name: submissionData.appName || 'تطبيق جديد',
-                            category: submissionData.appType || 'عام', 
-                            isVisible: true,
-                            downloadLink: formatDownloadUrl(submissionData.appAndroidLink) || '#',
-                            iphoneDownloadLink: formatDownloadUrl(submissionData.appIosLink) || '',
-                            iconPath: submissionData.appIconLink || 'placeholder-icon.png',
-                            shortDescription: submissionData.appDescription || '',
-                            fullDescription: submissionData.appDescription || '',
-                            developerName: submissionData.devName || 'مطور خارجي',
-                            size: 0, rating: 5.0, downloads: 0,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        };
-                        return db.collection('apps').add(appData);
-                    })
-                    .then(() => showToast('🎉 تم نشر التطبيق بنجاح!'));
+                db.collection('submissions').doc(submissionId).get().then(doc => {
+                    if (!doc.exists) return;
+                    const submissionData = doc.data();
+                    
+                    const appData = {
+                        name: submissionData.appName || 'تطبيق جديد',
+                        category: submissionData.appType || 'عام', 
+                        isVisible: true,
+                        downloadLink: formatDownloadUrl(submissionData.appAndroidLink) || '#',
+                        iphoneDownloadLink: formatDownloadUrl(submissionData.appIosLink) || '',
+                        iconPath: submissionData.appIconLink || 'https://via.placeholder.com/60',
+                        shortDescription: submissionData.appDescription || '',
+                        fullDescription: submissionData.appDescription || '',
+                        developerName: submissionData.devName || 'مطور خارجي',
+                        size: 0, 
+                        rating: 5.0, 
+                        downloads: 0,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    return db.collection('apps').add(appData).then(() => {
+                        return db.collection('submissions').doc(submissionId).update({
+                            reviewStatus: 'approved',
+                            reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    });
+                }).then(() => {
+                    showToast('🎉 تم قبول التطبيق ونشره في المتجر تلقائياً!');
+                }).catch(err => {
+                    console.error("خطأ في المراجعة:", err);
+                    showToast('❌ حدث خطأ أثناء نشر التطبيق: ' + err.message);
+                });
             }
         }
 
@@ -1070,6 +1124,7 @@
             chatMessagesContainer.innerHTML = '<p style="text-align:center; color:#777;">جاري جلب الرسائل...</p>';
             
             messagesUnsubscribe = db.collection('chats').doc(custId).collection('messages')
+                .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
                     chatMessagesContainer.innerHTML = '';
                     if (snapshot.empty) {
@@ -1077,162 +1132,82 @@
                         return;
                     }
 
-                    let messagesArray = [];
                     snapshot.forEach(doc => {
-                        messagesArray.push(doc.data());
-                    });
-
-                    messagesArray.sort((a, b) => {
-                        const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
-                        const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
-                        return timeA - timeB;
-                    });
-
-                    messagesArray.forEach(msg => {
+                        const msg = doc.data();
                         const bubble = document.createElement('div');
                         bubble.className = `msg-bubble ${msg.sender === 'user' ? 'user' : 'admin'}`;
-                        bubble.textContent = msg.text || '';
+                        bubble.textContent = msg.text;
                         chatMessagesContainer.appendChild(bubble);
                     });
-
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-                }, error => {
-                    console.error("خطأ في جلب محادثة العميل:", error);
-                    chatMessagesContainer.innerHTML = `<p style="color:red; text-align:center;">خطأ في تحميل الرسائل: ${error.message}</p>`;
                 });
         }
 
         function sendAdminReply() {
-            const input = document.getElementById('adminReplyInput');
-            const text = input.value.trim();
-            
-            if (!text) return;
             if (!activeChatCustomerId) {
                 showToast('⚠️ يرجى اختيار عميل من القائمة أولاً.');
                 return;
             }
+            const input = document.getElementById('adminReplyInput');
+            const text = input.value.trim();
+            if (!text) return;
 
-            db.collection('chats').doc(activeChatCustomerId).set({
-                lastReply: firebase.firestore.FieldValue.serverTimestamp(),
-                status: 'active'
-            }, { merge: true }).then(() => {
-                return db.collection('chats').doc(activeChatCustomerId).collection('messages').add({
-                    text: text,
-                    sender: 'admin',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+            db.collection('chats').doc(activeChatCustomerId).collection('messages').add({
+                text: text,
+                sender: 'admin',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 input.value = '';
-                showToast('✅ تم إرسال الرد بنجاح');
-            }).catch(error => {
-                console.error("خطأ في الإرسال:", error);
-                showToast(`❌ خطأ أثناء إرسال الرد: ${error.message}`);
-            });
+            }).catch(err => showToast('❌ فشل إرسال الرد: ' + err.message));
         }
 
         function loadStats() {
             db.collection('apps').get().then(snapshot => {
-                document.getElementById('totalApps').textContent = snapshot.size;
+                let totalApps = snapshot.size;
                 let totalDownloads = 0;
-                snapshot.forEach(doc => totalDownloads += doc.data().downloads || 0);
+                const topAppsList = document.getElementById('topAppsList');
+                topAppsList.innerHTML = '';
+
+                let appsArray = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const dCount = data.downloads || 0;
+                    totalDownloads += dCount;
+                    appsArray.push({ name: data.name || 'تطبيق', downloads: dCount });
+                });
+
+                document.getElementById('totalApps').textContent = totalApps;
                 document.getElementById('totalDownloads').textContent = totalDownloads.toLocaleString();
-            });
-        }
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) targetSection.style.display = 'block';
-            
-            const activeBtn = document.querySelector(`.nav-btn[onclick*="${sectionId}"]`);
-            if(activeBtn) activeBtn.classList.add('active');
-
-            if (sectionId === 'submissions-section') loadSubmissions(); 
-            else if (sectionId === 'apps-management-section') loadApps();
-            else if (sectionId === 'messages-section') loadChatUsers();
-            else if (sectionId === 'stats-section') loadStats();
-        }
-
-        function logout() {
-            firebase.auth().signOut().then(() => {
-                localStorage.removeItem('sudanPlayAdmin');
-                window.location.href = '/login.html';
-            });
-        }
-
-        // ==========================================
-        //  دالة إرسال واستقبال بيانات نموذج التطبيق
-        // ==========================================
-        function setupAppForm() {
-            const form = document.getElementById('appForm');
-            if (!form) return;
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const submitBtn = document.getElementById('submitButton');
-                const editingId = form.getAttribute('data-editing-id');
-                
-                // تعطيل الزر مؤقتاً لتفادي التكرار
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'جاري الحفظ...';
-
-                // تجميع ومعالجة كافة حقول النموذج
-                const rawScreenshots = form.screenshotsPaths.value;
-                const screenshotsPathsArray = rawScreenshots
-                    ? rawScreenshots.split(',').map(s => s.trim()).filter(s => s.length > 0)
-                    : [];
-
-                const appData = {
-                    name: form.name.value.trim(),
-                    category: form.category.value.trim(),
-                    isVisible: form.isVisible.value === "true",
-                    iconPath: form.iconPath.value.trim(),
-                    shortDescription: form.shortDescription.value.trim(),
-                    fullDescription: form.fullDescription.value.trim(),
-                    downloadLink: formatDownloadUrl(form.downloadLink.value),
-                    iphoneDownloadLink: formatDownloadUrl(form.iphoneDownloadLink.value),
-                    size: parseFloat(form.size.value) || 0,
-                    rating: parseFloat(form.rating.value) || 5.0,
-                    downloads: parseInt(form.downloads.value, 10) || 0,
-                    screenshotsPaths: screenshotsPathsArray,
-                    developerName: "Sudan Play Admin",
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                // تحديد العملية: تعديل أم إضافة جديدة
-                let firestorePromise;
-                if (editingId) {
-                    firestorePromise = db.collection('apps').doc(editingId).update(appData);
-                } else {
-                    appData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    firestorePromise = db.collection('apps').add(appData);
-                }
-
-                // تنفيذ العملية ومعالجة النتيجة
-                firestorePromise.then(() => {
-                    showToast(editingId ? '✅ تم تحديث بيانات التطبيق بنجاح!' : '🎉 تم إرسال ونشر التطبيق بنجاح!');
-                    resetForm();
-                    loadApps(); 
-                }).catch(err => {
-                    console.error("خطأ في حفظ البيانات:", err);
-                    showToast(`❌ خطأ أثناء الحفظ: ${err.message}`);
-                }).finally(() => {
-                    submitBtn.disabled = false;
+                appsArray.sort((a, b) => b.downloads - a.downloads);
+                appsArray.slice(0, 5).forEach((app, idx) => {
+                    topAppsList.innerHTML += `
+                        <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
+                            <span><b>#${idx + 1}</b> ${app.name}</span>
+                            <span style="color:var(--primary); font-weight:bold;"><i class="fas fa-download"></i> ${app.downloads.toLocaleString()}</span>
+                        </div>
+                    `;
                 });
             });
-            
-            document.getElementById('resetButton').addEventListener('click', resetForm);
+
+            db.collection('submissions').get().then(snapshot => {
+                let pending = 0;
+                let approved = 0;
+                snapshot.forEach(doc => {
+                    const status = doc.data().reviewStatus || 'Pending';
+                    if (status === 'Pending') pending++;
+                    if (status === 'approved') approved++;
+                });
+                document.getElementById('pendingSubmissions').textContent = pending;
+                document.getElementById('approvedSubmissions').textContent = approved;
+            });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            firebase.auth().onAuthStateChanged(user => {
-                setupAppForm();
-                showSection('apps-management-section');
-            });
-        });
+        window.onload = function() {
+            loadApps();
+            loadSubmissions();
+            loadChatUsers();
+        };
     </script>
 </body>
 </html>
