@@ -1019,7 +1019,7 @@
                     <div class="service-card">
                         <i class="fas fa-globe"></i>
                         <h4>تطوير المواقع</h4>
-                        <p>بناء منصات ومواقع إلكترونية بتصميم عصري ومتجاوب مع جميع المقاسات والشاشات.</p>
+                        <p>بناء منصات وم مواقع إلكترونية بتصميم عصري ومتجاوب مع جميع المقاسات والشاشات.</p>
                     </div>
                     <div class="service-card">
                         <i class="fas fa-cogs"></i>
@@ -1226,7 +1226,7 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        /* --- معالجة رفع APK من بوابة المطورين مباشرة --- */
+        /* --- معالجة رفع APK من بوابة المطورين المحدثة --- */
         document.getElementById('submissionApkFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1238,9 +1238,8 @@
 
             nextBtn.disabled = true;
             progressBox.style.display = 'block';
-            statusText.textContent = 'جاري رفع الملف إلى الخادم...';
+            statusText.textContent = 'جاري بدء عملية الرفع...';
 
-            // الحفظ في مجلد developer_uploads في Firebase Storage
             const storageRef = storage.ref('developer_uploads/' + Date.now() + '_' + file.name);
             const uploadTask = storageRef.put(file);
 
@@ -1251,9 +1250,10 @@
                     statusText.textContent = `جاري الرفع: ${Math.round(progress)}%`;
                 }, 
                 (error) => {
+                    console.error("Storage Upload Error:", error);
                     showToast('❌ فشل رفع الملف: ' + error.message);
+                    statusText.textContent = 'حدث خطأ أثناء الرفع!';
                     nextBtn.disabled = false;
-                    progressBox.style.display = 'none';
                 }, 
                 () => {
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
@@ -1261,6 +1261,10 @@
                         showToast('✅ تم رفع تطبيقك بنجاح وتعبئة الرابط!');
                         nextBtn.disabled = false;
                         statusText.textContent = 'اكتمل الرفع بنجاح!';
+                    }).catch(err => {
+                        console.error("URL Fetch Error:", err);
+                        showToast('❌ فشل جلب رابط التنزيل');
+                        nextBtn.disabled = false;
                     });
                 }
             );
