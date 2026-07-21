@@ -955,7 +955,7 @@
         <section id="main-page" class="page-section active-page">
             <div class="hero">
                 <h2>متجر السودان</h2>
-                <p>استكشف وحمّل أحدث التطبيقات المحلية والعالمية سريع.</p>
+                <p>استكشف وحمّل أحدث التطبيقات المحلية والعالمية سريعاً.</p>
                 <button onclick="document.getElementById('apps-view').scrollIntoView({behavior: 'smooth'});">تصفح الآن</button>
             </div>
 
@@ -993,7 +993,7 @@
                     <span id="customer-id-tag" style="font-size: 0.72em; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 10px;">معرف العميل: جاري التعرف...</span>
                 </div>
                 <div class="chat-box" id="chatBox">
-                    <div class="chat-msg agent">مرحباً بك! كيف يمكننا مساعدتك ؟ تم التعرّف على جلسك وستظل محادثتك محفوظة.</div>
+                    <div class="chat-msg agent">مرحباً بك! كيف يمكننا مساعدتك ؟ تم التعرف على جلستك وستظل محادثتك محفوظة.</div>
                 </div>
                 <div class="chat-input-area">
                     <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -1042,7 +1042,7 @@
                     <div class="feature-box">
                         <i class="fas fa-shield-alt" style="color: var(--primary); font-size: 1.5em;"></i>
                         <h4 style="font-size: 0.88em; margin-top: 6px;">حماية الأكواد</h4>
-                        <p style="font-size: 0.72em; color: #64748b;">مراجعة وأمان عالي لكافة الموارد المرفوقة.</p>
+                        <p style="font-size: 0.72em; color: #64748b;">مراجعة وأمان عالي لكافة الموارد المرفقة.</p>
                     </div>
                     <div class="feature-box">
                         <i class="fas fa-rocket" style="color: var(--primary); font-size: 1.5em;"></i>
@@ -1072,7 +1072,7 @@
             <div class="brand-title">Monty Go SDN</div>
         </div>
         <div class="footer-rights">
-            <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة لـ Monty Go SDN-السودان -ولاية الخرطوم</p>
+            <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة لـ Monty Go SDN - السودان - ولاية الخرطوم</p>
         </div>
     </footer>
 
@@ -1118,8 +1118,8 @@
                     <h4 style="font-size:0.88em; margin-bottom:6px; color:var(--primary);"><i class="fas fa-file-contract"></i> البوابة الأولى: الاتفاقية والشروط</h4>
                     <div class="terms-box">
                         <b>شروط ونصوص النشر على Sudan Play:</b><br>
-                        1. يتعهد المطور بأن التطبيق خالي من أي برمجيات خبيثة أو نصوص تضر ببيانات المستخدم.<br>
-                        2. يجب أن يتوافق التطبيق مع الأنظمة والتعليمات العامة ولا يحتك بملكية فكرية محفوظة.<br>
+                        1. يتعهد المطور بأن التطبيق خالٍ من أي برمجيات خبيثة أو نصوص تضر ببيانات المستخدم.<br>
+                        2. يجب أن يتوافق التطبيق مع الأنظمة والتعليمات العامة ولا ينتهك ملكية فكرية محفوظة.<br>
                         3. الرسوم المدفوعة هي رسوم مراجعة ونشر غير قابلة للاسترداد بعد البدء في عملية الفحص.<br>
                         4. تحتفظ منصة Monty Go SDN بحق قبول أو رفض التطبيق في حال عدم استيفاء المعايير.
                     </div>
@@ -1144,7 +1144,7 @@
                             <option value="تعليم">تعليم (Education)</option>
                             <option value="إنتاجية">إنتاجية (Productivity)</option>
                             <option value="خدمات">خدمات (Services)</option>
-                            <option value="اخرى">اخرى</option>  
+                            <option value="اخرى">أخرى</option>  
                         </select>
                         <input type="url" id="appIconLink" placeholder="رابط الأيقونة المباشر (URL)" required>
                         <textarea id="appDescription" placeholder="وصف التطبيق ووظائفه..." rows="2" required></textarea>
@@ -1270,10 +1270,10 @@
         function getCookie(name) {
             let nameEQ = name + "=";
             let ca = document.cookie.split(';');
-            for(let i=0;i < ca.length;i++) {
+            for(let i=0; i < ca.length; i++) {
                 let c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+                while (c.charAt(0)==' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
             }
             return null;
         }
