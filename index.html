@@ -1102,9 +1102,10 @@
                     </fieldset>
 
                     <fieldset>
-                        <legend>روابط التنزيل المباشرة (مثل GitHub)</legend>
-                        <input type="url" id="appAndroidLink" placeholder="رابط تحميل أندرويد المباشر (.apk مثل GitHub)" required>
-                        <input type="url" id="appIosLink" placeholder="رابط الآيفون iOS (اختياري)">
+                        <legend>رفع ملف التطبيق (APK)</legend>
+                        <label style="font-size: 0.78em; color: #475569; display: block; margin-bottom: 4px;">اختر ملف الـ APK من جهازك:</label>
+                        <input type="file" id="appFile" accept=".apk" required style="padding: 6px; background: rgba(255,255,255,0.85);">
+                        <input type="url" id="appIosLink" placeholder="رابط الآيفون iOS (اختياري)" style="margin-top: 8px;">
                     </fieldset>
 
                     <div class="modal-btn-row">
@@ -1403,10 +1404,10 @@
             } else if (gateNum === 3) {
                 const appName = document.getElementById('appName').value;
                 const appType = document.getElementById('appType').value;
-                const appAndroidLink = document.getElementById('appAndroidLink').value;
+                const appFile = document.getElementById('appFile').files[0];
 
-                if (!appName || !appType || !appAndroidLink) {
-                    showToast('⚠️ يرجى ملء الخانات الأساسية ورابط أندرويد المباشر.');
+                if (!appName || !appType || !appFile) {
+                    showToast('⚠️ يرجى ملء الخانات الأساسية واختيار ملف أندرويد (APK).');
                     return;
                 }
             }
@@ -1436,33 +1437,44 @@
             const bankName = document.getElementById('bankName').value;
             const devName = document.getElementById('devName').value;
             const devEmail = document.getElementById('devEmail').value;
+            const fileInput = document.getElementById('appFile');
+            const file = fileInput.files[0];
 
-            if (!transactionId || !bankName || !devName || !devEmail) {
-                showToast('⚠️ يرجى إكمال جميع بيانات التحويل وتواصل المطور.');
+            if (!transactionId || !bankName || !devName || !devEmail || !file) {
+                showToast('⚠️ يرجى إكمال جميع البيانات وملف الـ APK.');
                 return;
             }
 
-            db.collection('submissions').add({
-                appName: document.getElementById('appName').value,
-                appType: document.getElementById('appType').value,
-                appIconLink: document.getElementById('appIconLink').value || '',
-                appDescription: document.getElementById('appDescription').value,
-                appAndroidLink: document.getElementById('appAndroidLink').value,
-                appIosLink: document.getElementById('appIosLink').value || '#',
-                transactionId: transactionId,
-                bankName: bankName,
-                devName: devName,
-                devEmail: devEmail,
-                reviewStatus: 'Pending',
-                submissionDate: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                closeSubmissionModal();
-                showToast('✅ تم إرسال الطلب ورقم التحويل بنجاح للمراجعة.');
-                document.getElementById('submissionForm').reset();
-            }).catch(err => {
-                showToast('❌ حدث خطأ أثناء إرسال البيانات.');
-                console.error(err);
-            });
+            showToast('⏳ جاري تجهيز ورفع ملف التطبيق...');
+
+            const reader = new FileReader();
+            reader.onload = function(uploadEvent) {
+                const base64Content = uploadEvent.target.result.split(',')[1];
+
+                db.collection('submissions').add({
+                    appName: document.getElementById('appName').value,
+                    appType: document.getElementById('appType').value,
+                    appIconLink: document.getElementById('appIconLink').value || '',
+                    appDescription: document.getElementById('appDescription').value,
+                    appFileName: file.name,
+                    appFileBase64: base64Content,
+                    appIosLink: document.getElementById('appIosLink').value || '#',
+                    transactionId: transactionId,
+                    bankName: bankName,
+                    devName: devName,
+                    devEmail: devEmail,
+                    reviewStatus: 'Pending',
+                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    closeSubmissionModal();
+                    showToast('✅ تم إرسال الطلب وملف التطبيق بنجاح للمراجعة.');
+                    document.getElementById('submissionForm').reset();
+                }).catch(err => {
+                    showToast('❌ حدث خطأ أثناء إرسال البيانات.');
+                    console.error(err);
+                });
+            };
+            reader.readAsDataURL(file);
         });
 
         window.onclick = function(e) {
