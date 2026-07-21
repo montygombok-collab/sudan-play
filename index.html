@@ -691,7 +691,7 @@
             font-family: monospace;
         }
 
-        input[type="text"], input[type="email"], input[type="url"], input[type="number"], input[type="file"], select, textarea {
+        input[type="text"], input[type="email"], input[type="url"], input[type="number"], select, textarea {
             width: 100%;
             padding: 9px;
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -700,32 +700,6 @@
             font-size: 0.85em;
             margin-bottom: 8px;
             outline: none;
-        }
-
-        .upload-progress-box {
-            display: none;
-            margin-bottom: 8px;
-        }
-
-        .progress-bar-bg {
-            width: 100%;
-            background: #e2e8f0;
-            height: 10px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            transition: width 0.3s;
-        }
-
-        .progress-text {
-            font-size: 0.72em;
-            color: #475569;
-            margin-top: 3px;
         }
 
         fieldset {
@@ -908,7 +882,6 @@
     </style>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
 </head>
 <body onload="detectAndShowDevice(); initCustomerProfile();">
 
@@ -1129,26 +1102,14 @@
                     </fieldset>
 
                     <fieldset>
-                        <legend>ملف أو رابط التطبيق</legend>
-                        <label style="font-size: 0.75em; color: var(--primary); font-weight: bold; display: block; margin-bottom: 3px;">
-                            <i class="fas fa-file-upload"></i> اختر ملف APK من جهازك مباشرة (تلقائي):
-                        </label>
-                        <input type="file" id="submissionApkFile" accept=".apk">
-                        
-                        <div class="upload-progress-box" id="devUploadProgressBox">
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" id="devProgressBarFill"></div>
-                            </div>
-                            <div class="progress-text" id="devUploadStatus">جاري رفع الملف...</div>
-                        </div>
-
-                        <input type="url" id="appAndroidLink" placeholder="أو ضع رابط تنزيل أندرويد خارجي (.apk)">
-                        <input type="url" id="appIosLink" placeholder="رابط الآيفون iOS (اختياري)">
+                        <legend>روابط التنزيل المباشرة (مثل GitHub)</legend>
+                        <input type="url" id="appAndroidLink" placeholder="رابط تحميل أندرويد المباشر (.apk مثل GitHub)" required>
+                        <input type="url" id="appIosLink" placeholder="رابط الآيفون iOS أو الويب (اختياري)">
                     </fieldset>
 
                     <div class="modal-btn-row">
                         <button type="button" class="btn-gate btn-prev" onclick="goToGate(1)">السابق</button>
-                        <button type="button" class="btn-gate btn-next" id="gate2NextBtn" onclick="goToGate(3)">التالي: الدفع والتحويل <i class="fas fa-arrow-left"></i></button>
+                        <button type="button" class="btn-gate btn-next" onclick="goToGate(3)">التالي: الدفع والتحويل <i class="fas fa-arrow-left"></i></button>
                     </div>
                 </div>
 
@@ -1201,50 +1162,6 @@
 
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        document.getElementById('submissionApkFile').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const nextBtn = document.getElementById('gate2NextBtn');
-            const progressBox = document.getElementById('devUploadProgressBox');
-            const progressBar = document.getElementById('devProgressBarFill');
-            const statusText = document.getElementById('devUploadStatus');
-
-            nextBtn.disabled = true;
-            progressBox.style.display = 'block';
-            statusText.textContent = 'جاري بدء عملية الرفع...';
-
-            const storageRef = storage.ref('developer_uploads/' + Date.now() + '_' + file.name);
-            const uploadTask = storageRef.put(file);
-
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressBar.style.width = progress + '%';
-                    statusText.textContent = `جاري الرفع: ${Math.round(progress)}%`;
-                }, 
-                (error) => {
-                    console.error("Storage Upload Error:", error);
-                    showToast('❌ فشل رفع الملف: ' + error.message);
-                    statusText.textContent = 'حدث خطأ أثناء الرفع!';
-                    nextBtn.disabled = false;
-                }, 
-                () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        document.getElementById('appAndroidLink').value = downloadURL;
-                        showToast('✅ تم رفع تطبيقك بنجاح وتعبئة الرابط!');
-                        nextBtn.disabled = false;
-                        statusText.textContent = 'اكتمل الرفع بنجاح!';
-                    }).catch(err => {
-                        console.error("URL Fetch Error:", err);
-                        showToast('❌ فشل جلب رابط التنزيل');
-                        nextBtn.disabled = false;
-                    });
-                }
-            );
-        });
 
         function getCookie(name) {
             let nameEQ = name + "=";
@@ -1489,7 +1406,7 @@
                 const appAndroidLink = document.getElementById('appAndroidLink').value;
 
                 if (!appName || !appType || !appAndroidLink) {
-                    showToast('⚠️ يرجى ملء الخانات الأساسية للتطبيق أو رفع ملف APK.');
+                    showToast('⚠️ يرجى ملء الخانات الأساسية ورابط أندرويد المباشر.');
                     return;
                 }
             }
@@ -1512,7 +1429,6 @@
             }
         }
 
-        // إرسال البيانات مباشرة إلى مجموعة submissions في Firebase عند الضغط على تأكيد الطلب
         document.getElementById('submissionForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -1543,7 +1459,6 @@
                 closeSubmissionModal();
                 showToast('✅ تم إرسال الطلب ورقم التحويل بنجاح للمراجعة.');
                 document.getElementById('submissionForm').reset();
-                document.getElementById('devUploadProgressBox').style.display = 'none';
             }).catch(err => {
                 showToast('❌ حدث خطأ أثناء إرسال البيانات.');
                 console.error(err);
