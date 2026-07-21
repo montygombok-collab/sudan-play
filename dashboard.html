@@ -278,6 +278,10 @@
             padding: 8px;
             border-radius: 5px;
             transition: background 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .action-btn:hover {
@@ -376,7 +380,6 @@
             margin-bottom: 15px;
         }
 
-        /* === أنماط قسم الرسائل والدردشة الدعم المباشر === */
         .chat-dashboard-wrapper {
             display: flex;
             height: 600px;
@@ -708,7 +711,6 @@
         <div class="submissions-list" id="submissionsList"></div>
     </section>
 
-    <!-- قسم الرسائل والدعم المباشر -->
     <section id="messages-section" class="content-section" style="display: none;">
         <h2>محادثات الدعم المباشر مع العملاء</h2>
         <div class="chat-dashboard-wrapper">
@@ -774,6 +776,21 @@
         }
         const db = firebase.firestore();
 
+        // **دالة تنظيف وتعديل الروابط لتجاوز حظر 403 Forbidden**
+        function formatDownloadUrl(url) {
+            if (!url) return '#';
+            let cleanUrl = url.trim();
+
+            // إصلاح روابط Google Drive إذا وُجدت
+            if (cleanUrl.includes('drive.google.com')) {
+                const matches = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                if (matches && matches[1]) {
+                    return `https://drive.google.com/uc?export=download&id=${matches[1]}`;
+                }
+            }
+            return cleanUrl;
+        }
+
         function showToast(message, duration = 3000) {
             const toast = document.getElementById("toast");
             if (!toast) return;
@@ -826,6 +843,8 @@
                         ? '<i class="fab fa-apple" style="color: #555;"></i> iOS: متاح' 
                         : '<i class="fas fa-ban" style="color: #dc3545;"></i> iOS: غير متاح';
 
+                    const safeDownloadUrl = formatDownloadUrl(app.downloadLink);
+
                     const appItem = document.createElement('div');
                     appItem.className = 'app-item';
                     
@@ -838,6 +857,7 @@
                             <p>الفئة: ${app.category || 'عام'} | التنزيلات: ${(app.downloads || 0).toLocaleString()} <span style="margin-right: 10px;">${iosStatusHtml}</span></p>
                         </div>
                         <div class="app-actions">
+                            <a class="action-btn" href="${safeDownloadUrl}" target="_blank" rel="noreferrer noopener" title="تنزيل"><i class="fas fa-download"></i></a>
                             <button class="action-btn" title="تعديل" onclick="editApp('${appId}')"><i class="fas fa-edit"></i></button>
                             <button class="action-btn delete" title="حذف" onclick="openDeleteModal('${appId}', '${app.name}')"><i class="fas fa-trash-alt"></i></button>
                         </div>
@@ -899,6 +919,8 @@
                     if (status === 'Pending') pendingCount++;
                     if (status !== 'Pending') return; 
 
+                    const safeSubmissionLink = formatDownloadUrl(submission.appAndroidLink);
+
                     const card = document.createElement('div');
                     card.className = 'submission-card';
                     const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
@@ -911,7 +933,7 @@
                         <div class="submission-details">
                             <p><strong>المطور:</strong> ${submission.devName || 'غير متوفر'} | <strong>البريد:</strong> ${submission.devEmail || 'غير متوفر'}</p>
                             <p><strong>رقم التحويل البنكي:</strong> <code>${submission.transactionId || 'غير متوفر'}</code></p>
-                            <p><strong>رابط التطبيق:</strong> ${submission.appAndroidLink ? `<a href="${submission.appAndroidLink}" target="_blank">رابط التحميل</a>` : 'غير متوفر'}</p>
+                            <p><strong>رابط التطبيق:</strong> ${submission.appAndroidLink ? `<a href="${safeSubmissionLink}" target="_blank" rel="noreferrer noopener">رابط التحميل</a>` : 'غير متوفر'}</p>
                             <p><strong>تاريخ الإرسال:</strong> ${dateString}</p>
                         </div>
                         <div class="submission-actions">
@@ -945,8 +967,8 @@
                         const appData = {
                             name: submissionData.appName || 'تطبيق جديد',
                             category: submissionData.appType || 'عام', 
-                            downloadLink: submissionData.appAndroidLink || '#',
-                            iphoneDownloadLink: submissionData.appIosLink || '',
+                            downloadLink: formatDownloadUrl(submissionData.appAndroidLink) || '#',
+                            iphoneDownloadLink: formatDownloadUrl(submissionData.appIosLink) || '',
                             iconPath: submissionData.appIconLink || 'placeholder-icon.png',
                             shortDescription: submissionData.appDescription || '',
                             fullDescription: submissionData.appDescription || '',
@@ -960,9 +982,6 @@
             }
         }
 
-        // ====================================================
-        // نظام الدردشة المباشرة والدعم المحدث والمصلح بالكامل
-        // ====================================================
         let activeChatCustomerId = null;
         let messagesUnsubscribe = null;
 
@@ -970,12 +989,10 @@
             const usersList = document.getElementById('chatUsersList');
             usersList.innerHTML = '<p style="padding: 15px; color: #777; text-align: center;">جاري فحص المراسلات...</p>';
 
-            // استماع المجموعات الرئيسية + إظهار أي عميل قام بإرسال رسائل
             db.collectionGroup('messages').onSnapshot(snapshot => {
                 const customerIdsSet = new Set();
                 
                 snapshot.forEach(doc => {
-                    // الحصول على معرف العميل من مسار الرسالة: chats/{customerId}/messages/{messageId}
                     const pathSegments = doc.ref.path.split('/');
                     if (pathSegments.length >= 2 && pathSegments[0] === 'chats') {
                         customerIdsSet.add(pathSegments[1]);
@@ -1034,7 +1051,6 @@
                         messagesArray.push(doc.data());
                     });
 
-                    // فرز الرسائل حسب التاريخ محلياً لتفادي أخطاء Indexing
                     messagesArray.sort((a, b) => {
                         const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
                         const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
@@ -1065,7 +1081,6 @@
                 return;
             }
 
-            // إنشاء/تحديث العقدة الرئيسية ثم إضافة الرسالة
             db.collection('chats').doc(activeChatCustomerId).set({
                 lastReply: firebase.firestore.FieldValue.serverTimestamp(),
                 status: 'active'
@@ -1128,8 +1143,8 @@
                     iconPath: form.iconPath.value,
                     shortDescription: form.shortDescription.value,
                     fullDescription: form.fullDescription.value,
-                    downloadLink: form.downloadLink.value,
-                    iphoneDownloadLink: form.iphoneDownloadLink.value,
+                    downloadLink: formatDownloadUrl(form.downloadLink.value),
+                    iphoneDownloadLink: formatDownloadUrl(form.iphoneDownloadLink.value),
                     size: parseFloat(form.size.value) || 0,
                     rating: parseFloat(form.rating.value) || 0,
                     downloads: parseInt(form.downloads.value) || 0,
