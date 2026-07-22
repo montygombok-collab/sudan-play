@@ -725,36 +725,34 @@
             const usersList = document.getElementById('chatUsersList');
             usersList.innerHTML = '<p style="padding: 15px; color: #777; text-align: center;">جاري فحص المراسلات...</p>';
 
-            db.collectionGroup('messages').onSnapshot(snapshot => {
-                const customerIdsSet = new Set();
-                snapshot.forEach(doc => {
-                    const pathSegments = doc.ref.path.split('/');
-                    if (pathSegments.length >= 2 && pathSegments[0] === 'chats') {
-                        customerIdsSet.add(pathSegments[1]);
-                    }
-                });
-
+            // تم إصلاح استعلام جلب المحادثات لضمان التوافق مع بنية الفايرستور والتعرف على مستندات العملاء مباشرة
+            db.collection('chats').onSnapshot(snapshot => {
                 usersList.innerHTML = '';
-                if (customerIdsSet.size === 0) {
+                if (snapshot.empty) {
                     usersList.innerHTML = '<p style="padding: 15px; color: #777; text-align: center;">لا توجد محادثات جارية حتى الآن.</p>';
                     return;
                 }
 
-                customerIdsSet.forEach(custId => {
+                snapshot.forEach(doc => {
+                    const custId = doc.id;
+                    const data = doc.data();
+                    const lastMessage = data.lastMessage || 'محادثة جديدة';
+
                     const item = document.createElement('div');
                     item.className = `chat-user-item ${activeChatCustomerId === custId ? 'active' : ''}`;
                     item.onclick = (e) => selectChatUser(custId, e.currentTarget);
                     item.innerHTML = `
                         <div class="chat-user-avatar"><i class="fas fa-user"></i></div>
-                        <div class="chat-user-info">
-                            <h4>${custId}</h4>
-                            <p style="font-size:12px; color:#777;">اضغط لمشاهدة المحادثة</p>
+                        <div class="chat-user-info" style="flex-grow:1; overflow:hidden;">
+                            <h4 style="font-size: 14px; margin: 0; color: var(--dark);">${custId}</h4>
+                            <p style="font-size:12px; color:#777; margin: 2px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${lastMessage}</p>
                         </div>
                     `;
                     usersList.appendChild(item);
                 });
             }, error => {
                 console.error("خطأ في جلب قائمة العملاء:", error);
+                usersList.innerHTML = '<p style="padding: 15px; color: var(--secondary); text-align: center;">خطأ في تحميل المحادثات.</p>';
             });
         }
 
@@ -799,11 +797,22 @@
             const text = input.value.trim();
             if (!text) return;
 
-            db.collection('chats').doc(activeChatCustomerId).collection('messages').add({
+            const batch = db.batch();
+            
+            const msgRef = db.collection('chats').doc(activeChatCustomerId).collection('messages').doc();
+            batch.set(msgRef, {
                 text: text,
                 sender: 'admin',
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            });
+
+            const chatDocRef = db.collection('chats').doc(activeChatCustomerId);
+            batch.set(chatDocRef, {
+                lastMessage: text,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+
+            batch.commit().then(() => {
                 input.value = '';
             }).catch(err => showToast('❌ فشل إرسال الرد: ' + err.message));
         }
