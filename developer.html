@@ -376,8 +376,6 @@
 <body>
 
     <div class="dev-wrapper">
-        
-        <!-- واجهة تسجيل الدخول / إنشاء الحساب -->
         <div id="auth-view" class="card auth-container">
             <div class="header-top" style="border:none; margin-bottom:10px; padding:0;">
                 <h2><i class="fas fa-code"></i> بوابة المطورين</h2>
@@ -411,7 +409,6 @@
             </form>
         </div>
 
-        <!-- لوحة تحكم المطور وإدارة التطبيقات -->
         <div id="dashboard-view" class="card">
             <div class="header-top">
                 <h2><i class="fas fa-tachometer-alt"></i> لوحة تحكم المطور</h2>
@@ -486,7 +483,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>روابط صور من داخل التطبيق (افصل بينها بفواصل أو سطر جديد)</label>
+                    <label>روابط صور من داخل التطبيق (افصل بينها بفواصل)</label>
                     <textarea id="appScreenshots" placeholder="https://image1.png, https://image2.png" required></textarea>
                 </div>
 
@@ -505,7 +502,6 @@
                 </button>
             </form>
         </div>
-
     </div>
 
     <div id="learnModal" class="modal-overlay">
@@ -515,9 +511,9 @@
                 <button class="close-modal" onclick="closeLearnModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p><strong>1. الصور:</strong> ارفع صور واجهات التطبيق على مواقع الرفع الموثوقة وضع الروابط مفصولة بفواصل أو أسطر.</p>
-                <p><strong>2. ملف الـ APK:</strong> ارفع الملف على خدمات التخزين السحابي وخذ رابط التحميل المباشر.</p>
-                <p><strong>3. فترة المراجعة:</strong> تتطلب المراجعة <strong>72 ساعة</strong> قبل اعتماد ونشر التطبيق رسمياً في المتجر.</p>
+                <p><strong>1. كيف تضع الصور في روابط؟</strong><br>قم برفع صور واجهات التطبيق على أي موقع رفع صور موثوق وخذ الروابط المباشرة.</p>
+                <p><strong>2. كيف تضع ملف APK في رابط؟</strong><br>قم برفع ملف الـ APK على خدمات التخزين السحابي أو GitHub وخذ رابط التحميل المباشر.</p>
+                <p><strong>3. فترة المراجعة:</strong><br>يتم مراجعة الطلب من قبل الإدارة خلال <strong>72 ساعة</strong> قبل اعتماده.</p>
                 <div class="free-badge">
                     <i class="fas fa-gift"></i> الخدمة مقدمة من Monty Go SDN بشكل مجاني حاليا.
                 </div>
@@ -558,7 +554,7 @@
                 document.getElementById('developerWelcomeTag').textContent = `مرحباً: ${user.displayName || user.email}`;
                 document.getElementById('auth-view').style.display = 'none';
                 document.getElementById('dashboard-view').style.display = 'block';
-                loadDeveloperApps(user.email);
+                loadDeveloperSubmissions(user.email);
             } else {
                 document.getElementById('auth-view').style.display = 'block';
                 document.getElementById('dashboard-view').style.display = 'none';
@@ -576,7 +572,7 @@
 
             if (isRegisterMode) {
                 title.textContent = "إنشاء حساب مطور جديد";
-                btn.textContent = "تسجيل وحساب جديد";
+                btn.textContent = "تسجيل حساب جديد";
                 switchText.textContent = "لديك حساب بالفعل؟";
                 switchLink.textContent = "تسجيل الدخول";
                 nameGroup.style.display = 'block';
@@ -611,35 +607,39 @@
             auth.signOut().then(() => showToast('تم تسجيل الخروج بنجاح'));
         }
 
-        function loadDeveloperApps(email) {
+        // تم توحيد اسم الكولكشن إلى 'submissions' لتتطابق تماماً مع لوحة تحكم الإدارة
+        function loadDeveloperSubmissions(email) {
             const container = document.getElementById('myAppsContainer');
-            db.collection('apps').where('developerEmail', '==', email).onSnapshot(snapshot => {
+            db.collection('submissions').where('devEmail', '==', email).onSnapshot(snapshot => {
                 container.innerHTML = '';
+                let appCount = snapshot.size;
                 let totalDownloads = 0;
                 let totalRatingSum = 0;
-                let appCount = snapshot.size;
 
                 if (snapshot.empty) {
-                    container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">لا توجد تطبيقات منشورة أو قيد المراجعة حالياً.</p>';
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">لا توجد طلبات تطبيقات مرسلة حالياً.</p>';
                     updateStats(0, 0, 5.0);
                     return;
                 }
 
                 snapshot.forEach(doc => {
                     const app = doc.data();
+                    const status = app.reviewStatus || 'Pending';
                     const downloads = app.downloads || 0;
                     const rating = app.rating ? Number(app.rating) : 5.0;
                     
                     totalDownloads += downloads;
                     totalRatingSum += rating;
 
-                    const name = app.name || 'بدون اسم';
-                    const icon = app.iconPath || 'https://via.placeholder.com/40';
+                    const name = app.appName || 'بدون اسم';
+                    const icon = app.appIconLink || 'https://via.placeholder.com/40';
                     
-                    const isApproved = app.isVisible !== false && app.status !== 'pending';
-                    const statusBadge = isApproved 
-                        ? '<span class="status-approved">منشور بالمتجر</span>' 
-                        : '<span class="status-pending">قيد المراجعة (72 ساعة)</span>';
+                    let statusBadge = '<span class="status-pending">قيد المراجعة (72 ساعة)</span>';
+                    if (status === 'approved') {
+                        statusBadge = '<span class="status-approved">مقبول ومنشور</span>';
+                    } else if (status === 'rejected') {
+                        statusBadge = '<span class="status-pending" style="background:rgba(220,53,69,0.15); color:#dc3545;">مرفوض</span>';
+                    }
 
                     container.innerHTML += `
                         <div class="my-app-item">
@@ -647,7 +647,7 @@
                                 <img src="${icon}" alt="Icon">
                                 <div>
                                     <h5>${name}</h5>
-                                    <p>${app.category || 'عام'} • ${app.appSize || ''}</p>
+                                    <p>${app.appType || 'عام'} • ${app.appSize || ''}</p>
                                 </div>
                             </div>
                             <div class="app-metrics">
@@ -672,13 +672,13 @@
 
         function handlePublishApp(e) {
             e.preventDefault();
-            const name = document.getElementById('appName').value;
-            const category = document.getElementById('appCategory').value;
+            const appName = document.getElementById('appName').value;
+            const appType = document.getElementById('appCategory').value;
             const appSize = document.getElementById('appSize').value;
-            const iconPath = document.getElementById('appIcon').value;
-            const downloadLink = document.getElementById('appAndroidLink').value;
+            const appIconLink = document.getElementById('appIcon').value;
+            const appAndroidLink = document.getElementById('appAndroidLink').value;
             const screenshotsInput = document.getElementById('appScreenshots').value;
-            const description = document.getElementById('appDescription').value;
+            const appDescription = document.getElementById('appDescription').value;
             const termsAgreed = document.getElementById('termsAgreement').checked;
 
             if (!termsAgreed) {
@@ -686,23 +686,23 @@
                 return;
             }
 
-            const screenshots = screenshotsInput.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0);
+            const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
-            db.collection('apps').add({
-                name: name,
-                category: category,
+            // إرسال البيانات الموحدة إلى مجموعة 'submissions' ليتمكن المدير من مراجعتها وقبولها لنشرها في 'apps'
+            db.collection('submissions').add({
+                appName: appName,
+                appType: appType,
                 appSize: appSize,
-                fullDescription: description,
-                iconPath: iconPath,
-                downloadLink: downloadLink,
-                screenshots: screenshots,
-                iphoneDownloadLink: '#',
-                developerEmail: currentDevEmail,
+                appDescription: appDescription,
+                appIconLink: appIconLink,
+                appAndroidLink: appAndroidLink,
+                screenshotsPaths: screenshotsPaths,
+                devEmail: currentDevEmail,
+                devName: auth.currentUser.displayName || currentDevEmail,
                 downloads: 0,
                 rating: 5.0,
-                isVisible: false, 
-                status: 'pending', 
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                reviewStatus: 'Pending',
+                submissionDate: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 showToast('📤 تم إرسال طلب النشر إلى لوحة التحكم بنجاح، بانتظار مراجعة الإدارة (خلال 72 ساعة)');
                 document.getElementById('newAppForm').reset();
