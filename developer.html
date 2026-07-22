@@ -105,6 +105,7 @@
         input[type="text"], 
         input[type="email"],
         input[type="password"],
+        input[type="url"],
         textarea, 
         select {
             width: 100%;
@@ -125,6 +126,27 @@
         textarea {
             resize: vertical;
             height: 90px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-group a {
+            color: var(--primary);
+            text-decoration: none;
         }
 
         .btn {
@@ -246,11 +268,6 @@
             border-radius: 6px;
         }
 
-        .action-row {
-            display: flex;
-            gap: 10px;
-        }
-
         #toast {
             visibility: hidden;
             background: #0f172a;
@@ -348,7 +365,7 @@
                 <p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">جاري تحميل تطبيقاتك...</p>
             </div>
 
-            <!-- زر فتح نافذة أو نموذج إضافة تطبيق جديد -->
+            <!-- نموذج نشر وتحديث التطبيق (آلية النشر الشاملة) -->
             <div class="section-title" style="margin-top: 25px;">
                 <span><i class="fas fa-plus-circle"></i> نشر تطبيق جديد للمتجر</span>
             </div>
@@ -360,7 +377,7 @@
                         <input type="text" id="appName" placeholder="مثال: متتبع اللياقة" required>
                     </div>
                     <div class="form-group">
-                        <label>التصنيف</label>
+                        <label>نوع التطبيق (التصنيف)</label>
                         <select id="appCategory" required>
                             <option value="أدوات">أدوات (Tools)</option>
                             <option value="ألعاب">ألعاب (Games)</option>
@@ -371,24 +388,39 @@
                     </div>
                 </div>
 
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>حجم التطبيق</label>
+                        <input type="text" id="appSize" placeholder="مثال: 25 MB" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط شعار التطبيق (Icon URL)</label>
+                        <input type="url" id="appIcon" placeholder="https://..." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>رابط ملف APK للتطبيق</label>
+                    <input type="url" id="appAndroidLink" placeholder="https://..." required>
+                </div>
+
+                <div class="form-group">
+                    <label>روابط صور من داخل التطبيق (افصل بينها بفواصل أو سطر جديد)</label>
+                    <textarea id="appScreenshots" placeholder="https://image1.png, https://image2.png" required></textarea>
+                </div>
+
                 <div class="form-group">
                     <label>وصف التطبيق</label>
                     <textarea id="appDescription" placeholder="اكتب نبذة تفصيلية عن مميزات التطبيق..." required></textarea>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div class="form-group">
-                        <label>رابط الأيقونة المباشر (URL)</label>
-                        <input type="url" id="appIcon" placeholder="https://..." required>
-                    </div>
-                    <div class="form-group">
-                        <label>رابط تحميل أندرويد (APK / GitHub)</label>
-                        <input type="url" id="appAndroidLink" placeholder="https://..." required>
-                    </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="termsAgreement" required>
+                    <label for="termsAgreement" style="display:inline; margin:0; color:var(--text-main); cursor:pointer;">أوافق على الشروط والأحكام وسياسة النشر الخاصة بـ Sudan Play</label>
                 </div>
 
                 <button type="submit" class="btn" style="background: var(--success); margin-top: 5px;">
-                    <i class="fas fa-cloud-upload-alt"></i> نشر التطبيق فوراً في Sudan Play
+                    <i class="fas fa-cloud-upload-alt"></i> نشر ومراجعة التطبيق
                 </button>
             </form>
         </div>
@@ -517,7 +549,7 @@
                                 <img src="${icon}" alt="Icon">
                                 <div>
                                     <h5>${name}</h5>
-                                    <p>${app.category || 'عام'}</p>
+                                    <p>${app.category || 'عام'} • ${app.appSize || ''}</p>
                                 </div>
                             </div>
                             <div class="app-metrics">
@@ -543,16 +575,29 @@
             e.preventDefault();
             const name = document.getElementById('appName').value;
             const category = document.getElementById('appCategory').value;
-            const description = document.getElementById('appDescription').value;
+            const appSize = document.getElementById('appSize').value;
             const iconPath = document.getElementById('appIcon').value;
             const downloadLink = document.getElementById('appAndroidLink').value;
+            const screenshotsInput = document.getElementById('appScreenshots').value;
+            const description = document.getElementById('appDescription').value;
+            const termsAgreed = document.getElementById('termsAgreement').checked;
+
+            if (!termsAgreed) {
+                showToast('❌ يجب الموافقة على الشروط والأحكام أولاً');
+                return;
+            }
+
+            // معالجة صور الشاشة (تحويل النص إلى مصفوفة روابط بناءً على الفواصل أو الأسطر)
+            const screenshots = screenshotsInput.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0);
 
             db.collection('apps').add({
                 name: name,
                 category: category,
+                appSize: appSize,
                 fullDescription: description,
                 iconPath: iconPath,
                 downloadLink: downloadLink,
+                screenshots: screenshots,
                 iphoneDownloadLink: '#',
                 developerEmail: currentDevEmail,
                 downloads: 0,
@@ -560,7 +605,7 @@
                 isVisible: true,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                showToast('🎉 تم نشر التطبيق بنجاح وإضافته للمتجر!');
+                showToast('🎉 تم نشر ومراجعة التطبيق بنجاح وإضافته للمتجر!');
                 document.getElementById('newAppForm').reset();
             }).catch(err => {
                 showToast('❌ فشل في نشر التطبيق');
