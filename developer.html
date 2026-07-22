@@ -265,12 +265,33 @@
             gap: 15px;
             font-size: 0.8em;
             text-align: center;
+            align-items: center;
         }
 
         .metric-badge {
             background: rgba(255, 255, 255, 0.05);
             padding: 4px 8px;
             border-radius: 6px;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .status-approved {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            font-weight: bold;
         }
 
         /* تصميم النافذة المنبثقة (Modal) */
@@ -454,15 +475,15 @@
 
             <!-- قائمة تطبيقات المطور الحالية -->
             <div class="section-title">
-                <span><i class="fas fa-cubes"></i> تطبيقاتي المنشورة والمرفوعة</span>
+                <span><i class="fas fa-cubes"></i> طلبات وتطبيقاتي المرسلة</span>
             </div>
             <div class="my-apps-list" id="myAppsContainer">
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">جاري تحميل تطبيقاتك...</p>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">جاري تحميل طلباتك وتطبيقاتك...</p>
             </div>
 
             <!-- نموذج نشر وتحديث التطبيق (آلية النشر الشاملة) -->
             <div class="section-title" style="margin-top: 25px;">
-                <span><i class="fas fa-plus-circle"></i> نشر تطبيق جديد للمتجر</span>
+                <span><i class="fas fa-plus-circle"></i> إرسال تطبيق جديد للمراجعة</span>
             </div>
             
             <form id="newAppForm" onsubmit="handlePublishApp(event)">
@@ -515,7 +536,7 @@
                 </div>
 
                 <button type="submit" class="btn" style="background: var(--success); margin-top: 5px;">
-                    <i class="fas fa-cloud-upload-alt"></i> نشر ومراجعة التطبيق
+                    <i class="fas fa-paper-plane"></i> إرسال للمراجعة (72 ساعة)
                 </button>
             </form>
         </div>
@@ -532,7 +553,7 @@
             <div class="modal-body">
                 <p><strong>1. كيف تضع الصور في روابط؟</strong><br>قم برفع صور واجهات التطبيق على أي موقع رفع صور موثوق (مثل Imgur أو GitHub أو Google Drive مع إتاحة الرابط العام) ثم انسخ روابط الروابط المباشرة وضعها في خانة الصور مفصولة بفواصل.</p>
                 <p><strong>2. كيف تضع ملف APK في رابط؟</strong><br>قم برفع ملف الـ APK الخاص بتطبيقك على خدمات التخزين السحابي أو منصة GitHub وخذ رابط التحميل المباشر وضعه في خانة رابط ملف APK.</p>
-                <p><strong>3. فترة المراجعة:</strong><br>بعد الضغط على زر نشر التطبيق، سيتعين عليك <strong>انتظار فترة المراجعة (72 ساعة)</strong> حتى يتم فحص التطبيق واعتماده.</p>
+                <p><strong>3. فترة المراجعة:</strong><br>بعد إرسال التطبيق، يتم إرساله إلى لوحة التحكم الخاصة بالإدارة لمراجعته والتحقق منه، حيث تتطلب العملية <strong>فترة مراجعة (72 ساعة)</strong> قبل اعتماده ونشره رسمياً في المتجر.</p>
                 <div class="free-badge">
                     <i class="fas fa-gift"></i> لا يوجد رسوم أو ضرائب في الوقت الحالي، الخدمة مقدمة من Monty Go SDN بشكل مجاني حاليا.
                 </div>
@@ -650,6 +671,7 @@
 
         function loadDeveloperApps(email) {
             const container = document.getElementById('myAppsContainer');
+            // الاستماع لكل من مجموعة التطبيقات (apps) ومجموعة طلبات المراجعة (appRequests) حسب بنية النظام لديك
             db.collection('apps').where('developerEmail', '==', email).onSnapshot(snapshot => {
                 container.innerHTML = '';
                 let totalDownloads = 0;
@@ -657,7 +679,7 @@
                 let appCount = snapshot.size;
 
                 if (snapshot.empty) {
-                    container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">لم تقم بنشر أي تطبيقات بعد.</p>';
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">لا توجد تطبيقات منشورة أو قيد المراجعة حالياً.</p>';
                     updateStats(0, 0, 5.0);
                     return;
                 }
@@ -672,6 +694,12 @@
 
                     const name = app.name || app.appName || 'بدون اسم';
                     const icon = app.iconPath || app.appIconLink || 'https://via.placeholder.com/40';
+                    
+                    // تحديد حالة العرض أو المراجعة
+                    const isApproved = app.isVisible !== false && app.status !== 'pending';
+                    const statusBadge = isApproved 
+                        ? '<span class="status-approved">منشور بالمتجر</span>' 
+                        : '<span class="status-pending">قيد المراجعة (72 ساعة)</span>';
 
                     container.innerHTML += `
                         <div class="my-app-item">
@@ -683,6 +711,7 @@
                                 </div>
                             </div>
                             <div class="app-metrics">
+                                ${statusBadge}
                                 <div class="metric-badge"><i class="fas fa-download" style="color:var(--primary)"></i> ${downloads}</div>
                                 <div class="metric-badge"><i class="fas fa-star" style="color:var(--warning)"></i> ${rating.toFixed(1)}</div>
                             </div>
@@ -720,6 +749,7 @@
             // معالجة صور الشاشة (تحويل النص إلى مصفوفة روابط بناءً على الفواصل أو الأسطر)
             const screenshots = screenshotsInput.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0);
 
+            // تعديل الحالة بحيث لا يظهر طوالً في المتجر بل يُرسل للوحة التحكم كمبدئي/قيد المراجعة (isVisible: false)
             db.collection('apps').add({
                 name: name,
                 category: category,
@@ -732,13 +762,14 @@
                 developerEmail: currentDevEmail,
                 downloads: 0,
                 rating: 5.0,
-                isVisible: true,
+                isVisible: false, // يحتاج موافقة الإدارة لكي ينتقل للظهور في المتجر العام
+                status: 'pending', // قيد المراجعة في لوحة التحكم الإدارية
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                showToast('🎉 تم نشر ومراجعة التطبيق بنجاح وإضافته للمتجر!');
+                showToast('📤 تم إرسال طلب النشر إلى لوحة التحكم بنجاح، بانتظار مراجعة الإدارة (خلال 72 ساعة)');
                 document.getElementById('newAppForm').reset();
             }).catch(err => {
-                showToast('❌ فشل في نشر التطبيق');
+                showToast('❌ فشل في إرسال طلب التطبيق');
                 console.error(err);
             });
         }
