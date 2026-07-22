@@ -117,7 +117,6 @@
             color: #fff;
         }
 
-        /* زر "انشر تطبيقك" بلون متناسق مع الشعار */
         .nav-links a.publish-btn {
             background: linear-gradient(135deg, #4a6bff, #2ec4b6, #4a6bff);
             background-size: 200% auto;
@@ -246,14 +245,12 @@
             outline: none;
         }
 
-        /* شبكة عرض التطبيقات: 5 تطبيقات في الصف الواحد للشاشات الكبيرة ومتجاوبة */
         #apps-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 12px;
         }
 
-        /* تصميم عنصر التطبيق: إطار بسيط مع زوايا مستديرة وبدون كروت ضخمة */
         .app-card {
             background: var(--glass-card);
             backdrop-filter: blur(12px);
@@ -575,7 +572,6 @@
             opacity: 1;
         }
 
-        /* التجاوب مع مختلف الشاشات لتثبيت عدد العناصر في الصف بمرونة */
         @media (max-width: 1200px) {
             #apps-container {
                 grid-template-columns: repeat(4, 1fr);
@@ -623,7 +619,6 @@
             <div class="nav-links">
                 <a href="#" id="nav-main" class="active" onclick="switchPage('main-page')"><i class="fas fa-th"></i> الرئيسية</a>
                 <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
-                <!-- زر انشر تطبيقك بلون متناسق ولامع -->
                 <a href="#" id="nav-dev" class="publish-btn" onclick="goToDeveloperPage()"><i class="fas fa-rocket"></i> انشر تطبيقك</a>
                 <a href="#" id="nav-support" onclick="switchPage('support-page')"><i class="fas fa-headset"></i> الدعم</a>
             </div>
@@ -685,6 +680,11 @@
                 <div class="company-hero">
                     <h2>Monty Go SDN</h2>
                     <p>شركة متخصصة في صناعة وتطوير المواقع الإلكترونية، التطبيقات الحديثة، والحلول البرمجية متكاملة الخدمات لتلبية احتياجات السوق الرقمي المحلي والعالمي.</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://montygosdn.vercel.app/" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 8px 18px; border-radius: 30px; text-decoration: none; font-size: 0.85em; font-weight: bold; box-shadow: 0 4px 12px rgba(74, 107, 255, 0.3); transition: transform 0.2s;">
+                            <i class="fas fa-external-link-alt"></i> زيارة موقع الشركة الإلكتروني
+                        </a>
+                    </div>
                 </div>
 
                 <div class="company-services">
@@ -895,7 +895,6 @@
                     const rating = app.rating ? Number(app.rating).toFixed(1) : '5.0';
                     const downloadsCount = app.downloads || 0;
 
-                    // عرض الشعار (الأيقونة) مع الاسم تحته مباشرة وبدون كروت ضخمة أو أزرار خارجية، مع إطار وزوايا مستديرة
                     container.innerHTML += `
                         <div class="app-card" data-category="${catName}" data-name="${name}" onclick="showAppDetails('${app.id}')">
                             <img src="${icon}" class="app-icon" alt="Icon" loading="lazy">
