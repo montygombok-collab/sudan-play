@@ -93,16 +93,47 @@
             width: 100%;
         }
 
+        /* تحسين وتنسيق تخطيط قسم إدارة التطبيقات بشكل مفصول ومنظم */
+        .management-sub-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .sub-tab-btn {
+            background: #eef2ff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.3s;
+        }
+
+        .sub-tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .management-pane {
+            display: none;
+        }
+
+        .management-pane.active {
+            display: block;
+        }
+
         .app-form-panel {
             background: #fff;
             padding: 25px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 450px;
-            position: sticky;
-            top: 20px;
-            height: fit-content;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .app-form-panel h2 {
@@ -112,7 +143,14 @@
             padding-bottom: 10px;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
         .form-group { margin-bottom: 15px; }
+        .form-group.full-width { grid-column: 1 / -1; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
         .form-control, .form-textarea, .form-select {
             width: 100%;
@@ -129,9 +167,9 @@
             box-shadow: 0 0 0 2px rgba(74, 107, 255, 0.2);
         }
 
-        .form-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .form-buttons { display: flex; gap: 10px; margin-top: 20px; grid-column: 1 / -1; }
         .btn-primary, .btn-secondary {
-            flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
         }
         .btn-primary { background: var(--gradient); color: var(--light); box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3); }
         .btn-secondary { background: #ccc; color: var(--dark); }
@@ -238,72 +276,88 @@
         </button>
     </div>
 
+    <!-- قسم إدارة التطبيقات المفصول بنظام التبويبات الداخلية -->
     <section id="apps-management-section" class="content-section">
-        <div class="container" style="display: flex; gap: 20px; flex-wrap: wrap; width: 100%;"> 
-            <div class="app-form-panel">
-                <h2 id="formTitle">إضافة تطبيق جديد (خاص بـ Sudan Play)</h2>
-                <form id="appForm" data-editing-id="">
-                    <div class="form-group">
-                        <label for="name">اسم التطبيق</label>
-                        <input type="text" id="name" name="name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="category">الفئة</label>
-                        <input type="text" id="category" name="category" class="form-control" required placeholder="مثل: ألعاب، أدوات">
-                    </div>
-                    <div class="form-group">
-                        <label for="isVisible">حالة إظهار التطبيق في المتجر</label>
-                        <select id="isVisible" name="isVisible" class="form-select">
-                            <option value="true">ظاهر (معروض للمستخدمين)</option>
-                            <option value="false">مخفي (غير متاح حالياً)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="iconPath">رابط الأيقونة (URL)</label>
-                        <input type="url" id="iconPath" name="iconPath" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="shortDescription">وصف مختصر</label>
-                        <textarea id="shortDescription" name="shortDescription" class="form-textarea" rows="2" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="fullDescription">الوصف الكامل</label>
-                        <textarea id="fullDescription" name="fullDescription" class="form-textarea" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="downloadLink">رابط ملف التحميل (APK)</label>
-                        <input type="url" id="downloadLink" name="downloadLink" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="iphoneDownloadLink">رابط نسخة الآيفون (iOS Store)</label>
-                        <input type="url" id="iphoneDownloadLink" name="iphoneDownloadLink" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="size">الحجم (بالميجابايت)</label>
-                        <input type="number" step="0.1" id="size" name="size" class="form-control" value="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="rating">التقييم (من 5)</label>
-                        <input type="number" step="0.1" max="5" min="0" id="rating" name="rating" class="form-control" value="5.0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="downloads">عدد التنزيلات الأولي</label>
-                        <input type="number" id="downloads" name="downloads" class="form-control" value="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="screenshotsPaths">روابط صور الشاشة (افصل بينها بفاصلة)</label>
-                        <textarea id="screenshotsPaths" name="screenshotsPaths" class="form-textarea" rows="2" placeholder="URL1, URL2"></textarea>
-                    </div>
-                    <div class="form-buttons">
-                        <button type="submit" class="btn-primary" id="submitButton">نشر التطبيق مباشرة</button>
-                        <button type="button" class="btn-secondary" id="resetButton" onclick="resetForm()">إعادة ضبط</button>
-                    </div>
-                </form>
-            </div>
+        <div class="management-sub-tabs">
+            <button class="sub-tab-btn active" onclick="switchManagementPane('list-pane', event)">
+                <i class="fas fa-list"></i> عرض وتعديل التطبيقات المسجلة
+            </button>
+            <button class="sub-tab-btn" onclick="switchManagementPane('form-pane', event)">
+                <i class="fas fa-plus-circle"></i> إضافة تطبيق جديد
+            </button>
+        </div>
 
+        <!-- لوحة عرض القائمة -->
+        <div id="list-pane" class="management-pane active">
             <div class="app-list-panel">
                 <h2>قائمة التطبيقات المسجلة</h2>
                 <div id="appsList"></div>
+            </div>
+        </div>
+
+        <!-- لوحة نموذج الإضافة/التعديل -->
+        <div id="form-pane" class="management-pane">
+            <div class="app-form-panel">
+                <h2 id="formTitle">إضافة تطبيق جديد (خاص بـ Sudan Play)</h2>
+                <form id="appForm" data-editing-id="">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">اسم التطبيق</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">الفئة</label>
+                            <input type="text" id="category" name="category" class="form-control" required placeholder="مثل: ألعاب، أدوات">
+                        </div>
+                        <div class="form-group">
+                            <label for="isVisible">حالة إظهار التطبيق في المتجر</label>
+                            <select id="isVisible" name="isVisible" class="form-select">
+                                <option value="true">ظاهر (معروض للمستخدمين)</option>
+                                <option value="false">مخفي (غير متاح حالياً)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="iconPath">رابط الأيقونة (URL)</label>
+                            <input type="url" id="iconPath" name="iconPath" class="form-control" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="shortDescription">وصف مختصر</label>
+                            <textarea id="shortDescription" name="shortDescription" class="form-textarea" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="fullDescription">الوصف الكامل</label>
+                            <textarea id="fullDescription" name="fullDescription" class="form-textarea" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="downloadLink">رابط ملف التحميل (APK)</label>
+                            <input type="url" id="downloadLink" name="downloadLink" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="iphoneDownloadLink">رابط نسخة الآيفون (iOS Store)</label>
+                            <input type="url" id="iphoneDownloadLink" name="iphoneDownloadLink" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="size">الحجم (بالميجابايت)</label>
+                            <input type="number" step="0.1" id="size" name="size" class="form-control" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rating">التقييم (من 5)</label>
+                            <input type="number" step="0.1" max="5" min="0" id="rating" name="rating" class="form-control" value="5.0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="downloads">عدد التنزيلات الأولي</label>
+                            <input type="number" id="downloads" name="downloads" class="form-control" value="0" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="screenshotsPaths">روابط صور الشاشة (افصل بينها بفاصلة)</label>
+                            <textarea id="screenshotsPaths" name="screenshotsPaths" class="form-textarea" rows="2" placeholder="URL1, URL2"></textarea>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn-primary" id="submitButton">نشر التطبيق مباشرة</button>
+                            <button type="button" class="btn-secondary" id="resetButton" onclick="resetForm()">إعادة ضبط</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -382,6 +436,14 @@
             event.currentTarget.classList.add('active');
 
             if (sectionId === 'stats-section') loadStats();
+        }
+
+        // دالة التنقل بين لوحات قسم إدارة التطبيقات (القائمة أو النموذج)
+        function switchManagementPane(paneId, event) {
+            document.querySelectorAll('.management-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(paneId).classList.add('active');
+            document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
         }
 
         function formatDownloadUrl(url) {
@@ -543,6 +605,12 @@
                     document.getElementById('downloads').value = app.downloads || 0;
                     document.getElementById('screenshotsPaths').value = Array.isArray(app.screenshotsPaths) ? app.screenshotsPaths.join(', ') : (app.screenshotsPaths || '');
                     document.getElementById('submitButton').textContent = 'حفظ التعديلات';
+                    
+                    // الانتقال تلقائياً لتبويب النموذج عند النقر على تعديل
+                    document.querySelectorAll('.management-pane').forEach(pane => pane.classList.remove('active'));
+                    document.getElementById('form-pane').classList.add('active');
+                    document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.sub-tab-btn')[1].classList.add('active');
                 }
             });
         }
@@ -554,7 +622,6 @@
             document.getElementById('submitButton').textContent = 'نشر التطبيق مباشرة';
         }
 
-        // تم ربط طلبات المراجعة بمجموعة 'submissions' لتتوافق تماماً مع إرسال المطورين
         function loadSubmissions() {
             const submissionsList = document.getElementById('submissionsList');
             if (!submissionsList) return; 
