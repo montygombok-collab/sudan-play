@@ -4,225 +4,575 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة المطورين - Sudan Play</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         :root {
             --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --input-bg: #090d16;
-            --border-color: #334155;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
+            --card-bg: rgba(30, 41, 59, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(15, 23, 42, 0.85);
+            --primary: #4a6bff;
+            --primary-hover: #3b5ce8;
+            --secondary: #ff5e7d;
             --success: #10b981;
+            --warning: #f59e0b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
+            --radius: 14px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            background-attachment: fixed;
             color: var(--text-main);
-            margin: 0;
-            padding: 20px;
+            min-height: 100vh;
+            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
         }
 
-        .dev-container {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 30px;
+        .dev-wrapper {
             width: 100%;
-            max-width: 600px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            max-width: 850px;
+            margin: auto;
         }
 
-        h2 {
-            margin-top: 0;
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 12px;
+        }
+
+        .header-top h2 {
+            font-size: 1.3em;
             color: var(--text-main);
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--primary); }
+
+        /* شاشات المصادقة (تسجيل الدخول / إنشاء حساب) */
+        .auth-container {
+            max-width: 420px;
+            margin: 0 auto;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 0.85em;
         }
 
         input[type="text"], 
+        input[type="email"],
+        input[type="password"],
         textarea, 
         select {
             width: 100%;
-            padding: 12px;
+            padding: 10px 14px;
             background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 15px;
-            box-sizing: border-box;
+            font-size: 0.9em;
             outline: none;
             transition: border-color 0.3s;
         }
 
-        input[type="text"]:focus, 
-        textarea:focus, 
-        select:focus {
+        input:focus, textarea:focus, select:focus {
             border-color: var(--primary);
         }
 
         textarea {
             resize: vertical;
-            height: 100px;
+            height: 90px;
         }
 
-        .btn-publish {
-            background-color: var(--primary);
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 14px;
+            padding: 11px;
             border-radius: 8px;
             width: 100%;
-            font-size: 16px;
+            font-size: 0.95em;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
+            transition: opacity 0.2s, transform 0.1s;
         }
 
-        .btn-publish:hover {
-            background-color: var(--primary-hover);
+        .btn:hover { opacity: 0.9; }
+        .btn:active { transform: scale(0.98); }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.82em;
+            color: var(--text-muted);
         }
 
-        .btn-publish:active {
-            transform: scale(0.98);
+        .auth-switch a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
         }
 
-        #resultBox {
-            margin-top: 25px;
-            background-color: var(--input-bg);
-            border: 1px dashed var(--success);
-            padding: 15px;
-            border-radius: 8px;
+        /* لوحة تحكم المطور */
+        #dashboard-view {
             display: none;
+        }
+
+        .dev-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
         }
 
-        #resultBox h4 {
-            color: var(--success);
-            margin: 0 0 10px 0;
+        .stat-box h4 {
+            font-size: 0.78em;
+            color: var(--text-muted);
+            margin-bottom: 5px;
         }
 
-        .generated-link {
-            word-break: break-all;
+        .stat-box span {
+            font-size: 1.4em;
+            font-weight: 800;
             color: var(--primary);
-            background: rgba(59, 130, 246, 0.1);
-            padding: 8px;
-            border-radius: 6px;
-            display: inline-block;
-            margin-top: 5px;
-            font-family: monospace;
         }
+
+        .section-title {
+            font-size: 1em;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .my-apps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .my-app-item {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-brief {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-brief img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .app-brief h5 { font-size: 0.9em; margin-bottom: 2px; }
+        .app-brief p { font-size: 0.72em; color: var(--text-muted); }
+
+        .app-metrics {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8em;
+            text-align: center;
+        }
+
+        .metric-badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        #toast {
+            visibility: hidden;
+            background: #0f172a;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px 20px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            border: 1px solid var(--glass-border);
+            font-size: 0.85em;
+        }
+
+        #toast.show { visibility: visible; }
     </style>
+
+    <!-- فايربيس -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
 </head>
 <body>
 
-    <div class="dev-container">
-        <h2>لوحة رفع ونشر التطبيقات</h2>
+    <div class="dev-wrapper">
         
-        <form id="devForm" onsubmit="event.preventDefault(); generateApp();">
-            <div class="form-group">
-                <label for="appName">اسم التطبيق:</label>
-                <input type="text" id="appName" placeholder="مثال: سودان شات" required>
+        <!-- واجهة تسجيل الدخول / إنشاء الحساب -->
+        <div id="auth-view" class="card auth-container">
+            <div class="header-top" style="border:none; margin-bottom:10px; padding:0;">
+                <h2><i class="fas fa-code"></i> بوابة المطورين</h2>
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> المتجر</a>
             </div>
 
-            <div class="form-group">
-                <label for="appCategory">تصنيف التطبيق:</label>
-                <select id="appCategory">
-                    <option value="tools">أدوات وتقنيات</option>
-                    <option value="games">ألعاب</option>
-                    <option value="social">تواصل اجتماعي</option>
-                    <option value="education">تعليم</option>
-                </select>
-            </div>
+            <!-- نموذج تسجيل الدخول -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <h3 id="auth-title" style="font-size: 1.05em; margin-bottom: 15px; text-align: center; color: var(--text-muted);">تسجيل دخول المطورين</h3>
+                
+                <div class="form-group" id="nameFieldGroup" style="display: none;">
+                    <label>اسم المطور / الشركة</label>
+                    <input type="text" id="devFullName" placeholder="الاسم الكامل">
+                </div>
 
-            <div class="form-group">
-                <label for="appDesc">وصف التطبيق:</label>
-                <textarea id="appDesc" placeholder="اكتب نبذة مختصرة عن مميزات التطبيق..." required></textarea>
-            </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="devEmail" placeholder="developer@domain.com" required>
+                </div>
 
-            <div class="form-group">
-                <label for="appIcon">رابط الأيقونة (من Google Drive):</label>
-                ضع رابط مشاركة الصورة المباشر هنا
-                <input type="text" id="appIcon" placeholder="https://drive.google.com/uc?export=view&id=..." required>
-            </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="devPassword" placeholder="••••••••" required>
+                </div>
 
-            <div class="form-group">
-                <label for="apkLink">رابط تحميل ملف الـ APK (من Google Drive):</label>
-                ضع رابط مشاركة ملف الـ APK هنا
-                <input type="text" id="apkLink" placeholder="https://drive.google.com/uc?export=download&id=..." required>
-            </div>
-
-            <button type="submit" class="btn-publish">توليد ونشر التطبيق فوراً</button>
-        </form>
-
-        <div id="resultBox">
-            <h4>تم نشر التطبيق بنجاح! 🎉</h4>
-            <p>رابط صفحة تطبيقك الخاص:</p>
-            <a href="#" id="finalLink" class="generated-link" target="_blank">رابط التطبيق</a>
+                <button type="submit" class="btn" id="authSubmitBtn">دخول لوحة التحكم</button>
+                
+                <div class="auth-switch">
+                    <span id="switchText">ليس لديك حساب؟</span> 
+                    <a href="#" id="switchAuthMode" onclick="toggleAuthMode(event)">سجل حساب جديد</a>
+                </div>
+            </form>
         </div>
+
+        <!-- لوحة تحكم المطور وإدارة التطبيقات -->
+        <div id="dashboard-view" class="card">
+            <div class="header-top">
+                <h2><i class="fas fa-tachometer-alt"></i> لوحة تحكم المطور</h2>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <span id="developerWelcomeTag" style="font-size: 0.85em; color: var(--primary);">مرحباً، مطور</span>
+                    <a href="#" onclick="handleLogout()" class="back-link" style="color: var(--secondary);"><i class="fas fa-sign-out-alt"></i> خروج</a>
+                </div>
+            </div>
+
+            <!-- إحصائيات عامة للمطور -->
+            <div class="dev-stats-grid">
+                <div class="stat-box">
+                    <h4>إجمالي تطبيقاتي</h4>
+                    <span id="totalAppsCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <h4>مجموع التنزيلات</h4>
+                    <span id="totalDownloadsCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <h4>متوسط التقييم</h4>
+                    <span id="avgRatingCount">5.0 ⭐</span>
+                </div>
+            </div>
+
+            <!-- قائمة تطبيقات المطور الحالية -->
+            <div class="section-title">
+                <span><i class="fas fa-cubes"></i> تطبيقاتي المنشورة والمرفوعة</span>
+            </div>
+            <div class="my-apps-list" id="myAppsContainer">
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">جاري تحميل تطبيقاتك...</p>
+            </div>
+
+            <!-- زر فتح نافذة أو نموذج إضافة تطبيق جديد -->
+            <div class="section-title" style="margin-top: 25px;">
+                <span><i class="fas fa-plus-circle"></i> نشر تطبيق جديد للمتجر</span>
+            </div>
+            
+            <form id="newAppForm" onsubmit="handlePublishApp(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>اسم التطبيق</label>
+                        <input type="text" id="appName" placeholder="مثال: متتبع اللياقة" required>
+                    </div>
+                    <div class="form-group">
+                        <label>التصنيف</label>
+                        <select id="appCategory" required>
+                            <option value="أدوات">أدوات (Tools)</option>
+                            <option value="ألعاب">ألعاب (Games)</option>
+                            <option value="تعليم">تعليم (Education)</option>
+                            <option value="إنتاجية">إنتاجية (Productivity)</option>
+                            <option value="خدمات">خدمات (Services)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>وصف التطبيق</label>
+                    <textarea id="appDescription" placeholder="اكتب نبذة تفصيلية عن مميزات التطبيق..." required></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>رابط الأيقونة المباشر (URL)</label>
+                        <input type="url" id="appIcon" placeholder="https://..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط تحميل أندرويد (APK / GitHub)</label>
+                        <input type="url" id="appAndroidLink" placeholder="https://..." required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" style="background: var(--success); margin-top: 5px;">
+                    <i class="fas fa-cloud-upload-alt"></i> نشر التطبيق فوراً في Sudan Play
+                </button>
+            </form>
+        </div>
+
     </div>
 
+    <div id="toast">رسالة تنبيهية</div>
+
     <script>
-        function generateApp() {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
+            authDomain: "sudan-play.firebaseapp.com",
+            projectId: "sudan-play",
+            storageBucket: "sudan-play.appspot.com",
+            messagingSenderId: "981764948623",
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let isRegisterMode = false;
+        let currentDevEmail = "";
+
+        // التحقق من حالة الجلسة عند التحميل
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentDevEmail = user.email;
+                document.getElementById('developerWelcomeTag').textContent = `مرحباً: ${user.displayName || user.email}`;
+                document.getElementById('auth-view').style.display = 'none';
+                document.getElementById('dashboard-view').style.display = 'block';
+                loadDeveloperApps(user.email);
+            } else {
+                document.getElementById('auth-view').style.display = 'block';
+                document.getElementById('dashboard-view').style.display = 'none';
+            }
+        });
+
+        function toggleAuthMode(e) {
+            e.preventDefault();
+            isRegisterMode = !isRegisterMode;
+            const title = document.getElementById('auth-title');
+            const btn = document.getElementById('authSubmitBtn');
+            const switchText = document.getElementById('switchText');
+            const switchLink = document.getElementById('switchAuthMode');
+            const nameGroup = document.getElementById('nameFieldGroup');
+
+            if (isRegisterMode) {
+                title.textContent = "إنشاء حساب مطور جديد";
+                btn.textContent = "تسجيل وحساب جديد";
+                switchText.textContent = "لديك حساب بالفعل؟";
+                switchLink.textContent = "تسجيل الدخول";
+                nameGroup.style.display = 'block';
+            } else {
+                title.textContent = "تسجيل دخول المطورين";
+                btn.textContent = "دخول لوحة التحكم";
+                switchText.textContent = "ليس لديك حساب؟";
+                switchLink.textContent = "سجل حساب جديد";
+                nameGroup.style.display = 'none';
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('devEmail').value;
+            const password = document.getElementById('devPassword').value;
+            const fullName = document.getElementById('devFullName').value;
+
+            if (isRegisterMode) {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(cred => {
+                        return cred.user.updateProfile({ displayName: fullName });
+                    })
+                    .then(() => {
+                        showToast('✅ تم إنشاء الحساب بنجاح!');
+                    })
+                    .catch(err => {
+                        showToast('❌ خطأ: ' + err.message);
+                    });
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        showToast('✅ تم تسجيل الدخول بنجاح');
+                    })
+                    .catch(err => {
+                        showToast('❌ بيانات الدخول غير صحيحة');
+                    });
+            }
+        }
+
+        function handleLogout() {
+            auth.signOut().then(() => {
+                showToast('تم تسجيل الخروج بنجاح');
+            });
+        }
+
+        function loadDeveloperApps(email) {
+            const container = document.getElementById('myAppsContainer');
+            db.collection('apps').where('developerEmail', '==', email).onSnapshot(snapshot => {
+                container.innerHTML = '';
+                let totalDownloads = 0;
+                let totalRatingSum = 0;
+                let appCount = snapshot.size;
+
+                if (snapshot.empty) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">لم تقم بنشر أي تطبيقات بعد.</p>';
+                    updateStats(0, 0, 5.0);
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const app = doc.data();
+                    const downloads = app.downloads || 0;
+                    const rating = app.rating ? Number(app.rating) : 5.0;
+                    
+                    totalDownloads += downloads;
+                    totalRatingSum += rating;
+
+                    const name = app.name || app.appName || 'بدون اسم';
+                    const icon = app.iconPath || app.appIconLink || 'https://via.placeholder.com/40';
+
+                    container.innerHTML += `
+                        <div class="my-app-item">
+                            <div class="app-brief">
+                                <img src="${icon}" alt="Icon">
+                                <div>
+                                    <h5>${name}</h5>
+                                    <p>${app.category || 'عام'}</p>
+                                </div>
+                            </div>
+                            <div class="app-metrics">
+                                <div class="metric-badge"><i class="fas fa-download" style="color:var(--primary)"></i> ${downloads}</div>
+                                <div class="metric-badge"><i class="fas fa-star" style="color:var(--warning)"></i> ${rating.toFixed(1)}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                let avgRating = appCount > 0 ? (totalRatingSum / appCount) : 5.0;
+                updateStats(appCount, totalDownloads, avgRating);
+            });
+        }
+
+        function updateStats(count, downloads, rating) {
+            document.getElementById('totalAppsCount').textContent = count;
+            document.getElementById('totalDownloadsCount').textContent = downloads;
+            document.getElementById('avgRatingCount').textContent = rating.toFixed(1) + ' ⭐';
+        }
+
+        function handlePublishApp(e) {
+            e.preventDefault();
             const name = document.getElementById('appName').value;
             const category = document.getElementById('appCategory').value;
-            const desc = document.getElementById('appDesc').value;
-            const icon = document.getElementById('appIcon').value;
-            const apk = document.getElementById('apkLink').value;
+            const description = document.getElementById('appDescription').value;
+            const iconPath = document.getElementById('appIcon').value;
+            const downloadLink = document.getElementById('appAndroidLink').value;
 
-            // توليد معرف فريد يعتمد على الوقت واسم التطبيق
-            const appId = 'app_' + Date.now();
-
-            // تجهيز كائن البيانات لتخزينه (يمكن ربطه لاحقاً بقاعدة بيانات أو LocalStorage)
-            const appData = {
-                id: appId,
+            db.collection('apps').add({
                 name: name,
                 category: category,
-                description: desc,
-                iconUrl: icon,
-                apkUrl: apk,
-                date: new Date().toLocaleDateString()
-            };
+                fullDescription: description,
+                iconPath: iconPath,
+                downloadLink: downloadLink,
+                iphoneDownloadLink: '#',
+                developerEmail: currentDevEmail,
+                downloads: 0,
+                rating: 5.0,
+                isVisible: true,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                showToast('🎉 تم نشر التطبيق بنجاح وإضافته للمتجر!');
+                document.getElementById('newAppForm').reset();
+            }).catch(err => {
+                showToast('❌ فشل في نشر التطبيق');
+                console.error(err);
+            });
+        }
 
-            // حفظ مؤقت في المتصفح كمحاكاة لقاعدة البيانات لكي يقرأه المتجر العام
-            let allApps = JSON.parse(localStorage.getItem('sudanPlayApps')) || [];
-            allApps.push(appData);
-            localStorage.setItem('sudanPlayApps', JSON.stringify(allApps));
-
-            // توليد الرابط الخاص بالتطبيق
-            const generatedUrl = `app-view.html?id=${appId}`;
-            
-            // إظهار النتيجة للمطور
-            const resultBox = document.getElementById('resultBox');
-            const finalLink = document.getElementById('finalLink');
-            
-            finalLink.href = generatedUrl;
-            finalLink.textContent = window.location.origin + '/' + generatedUrl;
-            resultBox.style.display = 'block';
-
-            // تفريغ النموذج بعد النجاح
-            document.getElementById('devForm').reset();
+        function showToast(text) {
+            const t = document.getElementById('toast');
+            t.textContent = text;
+            t.className = "show";
+            setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
         }
     </script>
 </body>
