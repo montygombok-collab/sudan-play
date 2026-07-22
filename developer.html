@@ -84,7 +84,6 @@
 
         .back-link:hover { color: var(--primary); }
 
-        /* شاشات المصادقة (تسجيل الدخول / إنشاء حساب) */
         .auth-container {
             max-width: 420px;
             margin: 0 auto;
@@ -144,11 +143,6 @@
             cursor: pointer;
         }
 
-        .checkbox-group a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
         .btn {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -183,7 +177,6 @@
             font-weight: bold;
         }
 
-        /* لوحة تحكم المطور */
         #dashboard-view {
             display: none;
         }
@@ -294,7 +287,6 @@
             font-weight: bold;
         }
 
-        /* تصميم النافذة المنبثقة (Modal) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -318,12 +310,6 @@
             max-width: 500px;
             padding: 25px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            animation: modalPop 0.3s ease;
-        }
-
-        @keyframes modalPop {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
         }
 
         .modal-header {
@@ -335,24 +321,13 @@
             padding-bottom: 10px;
         }
 
-        .modal-header h3 {
-            font-size: 1.1em;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
         .close-modal {
             background: none;
             border: none;
             color: var(--text-muted);
             font-size: 1.2em;
             cursor: pointer;
-            transition: color 0.2s;
         }
-
-        .close-modal:hover { color: var(--secondary); }
 
         .modal-body {
             font-size: 0.88em;
@@ -361,10 +336,6 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-        }
-
-        .modal-body p strong {
-            color: var(--text-main);
         }
 
         .free-badge {
@@ -398,7 +369,6 @@
         #toast.show { visibility: visible; }
     </style>
 
-    <!-- فايربيس -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
@@ -414,7 +384,6 @@
                 <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> المتجر</a>
             </div>
 
-            <!-- نموذج تسجيل الدخول -->
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <h3 id="auth-title" style="font-size: 1.05em; margin-bottom: 15px; text-align: center; color: var(--text-muted);">تسجيل دخول المطورين</h3>
                 
@@ -452,12 +421,10 @@
                 </div>
             </div>
 
-            <!-- زر "تعلم" المنبثق -->
             <button type="button" class="btn btn-learn" onclick="openLearnModal()">
                 <i class="fas fa-question-circle"></i> تعلم كيف تنشر تطبيقك (دليل الاستخدام)
             </button>
 
-            <!-- إحصائيات عامة للمطور -->
             <div class="dev-stats-grid">
                 <div class="stat-box">
                     <h4>إجمالي تطبيقاتي</h4>
@@ -473,7 +440,6 @@
                 </div>
             </div>
 
-            <!-- قائمة تطبيقات المطور الحالية -->
             <div class="section-title">
                 <span><i class="fas fa-cubes"></i> طلبات وتطبيقاتي المرسلة</span>
             </div>
@@ -481,7 +447,6 @@
                 <p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">جاري تحميل طلباتك وتطبيقاتك...</p>
             </div>
 
-            <!-- نموذج نشر وتحديث التطبيق (آلية النشر الشاملة) -->
             <div class="section-title" style="margin-top: 25px;">
                 <span><i class="fas fa-plus-circle"></i> إرسال تطبيق جديد للمراجعة</span>
             </div>
@@ -543,7 +508,6 @@
 
     </div>
 
-    <!-- النافذة المنبثقة لزر "تعلم" -->
     <div id="learnModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
@@ -551,11 +515,11 @@
                 <button class="close-modal" onclick="closeLearnModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p><strong>1. كيف تضع الصور في روابط؟</strong><br>قم برفع صور واجهات التطبيق على أي موقع رفع صور موثوق (مثل Imgur أو GitHub أو Google Drive مع إتاحة الرابط العام) ثم انسخ روابط الروابط المباشرة وضعها في خانة الصور مفصولة بفواصل.</p>
-                <p><strong>2. كيف تضع ملف APK في رابط؟</strong><br>قم برفع ملف الـ APK الخاص بتطبيقك على خدمات التخزين السحابي أو منصة GitHub وخذ رابط التحميل المباشر وضعه في خانة رابط ملف APK.</p>
-                <p><strong>3. فترة المراجعة:</strong><br>بعد إرسال التطبيق، يتم إرساله إلى لوحة التحكم الخاصة بالإدارة لمراجعته والتحقق منه، حيث تتطلب العملية <strong>فترة مراجعة (72 ساعة)</strong> قبل اعتماده ونشره رسمياً في المتجر.</p>
+                <p><strong>1. الصور:</strong> ارفع صور واجهات التطبيق على مواقع الرفع الموثوقة وضع الروابط مفصولة بفواصل أو أسطر.</p>
+                <p><strong>2. ملف الـ APK:</strong> ارفع الملف على خدمات التخزين السحابي وخذ رابط التحميل المباشر.</p>
+                <p><strong>3. فترة المراجعة:</strong> تتطلب المراجعة <strong>72 ساعة</strong> قبل اعتماد ونشر التطبيق رسمياً في المتجر.</p>
                 <div class="free-badge">
-                    <i class="fas fa-gift"></i> لا يوجد رسوم أو ضرائب في الوقت الحالي، الخدمة مقدمة من Monty Go SDN بشكل مجاني حاليا.
+                    <i class="fas fa-gift"></i> الخدمة مقدمة من Monty Go SDN بشكل مجاني حاليا.
                 </div>
             </div>
         </div>
@@ -580,24 +544,14 @@
         let isRegisterMode = false;
         let currentDevEmail = "";
 
-        // التحكم في النافذة المنبثقة لزر تعلم
-        function openLearnModal() {
-            document.getElementById('learnModal').style.display = 'flex';
-        }
+        function openLearnModal() { document.getElementById('learnModal').style.display = 'flex'; }
+        function closeLearnModal() { document.getElementById('learnModal').style.display = 'none'; }
 
-        function closeLearnModal() {
-            document.getElementById('learnModal').style.display = 'none';
-        }
-
-        // إغلاق النافذة عند النقر خارجها
         window.onclick = function(event) {
             const modal = document.getElementById('learnModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
+            if (event.target === modal) modal.style.display = 'none';
         }
 
-        // التحقق من حالة الجلسة عند التحميل
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentDevEmail = user.email;
@@ -643,35 +597,22 @@
 
             if (isRegisterMode) {
                 auth.createUserWithEmailAndPassword(email, password)
-                    .then(cred => {
-                        return cred.user.updateProfile({ displayName: fullName });
-                    })
-                    .then(() => {
-                        showToast('✅ تم إنشاء الحساب بنجاح!');
-                    })
-                    .catch(err => {
-                        showToast('❌ خطأ: ' + err.message);
-                    });
+                    .then(cred => cred.user.updateProfile({ displayName: fullName }))
+                    .then(() => showToast('✅ تم إنشاء الحساب بنجاح!'))
+                    .catch(err => showToast('❌ خطأ: ' + err.message));
             } else {
                 auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        showToast('✅ تم تسجيل الدخول بنجاح');
-                    })
-                    .catch(err => {
-                        showToast('❌ بيانات الدخول غير صحيحة');
-                    });
+                    .then(() => showToast('✅ تم تسجيل الدخول بنجاح'))
+                    .catch(err => showToast('❌ بيانات الدخول غير صحيحة'));
             }
         }
 
         function handleLogout() {
-            auth.signOut().then(() => {
-                showToast('تم تسجيل الخروج بنجاح');
-            });
+            auth.signOut().then(() => showToast('تم تسجيل الخروج بنجاح'));
         }
 
         function loadDeveloperApps(email) {
             const container = document.getElementById('myAppsContainer');
-            // الاستماع لكل من مجموعة التطبيقات (apps) ومجموعة طلبات المراجعة (appRequests) حسب بنية النظام لديك
             db.collection('apps').where('developerEmail', '==', email).onSnapshot(snapshot => {
                 container.innerHTML = '';
                 let totalDownloads = 0;
@@ -692,10 +633,9 @@
                     totalDownloads += downloads;
                     totalRatingSum += rating;
 
-                    const name = app.name || app.appName || 'بدون اسم';
-                    const icon = app.iconPath || app.appIconLink || 'https://via.placeholder.com/40';
+                    const name = app.name || 'بدون اسم';
+                    const icon = app.iconPath || 'https://via.placeholder.com/40';
                     
-                    // تحديد حالة العرض أو المراجعة
                     const isApproved = app.isVisible !== false && app.status !== 'pending';
                     const statusBadge = isApproved 
                         ? '<span class="status-approved">منشور بالمتجر</span>' 
@@ -746,10 +686,8 @@
                 return;
             }
 
-            // معالجة صور الشاشة (تحويل النص إلى مصفوفة روابط بناءً على الفواصل أو الأسطر)
             const screenshots = screenshotsInput.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0);
 
-            // تعديل الحالة بحيث لا يظهر طوالً في المتجر بل يُرسل للوحة التحكم كمبدئي/قيد المراجعة (isVisible: false)
             db.collection('apps').add({
                 name: name,
                 category: category,
@@ -762,8 +700,8 @@
                 developerEmail: currentDevEmail,
                 downloads: 0,
                 rating: 5.0,
-                isVisible: false, // يحتاج موافقة الإدارة لكي ينتقل للظهور في المتجر العام
-                status: 'pending', // قيد المراجعة في لوحة التحكم الإدارية
+                isVisible: false, 
+                status: 'pending', 
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 showToast('📤 تم إرسال طلب النشر إلى لوحة التحكم بنجاح، بانتظار مراجعة الإدارة (خلال 72 ساعة)');
