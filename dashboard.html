@@ -990,16 +990,23 @@
                 snapshot.forEach(doc => {
                     const submission = doc.data();
                     const submissionId = doc.id;
-                    const status = submission.reviewStatus || 'Pending';
                     
-                    if (status === 'Pending') pendingCount++;
-                    if (status !== 'Pending') return; 
+                    // التعديل هنا: التعامل بمرونة مع حالة الطلب (إذا لم تكن موجودة أو كانت pending بحروف صغيرة)
+                    const status = (submission.reviewStatus || 'pending').toLowerCase();
+                    
+                    if (status === 'pending' || status === '1') {
+                        pendingCount++;
+                    } else {
+                        return; // تجاوز الطلبات التي تم الموافقة عليها أو رفضها مسبقاً
+                    }
 
                     const safeSubmissionLink = formatDownloadUrl(submission.appAndroidLink);
 
                     const card = document.createElement('div');
                     card.className = 'submission-card';
-                    const dateString = submission.submissionDate ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') : 'غير متوفر';
+                    const dateString = submission.submissionDate && typeof submission.submissionDate.toDate === 'function' 
+                        ? new Date(submission.submissionDate.toDate()).toLocaleString('ar-EG') 
+                        : 'غير متوفر';
 
                     card.innerHTML = `
                         <div class="submission-header">
@@ -1197,8 +1204,8 @@
                 let pending = 0;
                 let approved = 0;
                 snapshot.forEach(doc => {
-                    const status = doc.data().reviewStatus || 'Pending';
-                    if (status === 'Pending') pending++;
+                    const status = (doc.data().reviewStatus || 'pending').toLowerCase();
+                    if (status === 'pending') pending++;
                     if (status === 'approved') approved++;
                 });
                 document.getElementById('pendingSubmissions').textContent = pending;
