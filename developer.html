@@ -477,9 +477,15 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>رابط ملف APK للتطبيق</label>
-                    <input type="url" id="appAndroidLink" placeholder="https://..." required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>رابط ملف APK للتطبيق (Android)</label>
+                        <input type="url" id="appAndroidLink" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>رابط متجر آبل أو ويبسايت (iOS / Web)</label>
+                        <input type="url" id="appIosLink" placeholder="https://...">
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -512,7 +518,7 @@
             </div>
             <div class="modal-body">
                 <p><strong>1. كيف تضع الصور في روابط؟</strong><br>قم برفع صور واجهات التطبيق على أي موقع رفع صور موثوق وخذ الروابط المباشرة.</p>
-                <p><strong>2. كيف تضع ملف APK في رابط؟</strong><br>قم برفع ملف الـ APK على خدمات التخزين السحابي أو GitHub وخذ رابط التحميل المباشر.</p>
+                <p><strong>2. كيف تضع ملف APK أو رابط iOS/ويبسايت؟</strong><br>قم برفع ملف الـ APK أو توفير رابط متجر آبل (iOS) أو رابط الموقع الإلكتروني الخاص بالتطبيق.</p>
                 <p><strong>3. فترة المراجعة:</strong><br>يتم مراجعة الطلب من قبل الإدارة خلال <strong>72 ساعة</strong> قبل اعتماده.</p>
                 <div class="free-badge">
                     <i class="fas fa-gift"></i> الخدمة مقدمة من Monty Go SDN بشكل مجاني حاليا.
@@ -607,7 +613,6 @@
             auth.signOut().then(() => showToast('تم تسجيل الخروج بنجاح'));
         }
 
-        // تم توحيد اسم الكولكشن إلى 'submissions' لتتطابق تماماً مع لوحة تحكم الإدارة
         function loadDeveloperSubmissions(email) {
             const container = document.getElementById('myAppsContainer');
             db.collection('submissions').where('devEmail', '==', email).onSnapshot(snapshot => {
@@ -677,6 +682,7 @@
             const appSize = document.getElementById('appSize').value;
             const appIconLink = document.getElementById('appIcon').value;
             const appAndroidLink = document.getElementById('appAndroidLink').value;
+            const appIosLink = document.getElementById('appIosLink').value;
             const screenshotsInput = document.getElementById('appScreenshots').value;
             const appDescription = document.getElementById('appDescription').value;
             const termsAgreed = document.getElementById('termsAgreement').checked;
@@ -688,7 +694,6 @@
 
             const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
-            // إرسال البيانات الموحدة إلى مجموعة 'submissions' ليتمكن المدير من مراجعتها وقبولها لنشرها في 'apps'
             db.collection('submissions').add({
                 appName: appName,
                 appType: appType,
@@ -696,6 +701,7 @@
                 appDescription: appDescription,
                 appIconLink: appIconLink,
                 appAndroidLink: appAndroidLink,
+                appIosLink: appIosLink,
                 screenshotsPaths: screenshotsPaths,
                 devEmail: currentDevEmail,
                 devName: auth.currentUser.displayName || currentDevEmail,
