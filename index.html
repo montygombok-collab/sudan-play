@@ -109,6 +109,7 @@
             padding: 6px 10px;
             border-radius: 20px;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .nav-links a.active, .nav-links a:hover:not(.btn-primary) {
@@ -516,40 +517,6 @@
             line-height: 1.5;
         }
 
-        #developers-page {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 15px;
-        }
-
-        .glass-panel {
-            background: var(--glass-card);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: 25px 15px;
-            box-shadow: var(--glass-shadow);
-        }
-
-        .developer-header h2 {
-            font-size: 1.5em;
-            text-align: center;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .feature-box {
-            background: rgba(255, 255, 255, 0.4);
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -895,13 +862,13 @@
     <header>
         <nav>
             <a href="#" class="logo" onclick="switchPage('main-page')">
-                <img src="https://www.appcreator24.com/srv/imgs/gen/3834410_splash.png?ts=1764707568" alt="Sudan Play Logo">
+                <img src="https://www.appcreator24.com/srv/imgs/gen/3834410_splash.png" alt="Sudan Play Logo">
                 <span>Sudan Play</span>
             </a>
             <div class="nav-links">
                 <a href="#" id="nav-main" class="active" onclick="switchPage('main-page')"><i class="fas fa-th"></i> الرئيسية</a>
                 <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
-                <a href="#" id="nav-dev" onclick="switchPage('developers-page')"><i class="fas fa-code"></i> المطورين</a>
+                <a href="#" id="nav-dev" onclick="openDeveloperPreviewModal()"><i class="fas fa-code"></i> المطورين</a>
                 <a href="#" id="nav-support" onclick="switchPage('support-page')"><i class="fas fa-headset"></i> الدعم</a>
                 <a href="#" class="btn-primary" onclick="openSubmissionModal()"><i class="fas fa-upload"></i> انشر</a>
             </div>
@@ -959,7 +926,7 @@
         </section>
 
         <section id="about-page" class="page-section">
-            <div class="glass-panel">
+            <div class="glass-panel" style="background: var(--glass-card); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 25px 15px; box-shadow: var(--glass-shadow);">
                 <div class="company-hero">
                     <h2>Monty Go SDN</h2>
                     <p>شركة متخصصة في صناعة وتطوير المواقع الإلكترونية، التطبيقات الحديثة، والحلول البرمجية متكاملة الخدمات لتلبية احتياجات السوق الرقمي المحلي والعالمي.</p>
@@ -984,50 +951,32 @@
                 </div>
             </div>
         </section>
-
-        <section id="developers-page" class="page-section">
-            <div class="glass-panel">
-                <div class="developer-header">
-                    <h2><i class="fas fa-laptop-code" style="color: var(--primary);"></i> بوابة المطورين</h2>
-                    <p style="color: #475569; margin-top: 5px; font-size: 0.85em;">انضم إلى مجتمع المطورين وانشر تطبيقاتك ليصل إلى آلاف المستخدمين.</p>
-                </div>
-
-                <div class="features-grid">
-                    <div class="feature-box">
-                        <i class="fas fa-shield-alt" style="color: var(--primary); font-size: 1.5em;"></i>
-                        <h4 style="font-size: 0.88em; margin-top: 6px;">حماية الأكواد</h4>
-                        <p style="font-size: 0.72em; color: #64748b;">مراجعة وأمان عالي لكافة الموارد المرفقة.</p>
-                    </div>
-                    <div class="feature-box">
-                        <i class="fas fa-rocket" style="color: var(--primary); font-size: 1.5em;"></i>
-                        <h4 style="font-size: 0.88em; margin-top: 6px;">نشر بوابي منظم</h4>
-                        <p style="font-size: 0.72em; color: #64748b;">خطوات واضحة تبدأ من الشروط وحتى الدفع.</p>
-                    </div>
-                    <div class="feature-box">
-                        <i class="fas fa-chart-line" style="color: var(--primary); font-size: 1.5em;"></i>
-                        <h4 style="font-size: 0.88em; margin-top: 6px;">نمو دائم</h4>
-                        <p style="font-size: 0.72em; color: #64748b;">تحديث التنزيلات والتقييمات تلقائياً من الفايربيس.</p>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 25px;">
-                    <button class="download-modal-btn" style="max-width: 250px; font-size: 0.95em;" onclick="openSubmissionModal()">
-                        <i class="fas fa-paper-plane"></i> تقديم طلب نشر تطبيق
-                    </button>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer>
         <div class="footer-branding-box">
-            <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png?ts=1784566043" alt="Monty Go SDN Logo" class="brand-logo-img">
+            <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png" alt="Monty Go SDN Logo" class="brand-logo-img">
             <div class="brand-title">Monty Go SDN</div>
         </div>
         <div class="footer-rights">
             <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة لـ Monty Go SDN - السودان - ولاية الخرطوم</p>
         </div>
     </footer>
+
+    <!-- نافذة المعاينة البصرية للمطورين قبل الانتقال -->
+    <div id="developerPreviewModal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <span class="close-btn" onclick="closeDeveloperPreviewModal()">&times;</span>
+            <img src="https://www.appcreator24.com/srv/imgs/gen/3834410_splash.png" alt="Sudan Play Logo" style="width: 70px; height: 70px; border-radius: 16px; margin: 10px auto 15px auto; box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3); object-fit: cover;">
+            <h3 style="color: var(--dark); font-size: 1.2em; margin-bottom: 8px;">بوابة مطوري Sudan Play</h3>
+            <p style="color: #475569; font-size: 0.85em; line-height: 1.6; margin-bottom: 20px;">
+                أهلاً بك في مساحة المطورين المستقلة. تتيح لك هذه البوابة إدارة تطبيقاتك، وتوليد روابط النشر الخاصة بك بكل سهولة واحترافية.
+            </p>
+            <button class="download-modal-btn" onclick="goToDeveloperPage()" style="font-size: 0.95em; padding: 12px;">
+                <i class="fas fa-arrow-right"></i> الدخول إلى بوابة المطورين الآن
+            </button>
+        </div>
+    </div>
 
     <div id="appDetailsModal" class="modal">
         <div class="modal-content">
@@ -1233,10 +1182,23 @@
 
             document.getElementById('nav-main').classList.toggle('active', pageId === 'main-page');
             document.getElementById('nav-about').classList.toggle('active', pageId === 'about-page');
-            document.getElementById('nav-dev').classList.toggle('active', pageId === 'developers-page');
             document.getElementById('nav-support').classList.toggle('active', pageId === 'support-page');
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // دوال التحكم بالنافذة البصرية للمطورين
+        function openDeveloperPreviewModal() {
+            document.getElementById('developerPreviewModal').style.display = 'block';
+        }
+
+        function closeDeveloperPreviewModal() {
+            document.getElementById('developerPreviewModal').style.display = 'none';
+        }
+
+        function goToDeveloperPage() {
+            // توجيه المستخدم إلى صفحة المطورين المنفصلة التي تم إنشاؤها مسبقاً
+            window.location.href = 'developer.html';
         }
 
         function detectAndShowDevice() {
