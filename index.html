@@ -20,9 +20,9 @@
             --dark: #0f111a;
             --light: #f0f3f9;
             --glass-bg: rgba(255, 255, 255, 0.45);
-            --glass-card: rgba(255, 255, 255, 0.75);
+            --glass-card: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.75);
-            --glass-shadow: 0 8px 25px 0 rgba(31, 38, 135, 0.08);
+            --glass-shadow: 0 4px 15px 0 rgba(31, 38, 135, 0.05);
             --radius: 16px;
         }
 
@@ -117,7 +117,7 @@
             color: #fff;
         }
 
-        /* زر "انشر تطبيقك" بلون متناسق مع الشعار (درجات الأزرق وتاثير لامع جذاب) */
+        /* زر "انشر تطبيقك" بلون متناسق مع الشعار */
         .nav-links a.publish-btn {
             background: linear-gradient(135deg, #4a6bff, #2ec4b6, #4a6bff);
             background-size: 200% auto;
@@ -246,128 +246,65 @@
             outline: none;
         }
 
-        /* شبكة عرض التطبيقات: تضمن 4 تطبيقات في الصف الواحد بالشاشات الكبيرة ومتجاوبة بالكامل */
+        /* شبكة عرض التطبيقات: 5 تطبيقات في الصف الواحد للشاشات الكبيرة ومتجاوبة */
         #apps-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
         }
 
+        /* تصميم عنصر التطبيق: إطار بسيط مع زوايا مستديرة وبدون كروت ضخمة */
         .app-card {
             background: var(--glass-card);
-            backdrop-filter: blur(14px);
+            backdrop-filter: blur(12px);
             border-radius: 14px;
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.8);
             box-shadow: var(--glass-shadow);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .app-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
-        }
-
-        .app-cover {
-            height: 95px;
-            overflow: hidden;
-            background: #e2e8f0;
-            position: relative;
-        }
-
-        .app-cover img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .app-card:hover .app-cover img {
-            transform: scale(1.05);
-        }
-
-        .app-info {
-            padding: 8px 10px;
+            padding: 12px 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 4px;
-            flex-grow: 1;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            cursor: pointer;
+        }
+
+        .app-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            border-color: var(--primary);
         }
 
         .app-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 58px;
+            height: 58px;
+            border-radius: 14px;
             object-fit: cover;
-            margin-top: -28px;
-            border: 2px solid #fff;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
             background: #fff;
+            margin-bottom: 6px;
         }
 
         .app-title {
-            font-size: 0.88em;
+            font-size: 0.82em;
             color: #0f111a;
             font-weight: 700;
             width: 100%;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin-top: 2px;
+            margin-bottom: 2px;
         }
 
         .app-stats-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            font-size: 0.72em;
-            color: #475569;
-            margin-top: 2px;
-        }
-
-        .download-buttons-container {
-            display: flex;
             gap: 4px;
-            padding: 8px;
-            background: rgba(0, 0, 0, 0.02);
-            border-top: 1px solid rgba(0,0,0,0.04);
-        }
-
-        .download-btn-split {
-            flex: 1;
-            padding: 5px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.72em;
-            transition: all 0.2s;
-            text-align: center;
-            font-weight: 600;
-            border: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .download-btn-android { background: #2ea44f; }
-        .download-btn-ios { background: #007AFF; }
-
-        .download-btn-split:hover {
-            opacity: 0.9;
-        }
-
-        .download-btn-split.unavailable {
-            background: rgba(148, 163, 184, 0.3) !important;
-            color: #94a3b8 !important;
-            cursor: not-allowed;
+            font-size: 0.68em;
+            color: #64748b;
         }
 
         #support-page {
@@ -460,6 +397,8 @@
             margin-bottom: 0;
             border-radius: 20px;
             padding: 10px 15px;
+            outline: none;
+            border: 1px solid var(--glass-border);
         }
 
         .chat-input-area button {
@@ -636,17 +575,16 @@
             opacity: 1;
         }
 
-        /* التجاوب مع الشاشات المختلفة (لوحي وموبايل) لضمان أفضل مظهر */
-        @media (max-width: 1024px) {
+        /* التجاوب مع مختلف الشاشات لتثبيت عدد العناصر في الصف بمرونة */
+        @media (max-width: 1200px) {
             #apps-container {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             #apps-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
@@ -655,8 +593,12 @@
             .nav-links a { padding: 4px 7px; font-size: 0.72em; }
             .logo span { font-size: 0.85em; }
             #apps-container { 
-                grid-template-columns: repeat(2, 1fr) !important; 
+                grid-template-columns: repeat(3, 1fr) !important; 
                 gap: 8px !important; 
+            }
+            .app-icon {
+                width: 48px;
+                height: 48px;
             }
         }
     </style>
@@ -927,18 +869,6 @@
             return count.toString();
         }
 
-        function triggerDownload(appId, url) {
-            if (!url || url === '#' || url.trim() === '') {
-                showToast('⚠️ رابط التحميل غير متاح حالياً.');
-                return;
-            }
-            db.collection('apps').doc(appId).update({
-                downloads: firebase.firestore.FieldValue.increment(1)
-            }).catch(err => console.log('Update error:', err));
-
-            window.open(url, '_blank');
-        }
-
         function loadApps() {
             const container = document.getElementById('apps-container');
             db.collection('apps').onSnapshot(snapshot => {
@@ -962,35 +892,18 @@
 
                     const name = app.name || app.appName || 'تطبيق بدون عنوان';
                     const icon = app.iconPath || app.appIconLink || 'https://via.placeholder.com/40';
-                    const cover = (app.screenshotsPaths && app.screenshotsPaths[0]) || app.coverPath || icon;
-                    const androidLink = app.downloadLink || app.appAndroidLink || '#';
-                    const iosLink = app.iphoneDownloadLink || app.appIosLink || '#';
                     const rating = app.rating ? Number(app.rating).toFixed(1) : '5.0';
                     const downloadsCount = app.downloads || 0;
 
+                    // عرض الشعار (الأيقونة) مع الاسم تحته مباشرة وبدون كروت ضخمة أو أزرار خارجية، مع إطار وزوايا مستديرة
                     container.innerHTML += `
                         <div class="app-card" data-category="${catName}" data-name="${name}" onclick="showAppDetails('${app.id}')">
-                            <div class="app-cover">
-                                <img src="${cover}" alt="Cover" loading="lazy">
-                            </div>
-                            <div class="app-info">
-                                <img src="${icon}" class="app-icon" alt="Icon" loading="lazy">
-                                <h4 class="app-title">${name}</h4>
-                                <div class="app-stats-row">
-                                    <span class="app-rating" style="color: #f59e0b;"><i class="fas fa-star"></i> ${rating}</span>
-                                    <span>•</span>
-                                    <span><i class="fas fa-download"></i> ${formatDownloads(downloadsCount)}</span>
-                                </div>
-                            </div>
-                            <div class="download-buttons-container">
-                                <button class="download-btn-split download-btn-android ${androidLink === '#' ? 'unavailable' : ''}" 
-                                        onclick="event.stopPropagation(); triggerDownload('${app.id}', '${androidLink}')">
-                                    <i class="fab fa-android"></i> أندرويد
-                                </button>
-                                <button class="download-btn-split download-btn-ios ${iosLink === '#' ? 'unavailable' : ''}" 
-                                        onclick="event.stopPropagation(); triggerDownload('${app.id}', '${iosLink}')">
-                                    <i class="fab fa-apple"></i> آيفون
-                                </button>
+                            <img src="${icon}" class="app-icon" alt="Icon" loading="lazy">
+                            <h4 class="app-title">${name}</h4>
+                            <div class="app-stats-row">
+                                <span class="app-rating" style="color: #f59e0b;"><i class="fas fa-star"></i> ${rating}</span>
+                                <span>•</span>
+                                <span><i class="fas fa-download"></i> ${formatDownloads(downloadsCount)}</span>
                             </div>
                         </div>
                     `;
@@ -1038,6 +951,18 @@
             iosBtn.onclick = () => triggerDownload(app.id, iosLink);
 
             document.getElementById('appDetailsModal').style.display = 'block';
+        }
+
+        function triggerDownload(appId, url) {
+            if (!url || url === '#' || url.trim() === '') {
+                showToast('⚠️ رابط التحميل غير متاح حالياً.');
+                return;
+            }
+            db.collection('apps').doc(appId).update({
+                downloads: firebase.firestore.FieldValue.increment(1)
+            }).catch(err => console.log('Update error:', err));
+
+            window.open(url, '_blank');
         }
 
         function closeModal() { document.getElementById('appDetailsModal').style.display = 'none'; }
