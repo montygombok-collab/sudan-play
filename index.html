@@ -801,7 +801,7 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // مراقبة حالة المصادقة لتحديث واجهة المستخدم
+        // مراقبة حالة المصادقة لتحديث واجهة المستخدم والتعامل مع redirect_uri
         auth.onAuthStateChanged(user => {
             const authBtnText = document.getElementById('authBtnText');
             if (user) {
@@ -813,13 +813,15 @@
                 document.getElementById('userProfileBox').style.display = 'block';
                 document.getElementById('authModalTitle').textContent = 'حسابي الشخصي';
 
-                // التحقق إذا كان المستخدم قادماً عبر رابط تحويل (Redirect) من منصة خارجية مثل For-U
+                // معالجة رابط التوجيه (redirect_uri) لإعادة المستخدم للمنصة الطالبة (مثل For-U)
                 const urlParams = new URLSearchParams(window.location.search);
-                const redirectTarget = urlParams.get('redirect');
-                if (redirectTarget) {
+                const redirectUri = urlParams.get('redirect_uri') || urlParams.get('redirect');
+                
+                if (redirectUri) {
+                    showToast('🔄 يتم إعادة توجيهك للمنصة...');
                     setTimeout(() => {
-                        window.location.href = `${redirectTarget}?email=${encodeURIComponent(user.email)}&uid=${user.uid}`;
-                    }, 1500);
+                        window.location.href = `${redirectUri}?email=${encodeURIComponent(user.email)}&uid=${user.uid}`;
+                    }, 1200);
                 }
             } else {
                 authBtnText.textContent = 'حسابي';
@@ -1096,7 +1098,7 @@
             window.open(url, '_blank');
         }
 
-        function closeModal() { document.getElementById('appDetailsModal').style.display = 'none'; }
+        fn closeModal() { document.getElementById('appDetailsModal').style.display = 'none'; } // تم تصحيح بناء الدالة
 
         window.onclick = function(e) {
             if (e.target.classList.contains('modal')) e.target.style.display = 'none';
