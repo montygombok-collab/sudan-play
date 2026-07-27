@@ -6,7 +6,6 @@
     <title>تسجيل الدخول - Sudan Play</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS الخاص بك */
         * {
             margin: 0;
             padding: 0;
@@ -105,7 +104,6 @@
             letter-spacing: normal;
         }
         
-        /* هذا الجزء يمنع ظهور "البيانات الجاهزة" من المتصفح في حقل الدخول */
         .form-control:-webkit-autofill,
         .form-control:-webkit-autofill:hover, 
         .form-control:-webkit-autofill:focus, 
@@ -113,7 +111,6 @@
             -webkit-box-shadow: 0 0 0 30px var(--light) inset !important;
             -webkit-text-fill-color: var(--dark) !important;
         }
-
 
         button {
             width: 100%;
@@ -135,7 +132,7 @@
         }
     </style>
 
-    <!-- مكتبات Firebase الأساسية (الإصدار 8) -->
+    <!-- مكتبات Firebase الأساسية (الإصدار 8)[cite: 2] -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
 </head>
@@ -161,11 +158,10 @@
         </form>
     </div>
 
-    <!-- كود الجزيئات (Particles) -->
+    <!-- كود الجزيئات (Particles)[cite: 2] -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
-        // ** إعدادات Firebase الصحيحة لمشروعك **
         var firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
@@ -175,7 +171,6 @@
             appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
         };
         
-        // تهيئة Firebase
         firebase.initializeApp(firebaseConfig);
 
         function login() {
@@ -191,14 +186,17 @@
                 .then((userCredential) => {
                     const user = userCredential.user;
                     localStorage.setItem('sudanPlayAdmin', user.uid);
-                    window.location.href = '/dashboard.html'; 
+                    
+                    // الانتقال للصفحة المقصودة إن وجدت، أو لوحة التحكم كخيار افتراضي[cite: 2]
+                    const targetPage = localStorage.getItem('redirectAfterLogin') || 'dashboard.html';
+                    localStorage.removeItem('redirectAfterLogin');
+                    window.location.href = targetPage; 
                 })
                 .catch((error) => {
                     alert('خطأ في تسجيل الدخول: ' + error.message);
                 });
         }
 
-        // دالة إنشاء الجزيئات
         function createParticles() {
             particlesJS('particles-js', {
                 "particles": {
@@ -216,15 +214,15 @@
             });
         }
 
-        // دالة التحقق من تسجيل دخول سابق
         function checkExistingLogin() {
             const session = localStorage.getItem('sudanPlayAdmin');
             if (session) {
-                window.location.href = '/dashboard.html';
+                const targetPage = localStorage.getItem('redirectAfterLogin') || 'dashboard.html';
+                localStorage.removeItem('redirectAfterLogin');
+                window.location.href = targetPage;
             }
         }
 
-        // تهيئة الصفحة
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
             checkExistingLogin();
@@ -239,10 +237,8 @@
                     this.parentElement.style.transform = 'scale(1)';
                 });
             });
-
         });
 
-        // إضافة تأثيرات كتابة للأحرف
         document.addEventListener('keydown', function(e) {
             if (e.target.type === 'password') {
                 const input = e.target;
