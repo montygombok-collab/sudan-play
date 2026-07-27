@@ -20,6 +20,7 @@
             --dark: rgb(30, 30, 45);
             --light: rgb(248, 249, 254);
             --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-sudan: linear-gradient(135deg, #2ec4b6 0%, var(--primary) 100%);
             --gradient-light: linear-gradient(135deg, rgba(74, 107, 255, 0.1) 0%, rgba(255, 94, 125, 0.1) 100%);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
@@ -46,7 +47,7 @@
             padding: 40px;
             border-radius: 15px;
             box-shadow: var(--shadow);
-            width: 350px;
+            width: 380px;
             text-align: center;
             position: relative;
             z-index: 1;
@@ -59,13 +60,13 @@
 
         .login-box h2 {
             color: var(--primary);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-weight: 700;
         }
 
         .input-group {
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             background: var(--gradient-light);
@@ -93,46 +94,63 @@
             font-size: 16px;
             color: var(--dark);
             outline: none;
-            transition: all 0.3s ease;
         }
 
         .form-control::placeholder {
             color: rgba(30, 30, 45, 0.6);
         }
 
-        .form-control[type="password"] {
-            letter-spacing: normal;
-        }
-        
-        .form-control:-webkit-autofill,
-        .form-control:-webkit-autofill:hover, 
-        .form-control:-webkit-autofill:focus, 
-        .form-control:-webkit-autofill:active  {
-            -webkit-box-shadow: 0 0 0 30px var(--light) inset !important;
-            -webkit-text-fill-color: var(--dark) !important;
-        }
-
-        button {
+        .btn-main {
             width: 100%;
             padding: 12px;
             background: var(--gradient);
             color: var(--light);
             border: none;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(74, 107, 255, 0.4);
+            margin-bottom: 12px;
         }
 
-        button:hover {
+        .btn-sudan {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-sudan);
+            color: var(--light);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(46, 196, 182, 0.4);
+        }
+
+        .btn-main:hover, .btn-sudan:hover {
             opacity: 0.9;
             transform: translateY(-2px);
         }
+
+        .divider {
+            margin: 15px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .divider span {
+            background: var(--light);
+            padding: 0 10px;
+            position: relative;
+            top: -10px;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 
-    <!-- مكتبات Firebase الأساسية (الإصدار 8)[cite: 2] -->
+    <!-- مكتبات Firebase الأساسية (الإصدار 8) -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
 </head>
@@ -141,8 +159,8 @@
     <div class="particles" id="particles-js"></div>
 
     <div class="login-box">
-        <h2>تسجيل الدخول للمسؤول</h2>
-        <form onsubmit="event.preventDefault(); login();">
+        <h2>تسجيل الدخول</h2>
+        <form onsubmit="event.preventDefault();">
 
             <div class="input-group">
                 <i class="fas fa-envelope"></i>
@@ -154,11 +172,21 @@
                 <input type="password" id="password" class="form-control" placeholder="كلمة المرور" required>
             </div>
             
-            <button type="submit">دخول</button>
+            <!-- زر تسجيل الدخول العادي / العام -->
+            <button type="button" class="btn-main" onclick="loginGeneral()">
+                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول (عام)
+            </button>
+
+            <div class="divider"><span>أو</span></div>
+
+            <!-- زر تسجيل الدخول عبر سودان بلاي -->
+            <button type="button" class="btn-sudan" onclick="loginWithSudanPlay()">
+                <i class="fas fa-store"></i> تسجيل الدخول عبر سودان بلاي
+            </button>
         </form>
     </div>
 
-    <!-- كود الجزيئات (Particles)[cite: 2] -->
+    <!-- كود الجزيئات (Particles) -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
@@ -173,7 +201,18 @@
         
         firebase.initializeApp(firebaseConfig);
 
-        function login() {
+        // وظيفة الدخول العامة
+        function loginGeneral() {
+            executeFirebaseLogin("تم تسجيل الدخول العام بنجاح!");
+        }
+
+        // وظيفة الدخول عبر سودان بلاي
+        function loginWithSudanPlay() {
+            executeFirebaseLogin("تم تسجيل الدخول عبر حساب سودان بلاي بنجاح!");
+        }
+
+        // الدالة الموحدة للتعامل مع Firebase والتوجيه الذكي
+        function executeFirebaseLogin(successMessage) {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -187,7 +226,7 @@
                     const user = userCredential.user;
                     localStorage.setItem('sudanPlayAdmin', user.uid);
                     
-                    // الانتقال للصفحة المقصودة إن وجدت، أو لوحة التحكم كخيار افتراضي[cite: 2]
+                    // التوجيه الذكي للصفحة المقصودة (مثل فور يو) أو لوحة التحكم كافتراضي
                     const targetPage = localStorage.getItem('redirectAfterLogin') || 'dashboard.html';
                     localStorage.removeItem('redirectAfterLogin');
                     window.location.href = targetPage; 
@@ -226,27 +265,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
             checkExistingLogin();
-            
-            const inputs = document.querySelectorAll('.form-control');
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.parentElement.style.transform = 'scale(1.02)';
-                });
-                
-                input.addEventListener('blur', function() {
-                    this.parentElement.style.transform = 'scale(1)';
-                });
-            });
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.target.type === 'password') {
-                const input = e.target;
-                input.style.letterSpacing = '2px';
-                setTimeout(() => {
-                    input.style.letterSpacing = 'normal';
-                }, 100);
-            }
         });
     </script>
 </body>
