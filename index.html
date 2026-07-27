@@ -598,7 +598,9 @@
             }
         }
     </style>
+    <!-- Firebase SDKs (Compat v8) -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
 <body onload="detectAndShowDevice(); initCustomerProfile();">
@@ -621,6 +623,8 @@
                 <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
                 <a href="#" id="nav-dev" class="publish-btn" onclick="goToDeveloperPage()"><i class="fas fa-rocket"></i> انشر تطبيقك</a>
                 <a href="#" id="nav-support" onclick="switchPage('support-page')"><i class="fas fa-headset"></i> الدعم</a>
+                <!-- زر إنشاء الحساب وتسجيل الدخول -->
+                <a href="#" id="nav-auth" onclick="openAuthModal()" style="background: rgba(74, 107, 255, 0.2); border: 1px solid var(--primary);"><i class="fas fa-user-circle"></i> <span id="authBtnText">حسابي</span></a>
             </div>
         </nav>
     </header>
@@ -718,6 +722,7 @@
         </div>
     </footer>
 
+    <!-- نافذة تفاصيل التطبيق -->
     <div id="appDetailsModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -742,11 +747,46 @@
         </div>
     </div>
 
+    <!-- نافذة تسجيل الدخول / إنشاء الحساب (Auth Modal) -->
+    <div id="authModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: right;">
+            <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+            <div style="text-align: center; margin-bottom: 15px;">
+                <h3 id="authModalTitle" style="font-size: 1.2em; font-weight: bold; color: var(--dark);">تسجيل الدخول / إنشاء حساب</h3>
+                <p style="font-size: 0.78em; color: #64748b; margin-top: 3px;">انضم إلى سودان بلاي لربط حسابك بالمنصات الأخرى</p>
+            </div>
+
+            <form id="firebaseAuthForm" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
+                <div>
+                    <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">البريد الإلكتروني</label>
+                    <input type="email" id="authEmail" required style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none;" placeholder="name@example.com">
+                </div>
+                <div>
+                    <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">كلمة المرور</label>
+                    <input type="password" id="authPassword" required style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none;" placeholder="••••••••">
+                </div>
+                
+                <button type="submit" id="authSubmitBtn" class="download-modal-btn" style="margin-top: 5px;">دخول</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 12px; font-size: 0.78em;">
+                <span id="authToggleText" style="color: #64748b;">ليس لديك حساب؟</span>
+                <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">أنشئ حساباً جديداً</a>
+            </div>
+
+            <div id="userProfileBox" style="display: none; text-align: center; padding: 10px 0;">
+                <p style="font-size: 0.85em; color: #334155; margin-bottom: 8px;">مرحباً بك، <span id="loggedInEmail" style="font-weight: bold; color: var(--primary);"></span></p>
+                <button onclick="logoutUser()" style="background: #ef4444; color: white; border: none; padding: 7px 15px; border-radius: 8px; font-size: 0.8em; cursor: pointer;">تسجيل الخروج</button>
+            </div>
+        </div>
+    </div>
+
     <div id="toast-message"></div>
 
     <script>
         let allApps = [];
         let customerId = "";
+        let isRegisterMode = false;
 
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
@@ -759,6 +799,98 @@
 
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // مراقبة حالة المصادقة لتحديث واجهة المستخدم
+        auth.onAuthStateChanged(user => {
+            const authBtnText = document.getElementById('authBtnText');
+            if (user) {
+                authBtnText.textContent = user.email.split('@')[0];
+                document.getElementById('firebaseAuthForm').style.display = 'none';
+                document.getElementById('authToggleText').style.display = 'none';
+                document.getElementById('authToggleBtn').style.display = 'none';
+                document.getElementById('loggedInEmail').textContent = user.email;
+                document.getElementById('userProfileBox').style.display = 'block';
+                document.getElementById('authModalTitle').textContent = 'حسابي الشخصي';
+
+                // التحقق إذا كان المستخدم قادماً عبر رابط تحويل (Redirect) من منصة خارجية مثل For-U
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectTarget = urlParams.get('redirect');
+                if (redirectTarget) {
+                    setTimeout(() => {
+                        window.location.href = `${redirectTarget}?email=${encodeURIComponent(user.email)}&uid=${user.uid}`;
+                    }, 1500);
+                }
+            } else {
+                authBtnText.textContent = 'حسابي';
+                document.getElementById('firebaseAuthForm').style.display = 'flex';
+                document.getElementById('authToggleText').style.display = 'inline';
+                document.getElementById('authToggleBtn').style.display = 'inline';
+                document.getElementById('userProfileBox').style.display = 'none';
+                document.getElementById('authModalTitle').textContent = 'تسجيل الدخول / إنشاء حساب';
+            }
+        });
+
+        function openAuthModal() {
+            document.getElementById('authModal').style.display = 'block';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            const title = document.getElementById('authModalTitle');
+            const btn = document.getElementById('authSubmitBtn');
+            const toggleText = document.getElementById('authToggleText');
+            const toggleBtn = document.getElementById('authToggleBtn');
+
+            if (isRegisterMode) {
+                title.textContent = 'إنشاء حساب جديد';
+                btn.textContent = 'تسجيل';
+                toggleText.textContent = 'لديك حساب بالفعل؟';
+                toggleBtn.textContent = 'سجل دخولك';
+            } else {
+                title.textContent = 'تسجيل الدخول';
+                btn.textContent = 'دخول';
+                toggleText.textContent = 'ليس لديك حساب؟';
+                toggleBtn.textContent = 'أنشئ حساباً جديداً';
+            }
+        }
+
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+
+            if (isRegisterMode) {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(userCredential => {
+                        showToast('✅ تم إنشاء الحساب بنجاح!');
+                        closeAuthModal();
+                    })
+                    .catch(error => {
+                        showToast('❌ خطأ: ' + error.message);
+                    });
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(userCredential => {
+                        showToast('✅ تم تسجيل الدخول بنجاح!');
+                        closeAuthModal();
+                    })
+                    .catch(error => {
+                        showToast('❌ خطأ في البريد أو كلمة المرور');
+                    });
+            }
+        }
+
+        function logoutUser() {
+            auth.signOut().then(() => {
+                showToast('👋 تم تسجيل الخروج');
+                closeAuthModal();
+            });
+        }
 
         function getCookie(name) {
             let nameEQ = name + "=";
