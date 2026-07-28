@@ -723,6 +723,7 @@
                 form.style.display = 'flex';
                 toggleContainer.style.display = 'block';
                 
+                isRegisterMode = false;
                 updateAuthModeUI();
 
                 chatLockOverlay.style.display = 'flex';
@@ -799,7 +800,7 @@
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
-                    showToast(`✅ تم إنشاء الحساب بنجاح! مرحباً ${name} - رقمك التعريفي: ${spId}`);
+                    showToast(`تم انشاء الحساب مرحبا ${name} رقم التعريف الخاص بك ${spId}`);
                     closeAuthModal();
                 } catch (error) {
                     showToast('❌ خطأ: ' + error.message);
@@ -905,3 +906,4 @@
     </script>
 </body>
 </html>
+```[cite: 1]
