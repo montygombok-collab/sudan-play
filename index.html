@@ -337,6 +337,7 @@
             flex-direction: column;
             height: 450px;
             overflow: hidden;
+            position: relative;
         }
 
         .chat-header {
@@ -406,6 +407,46 @@
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
+        }
+
+        /* طبقة حجب الدردشة إذا لم يكن المستخدم مسجل دخول */
+        #chat-lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 17, 26, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #chat-lock-overlay h3 {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        #chat-lock-overlay p {
+            font-size: 0.85em;
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+
+        #chat-lock-overlay button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         #about-page {
@@ -603,7 +644,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
-<body onload="detectAndShowDevice(); initCustomerProfile();">
+<body onload="detectAndShowDevice();">
 
     <div id="device-detection-banner">
         <div class="banner-content">
@@ -623,7 +664,7 @@
                 <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
                 <a href="#" id="nav-dev" class="publish-btn" onclick="goToDeveloperPage()"><i class="fas fa-rocket"></i> انشر تطبيقك</a>
                 <a href="#" id="nav-support" onclick="switchPage('support-page')"><i class="fas fa-headset"></i> الدعم</a>
-                <!-- زر إنشاء الحساب وتسجيل الدخول -->
+                <!-- زر حسابي / تسجيل الدخول -->
                 <a href="#" id="nav-auth" onclick="openAuthModal()" style="background: rgba(74, 107, 255, 0.2); border: 1px solid var(--primary);"><i class="fas fa-user-circle"></i> <span id="authBtnText">حسابي</span></a>
             </div>
         </nav>
@@ -665,12 +706,20 @@
             </div>
 
             <div class="chat-container">
+                <!-- طبقة حجب الدردشة تظهر حصراً إذا لم يتم تسجيل الدخول -->
+                <div id="chat-lock-overlay">
+                    <i class="fas fa-lock" style="font-size: 2.2em; color: var(--primary); margin-bottom: 10px;"></i>
+                    <h3>الدعم الفني مخصص للمستخدمين المسجلين</h3>
+                    <p>يرجى تسجيل الدخول أو إنشاء حساب جديد للوصول إلى الدردشة المباشرة مع الدعم.</p>
+                    <button onclick="openAuthModal()">تسجيل الدخول / حساب جديد</button>
+                </div>
+
                 <div class="chat-header">
                     <span style="font-size: 0.9em; font-weight: bold;"><i class="fas fa-comments"></i> الدردشة المباشرة مع الدعم</span>
-                    <span id="customer-id-tag" style="font-size: 0.72em; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 10px;">معرف العميل: جاري التعرف...</span>
+                    <span id="customer-id-tag" style="font-size: 0.72em; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 10px;">---</span>
                 </div>
                 <div class="chat-box" id="chatBox">
-                    <div class="chat-msg agent">مرحباً بك! كيف يمكننا مساعدتك ؟ تم التعرف على جلستك وستظل محادثتك محفوظة.</div>
+                    <div class="chat-msg agent">مرحباً بك! كيف يمكننا مساعدتك ؟</div>
                 </div>
                 <div class="chat-input-area">
                     <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -747,13 +796,13 @@
         </div>
     </div>
 
-    <!-- نافذة تسجيل الدخول / إنشاء الحساب (Auth Modal) -->
+    <!-- نافذة تسجيل الدخول / إنشاء الحساب (بدون معلومات معقدة إضافية) -->
     <div id="authModal" class="modal">
         <div class="modal-content" style="max-width: 400px; text-align: right;">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
             <div style="text-align: center; margin-bottom: 15px;">
                 <h3 id="authModalTitle" style="font-size: 1.2em; font-weight: bold; color: var(--dark);">تسجيل الدخول / إنشاء حساب</h3>
-                <p style="font-size: 0.78em; color: #64748b; margin-top: 3px;">انضم إلى سودان بلاي لربط حسابك بالمنصات الأخرى</p>
+                <p style="font-size: 0.78em; color: #64748b; margin-top: 3px;">سجل بالبريد وكلمة المرور للحصول على رقمك التعريفي</p>
             </div>
 
             <form id="firebaseAuthForm" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
@@ -774,7 +823,7 @@
                 <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">أنشئ حساباً جديداً</a>
             </div>
 
-            <!-- صندوق الملف الشخصي وعرض الرقم التعريفي مع زر النسخ -->
+            <!-- صندوق الملف الشخصي وعرض الرقم التعريفي Sudan Play ID مع زر النسخ -->
             <div id="userProfileBox" style="display: none; text-align: center; padding: 10px 0;">
                 <p style="font-size: 0.85em; color: #334155; margin-bottom: 6px;">مرحباً بك، <span id="loggedInEmail" style="font-weight: bold; color: var(--primary);"></span></p>
                 
@@ -797,8 +846,8 @@
 
     <script>
         let allApps = [];
-        let customerId = "";
         let isRegisterMode = false;
+        let currentUserUid = null;
 
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
@@ -813,10 +862,13 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // مراقبة حالة المصادقة لتحديث واجهة المستخدم وجلب/توليد الرقم التعريفي
+        // مراقبة حالة تسجيل الدخول وتحديث واجهة الدعم والملف الشخصي
         auth.onAuthStateChanged(async user => {
             const authBtnText = document.getElementById('authBtnText');
+            const chatLockOverlay = document.getElementById('chat-lock-overlay');
+            
             if (user) {
+                currentUserUid = user.uid;
                 authBtnText.textContent = user.email.split('@')[0];
                 document.getElementById('firebaseAuthForm').style.display = 'none';
                 document.getElementById('authToggleText').style.display = 'none';
@@ -824,7 +876,10 @@
                 document.getElementById('loggedInEmail').textContent = user.email;
                 document.getElementById('authModalTitle').textContent = 'حسابي الشخصي';
 
-                // فحص ما إذا كان للمستخدم رقم تعريفي مخزن في Firestore مسبقاً، وإلا يتم توليده وحفظه
+                // إزالة قفل الدعم لأن المستخدم مسجل دخول
+                chatLockOverlay.style.display = 'none';
+
+                // جلب أو توليد الرقم التعريفي Sudan Play ID تلقائياً
                 const userDocRef = db.collection('users').doc(user.uid);
                 const docSnap = await userDocRef.get();
                 
@@ -832,7 +887,6 @@
                 if (docSnap.exists && docSnap.data().sudanPlayId) {
                     spId = docSnap.data().sudanPlayId;
                 } else {
-                    // توليد رقم تعريفي فريد مثل SP-74821
                     spId = 'SP-' + Math.floor(10000 + Math.random() * 90000);
                     await userDocRef.set({
                         email: user.email,
@@ -842,12 +896,14 @@
                 }
 
                 document.getElementById('userSudanPlayId').textContent = spId;
+                document.getElementById('customer-id-tag').textContent = `الرقم التعريفي: ${spId}`;
                 document.getElementById('userProfileBox').style.display = 'block';
 
-                // معالجة رابط التوجيه (redirect_uri) لإعادة المستخدم للمنصة الطالبة (مثل For-U)
+                loadChatHistory(user.uid);
+
+                // إعادة التوجيه للمنصات المرتبطة إن وجدت
                 const urlParams = new URLSearchParams(window.location.search);
                 const redirectUri = urlParams.get('redirect_uri') || urlParams.get('redirect');
-                
                 if (redirectUri) {
                     showToast('🔄 يتم إعادة توجيهك للمنصة...');
                     setTimeout(() => {
@@ -855,22 +911,26 @@
                     }, 1200);
                 }
             } else {
+                currentUserUid = null;
                 authBtnText.textContent = 'حسابي';
                 document.getElementById('firebaseAuthForm').style.display = 'flex';
                 document.getElementById('authToggleText').style.display = 'inline';
                 document.getElementById('authToggleBtn').style.display = 'inline';
                 document.getElementById('userProfileBox').style.display = 'none';
                 document.getElementById('authModalTitle').textContent = 'تسجيل الدخول / إنشاء حساب';
+                
+                // إظهار قفل الدعم لحين تسجيل الدخول
+                chatLockOverlay.style.display = 'flex';
+                document.getElementById('customer-id-tag').textContent = 'غير مسجل دخول';
             }
         });
 
-        // دالة نسخ الرقم التعريفي إلى الحافظة
         function copySudanPlayId() {
             const spIdText = document.getElementById('userSudanPlayId').textContent;
             navigator.clipboard.writeText(spIdText).then(() => {
                 showToast('📋 تم نسخ الرقم التعريفي بنجاح!');
-            }).catch(err => {
-                showToast('❌فشل نسخ الرقم التعريفي');
+            }).catch(() => {
+                showToast('❌ فشل النسخ');
             });
         }
 
@@ -909,7 +969,7 @@
 
             if (isRegisterMode) {
                 auth.createUserWithEmailAndPassword(email, password)
-                    .then(userCredential => {
+                    .then(() => {
                         showToast('✅ تم إنشاء الحساب بنجاح!');
                         closeAuthModal();
                     })
@@ -918,11 +978,11 @@
                     });
             } else {
                 auth.signInWithEmailAndPassword(email, password)
-                    .then(userCredential => {
+                    .then(() => {
                         showToast('✅ تم تسجيل الدخول بنجاح!');
                         closeAuthModal();
                     })
-                    .catch(error => {
+                    .catch(() => {
                         showToast('❌ خطأ في البريد أو كلمة المرور');
                     });
             }
@@ -935,41 +995,9 @@
             });
         }
 
-        function getCookie(name) {
-            let nameEQ = name + "=";
-            let ca = document.cookie.split(';');
-            for(let i=0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                let date = new Date();
-                date.setTime(date.getTime() + (days*24*60*60*1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-        }
-
-        function initCustomerProfile() {
-            customerId = localStorage.getItem('sp_customer_id') || getCookie('sp_customer_id');
-            if (!customerId) {
-                customerId = 'cust_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('sp_customer_id', customerId);
-                setCookie('sp_customer_id', customerId, 365);
-            }
-            document.getElementById('customer-id-tag').textContent = `معرف العميل: ${customerId}`;
-            loadChatHistory();
-        }
-
-        function loadChatHistory() {
+        function loadChatHistory(uid) {
             const chatBox = document.getElementById('chatBox');
-            db.collection('chats').doc(customerId).collection('messages')
+            db.collection('chats').doc(uid).collection('messages')
               .orderBy('timestamp', 'asc')
               .onSnapshot(snapshot => {
                   if (snapshot.empty) return;
@@ -986,11 +1014,17 @@
         }
 
         function sendMessage() {
+            if (!currentUserUid) {
+                showToast('⚠️ يجب تسجيل الدخول أولاً لاستخدام الدعم.');
+                openAuthModal();
+                return;
+            }
+
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text) return;
 
-            db.collection('chats').doc(customerId).collection('messages').add({
+            db.collection('chats').doc(currentUserUid).collection('messages').add({
                 text: text,
                 sender: 'user',
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -1058,7 +1092,6 @@
 
                 snapshot.forEach(doc => {
                     const app = { id: doc.id, ...doc.data() };
-                    
                     if (app.isVisible === false) return;
 
                     allApps.push(app);
