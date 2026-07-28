@@ -36,30 +36,6 @@
             overflow-x: hidden;
         }
 
-        #device-detection-banner {
-            background: rgba(46, 196, 182, 0.9);
-            backdrop-filter: blur(10px);
-            color: white;
-            text-align: center;
-            font-size: 0.85em;
-            position: sticky;
-            top: 0;
-            z-index: 2000;
-            transition: all 0.4s ease;
-            opacity: 0;
-            height: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #device-detection-banner.show {
-            opacity: 1;
-            height: auto;
-            padding: 8px;
-        }
-
         header {
             background: rgba(15, 17, 26, 0.88);
             backdrop-filter: blur(15px);
@@ -125,22 +101,10 @@
             padding: 7px 14px;
             border-radius: 30px;
             box-shadow: 0 0 15px rgba(74, 107, 255, 0.5);
-            animation: shinePulse 3s infinite linear;
             display: flex;
             align-items: center;
             gap: 5px;
             border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-
-        .nav-links a.publish-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 22px rgba(46, 196, 182, 0.8);
-        }
-
-        @keyframes shinePulse {
-            0% { background-position: 0% 50%; box-shadow: 0 0 10px rgba(74, 107, 255, 0.4); }
-            50% { background-position: 100% 50%; box-shadow: 0 0 20px rgba(46, 196, 182, 0.8); }
-            100% { background-position: 0% 50%; box-shadow: 0 0 10px rgba(74, 107, 255, 0.4); }
         }
 
         .page-section {
@@ -262,15 +226,13 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
         }
 
         .app-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            background: rgba(255, 255, 255, 0.95);
-            border-color: var(--primary);
         }
 
         .app-icon {
@@ -279,7 +241,6 @@
             border-radius: 14px;
             object-fit: cover;
             border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
             background: #fff;
             margin-bottom: 6px;
         }
@@ -392,7 +353,6 @@
 
         .chat-input-area input {
             flex: 1;
-            margin-bottom: 0;
             border-radius: 20px;
             padding: 10px 15px;
             outline: none;
@@ -409,7 +369,6 @@
             font-weight: bold;
         }
 
-        /* طبقة حجب الدردشة إذا لم يكن المستخدم مسجل دخول */
         #chat-lock-overlay {
             position: absolute;
             top: 0;
@@ -428,17 +387,6 @@
             padding: 20px;
         }
 
-        #chat-lock-overlay h3 {
-            font-size: 1.2em;
-            margin-bottom: 8px;
-        }
-
-        #chat-lock-overlay p {
-            font-size: 0.85em;
-            color: #94a3b8;
-            margin-bottom: 15px;
-        }
-
         #chat-lock-overlay button {
             background: var(--primary);
             color: white;
@@ -447,56 +395,7 @@
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
-        }
-
-        #about-page {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 15px;
-        }
-
-        .company-hero {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .company-hero h2 {
-            font-size: 1.8em;
-            color: var(--dark);
-            margin-bottom: 8px;
-        }
-
-        .company-hero p {
-            color: #475569;
-            font-size: 0.95em;
-            max-width: 650px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .company-services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .service-card {
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            padding: 20px;
-            border-radius: 14px;
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .service-card:hover { transform: translateY(-4px); }
-
-        .service-card i {
-            font-size: 2.2em;
-            color: var(--primary);
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
 
         .modal {
@@ -515,13 +414,13 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            margin: 5% auto;
+            margin: 4% auto;
             padding: 20px;
             border-radius: 18px;
             width: 92%;
-            max-width: 520px;
+            max-width: 480px;
             position: relative;
-            max-height: 88vh;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
@@ -556,40 +455,6 @@
             margin-top: auto;
         }
 
-        .footer-branding-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .brand-logo-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 3px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            object-fit: cover;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .brand-title {
-            font-size: 1.05em;
-            font-weight: 800;
-            background: linear-gradient(135deg, #4a6bff, #ff5e7d);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .footer-rights {
-            font-size: 0.72em;
-            color: #94a3b8;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 8px;
-        }
-
         #toast-message {
             visibility: hidden;
             min-width: 200px;
@@ -613,30 +478,8 @@
             opacity: 1;
         }
 
-        @media (max-width: 1200px) {
-            #apps-container {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        @media (max-width: 900px) {
-            #apps-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
         @media (max-width: 600px) {
-            header { padding: 8px 10px; }
-            .nav-links a { padding: 4px 7px; font-size: 0.72em; }
-            .logo span { font-size: 0.85em; }
-            #apps-container { 
-                grid-template-columns: repeat(3, 1fr) !important; 
-                gap: 8px !important; 
-            }
-            .app-icon {
-                width: 48px;
-                height: 48px;
-            }
+            #apps-container { grid-template-columns: repeat(3, 1fr) !important; }
         }
     </style>
     <!-- Firebase SDKs (Compat v8) -->
@@ -644,14 +487,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
-<body onload="detectAndShowDevice();">
-
-    <div id="device-detection-banner">
-        <div class="banner-content">
-            <i class="fas fa-spinner fa-spin"></i>
-            <span id="detection-text">جاري التعرف على الجهاز...</span>
-        </div>
-    </div>
+<body>
 
     <header>
         <nav>
@@ -706,12 +542,12 @@
             </div>
 
             <div class="chat-container">
-                <!-- طبقة حجب الدردشة تظهر حصراً إذا لم يتم تسجيل الدخول -->
+                <!-- طبقة حجب الدردشة إذا لم يكن المستخدم مسجل دخول -->
                 <div id="chat-lock-overlay">
                     <i class="fas fa-lock" style="font-size: 2.2em; color: var(--primary); margin-bottom: 10px;"></i>
                     <h3>الدعم الفني مخصص للمستخدمين المسجلين</h3>
                     <p>يرجى تسجيل الدخول أو إنشاء حساب جديد للوصول إلى الدردشة المباشرة مع الدعم.</p>
-                    <button onclick="openAuthModal()">تسجيل الدخول / حساب جديد</button>
+                    <button onclick="openAuthModal()">تسجيل الدخول / إنشاء حساب</button>
                 </div>
 
                 <div class="chat-header">
@@ -729,107 +565,65 @@
         </section>
 
         <section id="about-page" class="page-section">
-            <div class="glass-panel" style="background: var(--glass-card); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 25px 15px; box-shadow: var(--glass-shadow);">
-                <div class="company-hero">
-                    <h2>Monty Go SDN</h2>
-                    <p>شركة متخصصة في صناعة وتطوير المواقع الإلكترونية، التطبيقات الحديثة، والحلول البرمجية متكاملة الخدمات لتلبية احتياجات السوق الرقمي المحلي والعالمي.</p>
-                    <div style="margin-top: 15px;">
-                        <a href="https://montygosdn.vercel.app/" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 8px 18px; border-radius: 30px; text-decoration: none; font-size: 0.85em; font-weight: bold; box-shadow: 0 4px 12px rgba(74, 107, 255, 0.3); transition: transform 0.2s;">
-                            <i class="fas fa-external-link-alt"></i> زيارة موقع الشركة الإلكتروني
-                        </a>
-                    </div>
-                </div>
-
-                <div class="company-services">
-                    <div class="service-card">
-                        <i class="fas fa-mobile-alt"></i>
-                        <h4>تطوير التطبيقات</h4>
-                        <p>تصميم وبناء تطبيقات الجوال المبتكرة للأندرويد والآيفون بكفاءة عالية وأداء سلس.</p>
-                    </div>
-                    <div class="service-card">
-                        <i class="fas fa-globe"></i>
-                        <h4>تطوير المواقع</h4>
-                        <p>بناء منصات ومواقع إلكترونية بتصميم عصري ومتجاوب مع جميع المقاسات والشاشات.</p>
-                    </div>
-                    <div class="service-card">
-                        <i class="fas fa-cogs"></i>
-                        <h4>الخدمات البرمجية</h4>
-                        <p>تقديم حلول برمجية مخصصة، ربط الأنظمة، وإدارة واجهات البرمجة لتسريع أعمالك.</p>
-                    </div>
-                </div>
+            <div style="max-width: 900px; margin: 20px auto; padding: 25px 15px; background: var(--glass-card); border-radius: var(--radius);">
+                <h2 style="text-align: center; margin-bottom: 15px;">عن المنصة</h2>
+                <p style="text-align: center; color: #475569;">منصة Sudan Play لتطبيقات الويب والخدمات التقنية المتكاملة.</p>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="footer-branding-box">
-            <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png" alt="Monty Go SDN Logo" class="brand-logo-img">
-            <div class="brand-title">Monty Go SDN</div>
-        </div>
-        <div class="footer-rights">
-            <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة لـ Monty Go SDN - السودان - ولاية الخرطوم</p>
-        </div>
+        <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة</p>
     </footer>
 
-    <!-- نافذة تفاصيل التطبيق -->
-    <div id="appDetailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
-                <img id="detailsIcon" src="" alt="Icon" style="width: 48px; height: 48px; border-radius: 10px; object-fit: cover;">
-                <div>
-                    <h3 id="detailsTitle" style="font-size: 1em;"></h3>
-                    <p id="detailsCategory" style="color: var(--primary); font-size: 0.78em;"></p>
-                    <div style="display: flex; gap: 8px; font-size: 0.75em; color: #64748b; margin-top: 2px;">
-                        <span id="detailsRating" style="color: #f59e0b; font-weight: 700;"><i class="fas fa-star"></i> 5.0</span>
-                        <span id="detailsDownloads"><i class="fas fa-download"></i> 0 تنزيل</span>
-                    </div>
-                </div>
-            </div>
-            <h4 style="margin-bottom: 4px; font-size: 0.85em;">الوصف</h4>
-            <p id="detailsDescription" style="color: #475569; line-height: 1.5; font-size: 0.8em; margin-bottom: 12px;"></p>
-            
-            <div style="display: flex; gap: 6px;">
-                <button id="detailsAndroidBtn" class="download-modal-btn" style="background:#2ea44f;"><i class="fab fa-android"></i> أندرويد</button>
-                <button id="detailsIosBtn" class="download-modal-btn" style="background:#007AFF;"><i class="fab fa-apple"></i> آيفون</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة تسجيل الدخول / إنشاء الحساب (بدون معلومات معقدة إضافية) -->
+    <!-- نافذة تسجيل الدخول / إنشاء الحساب الشاملة -->
     <div id="authModal" class="modal">
-        <div class="modal-content" style="max-width: 400px; text-align: right;">
+        <div class="modal-content" style="text-align: right;">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
             <div style="text-align: center; margin-bottom: 15px;">
-                <h3 id="authModalTitle" style="font-size: 1.2em; font-weight: bold; color: var(--dark);">تسجيل الدخول / إنشاء حساب</h3>
-                <p style="font-size: 0.78em; color: #64748b; margin-top: 3px;">سجل بالبريد وكلمة المرور للحصول على رقمك التعريفي</p>
+                <h3 id="authModalTitle" style="font-size: 1.2em; font-weight: bold; color: var(--dark);">إنشاء حساب جديد</h3>
+                <p style="font-size: 0.78em; color: #64748b; margin-top: 3px;">سجل بياناتك للحصول على رقمك التعريفي (Sudan Play ID)</p>
             </div>
 
+            <!-- نموذج التسجيل المخصص (الاسم، البريد، تاريخ الميلاد، صورة اختيارية، كلمة المرور) -->
             <form id="firebaseAuthForm" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
+                <div id="registerFields">
+                    <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">الاسم الكامل</label>
+                    <input type="text" id="authName" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none; margin-bottom: 8px;" placeholder="محمد أحمد">
+
+                    <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">تاريخ الميلاد</label>
+                    <input type="date" id="authDob" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none; margin-bottom: 8px;">
+
+                    <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">رابط صورة البروفايل (اختياري)</label>
+                    <input type="url" id="authAvatar" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none; margin-bottom: 8px;" placeholder="https://example.com/avatar.jpg">
+                </div>
+
                 <div>
                     <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">البريد الإلكتروني</label>
-                    <input type="email" id="authEmail" required style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none;" placeholder="name@example.com">
+                    <input type="email" id="authEmail" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none;" placeholder="name@example.com">
                 </div>
                 <div>
                     <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">كلمة المرور</label>
-                    <input type="password" id="authPassword" required style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none;" placeholder="••••••••">
+                    <input type="password" id="authPassword" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none;" placeholder="••••••••">
                 </div>
                 
-                <button type="submit" id="authSubmitBtn" class="download-modal-btn" style="margin-top: 5px;">دخول</button>
+                <button type="submit" id="authSubmitBtn" class="download-modal-btn" style="margin-top: 5px;">إنشاء الحساب</button>
             </form>
 
             <div style="text-align: center; margin-top: 12px; font-size: 0.78em;">
-                <span id="authToggleText" style="color: #64748b;">ليس لديك حساب؟</span>
-                <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">أنشئ حساباً جديداً</a>
+                <span id="authToggleText" style="color: #64748b;">لديك حساب بالفعل؟</span>
+                <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">سجل دخولك</a>
             </div>
 
-            <!-- صندوق الملف الشخصي وعرض الرقم التعريفي Sudan Play ID مع زر النسخ -->
+            <!-- صندوق الملف الشخصي وعرض الرقم التعريفي Sudan Play ID مع زر النسخ وتسجيل الخروج -->
             <div id="userProfileBox" style="display: none; text-align: center; padding: 10px 0;">
-                <p style="font-size: 0.85em; color: #334155; margin-bottom: 6px;">مرحباً بك، <span id="loggedInEmail" style="font-weight: bold; color: var(--primary);"></span></p>
+                <img id="profilePreviewImg" src="" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid var(--primary); display: none;">
+                <h4 id="profileNameDisplay" style="font-size: 1em; color: var(--dark);"></h4>
+                <p style="font-size: 0.8em; color: #64748b; margin-bottom: 6px;"><span id="loggedInEmail"></span></p>
                 
                 <div style="background: rgba(74, 107, 255, 0.08); border: 1px dashed var(--primary); padding: 10px; border-radius: 10px; margin: 12px 0; display: flex; align-items: center; justify-content: space-between;">
                     <div style="text-align: right;">
-                        <span style="font-size: 0.7em; color: #64748b; display: block;">رقمك التعريفي (Sudan Play ID):</span>
+                        <span style="font-size: 0.7em; color: #64748b; display: block;">الرقم التعريفي (Sudan Play ID):</span>
                         <span id="userSudanPlayId" style="font-size: 0.9em; font-weight: bold; color: var(--dark); font-family: monospace;">---</span>
                     </div>
                     <button type="button" onclick="copySudanPlayId()" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75em; cursor: pointer; display: flex; align-items: center; gap: 4px;">
@@ -837,7 +631,7 @@
                     </button>
                 </div>
 
-                <button onclick="logoutUser()" style="background: #ef4444; color: white; border: none; padding: 7px 15px; border-radius: 8px; font-size: 0.8em; cursor: pointer; width: 100%; margin-top: 5px;">تسجيل الخروج</button>
+                <button onclick="logoutUser()" style="background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.8em; cursor: pointer; width: 100%; margin-top: 5px; font-weight: bold;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
             </div>
         </div>
     </div>
@@ -845,8 +639,7 @@
     <div id="toast-message"></div>
 
     <script>
-        let allApps = [];
-        let isRegisterMode = false;
+        let isRegisterMode = true; // الافتراضي إنشاء حساب
         let currentUserUid = null;
 
         const firebaseConfig = {
@@ -862,54 +655,42 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // مراقبة حالة تسجيل الدخول وتحديث واجهة الدعم والملف الشخصي
         auth.onAuthStateChanged(async user => {
             const authBtnText = document.getElementById('authBtnText');
             const chatLockOverlay = document.getElementById('chat-lock-overlay');
             
             if (user) {
                 currentUserUid = user.uid;
-                authBtnText.textContent = user.email.split('@')[0];
+                authBtnText.textContent = 'حسابي';
                 document.getElementById('firebaseAuthForm').style.display = 'none';
                 document.getElementById('authToggleText').style.display = 'none';
                 document.getElementById('authToggleBtn').style.display = 'none';
-                document.getElementById('loggedInEmail').textContent = user.email;
                 document.getElementById('authModalTitle').textContent = 'حسابي الشخصي';
 
-                // إزالة قفل الدعم لأن المستخدم مسجل دخول
                 chatLockOverlay.style.display = 'none';
 
-                // جلب أو توليد الرقم التعريفي Sudan Play ID تلقائياً
+                // جلب بيانات المستخدم الإضافية من قاعدة البيانات
                 const userDocRef = db.collection('users').doc(user.uid);
                 const docSnap = await userDocRef.get();
                 
                 let spId = "";
-                if (docSnap.exists && docSnap.data().sudanPlayId) {
-                    spId = docSnap.data().sudanPlayId;
-                } else {
-                    spId = 'SP-' + Math.floor(10000 + Math.random() * 90000);
-                    await userDocRef.set({
-                        email: user.email,
-                        sudanPlayId: spId,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
+                if (docSnap.exists) {
+                    const data = docSnap.data();
+                    spId = data.sudanPlayId || '';
+                    document.getElementById('profileNameDisplay').textContent = data.name || user.email;
+                    if (data.avatar) {
+                        const img = document.getElementById('profilePreviewImg');
+                        img.src = data.avatar;
+                        img.style.display = 'inline-block';
+                    }
                 }
 
                 document.getElementById('userSudanPlayId').textContent = spId;
+                document.getElementById('loggedInEmail').textContent = user.email;
                 document.getElementById('customer-id-tag').textContent = `الرقم التعريفي: ${spId}`;
                 document.getElementById('userProfileBox').style.display = 'block';
 
                 loadChatHistory(user.uid);
-
-                // إعادة التوجيه للمنصات المرتبطة إن وجدت
-                const urlParams = new URLSearchParams(window.location.search);
-                const redirectUri = urlParams.get('redirect_uri') || urlParams.get('redirect');
-                if (redirectUri) {
-                    showToast('🔄 يتم إعادة توجيهك للمنصة...');
-                    setTimeout(() => {
-                        window.location.href = `${redirectUri}?email=${encodeURIComponent(user.email)}&uid=${user.uid}&sudan_play_id=${spId}`;
-                    }, 1200);
-                }
             } else {
                 currentUserUid = null;
                 authBtnText.textContent = 'حسابي';
@@ -917,9 +698,8 @@
                 document.getElementById('authToggleText').style.display = 'inline';
                 document.getElementById('authToggleBtn').style.display = 'inline';
                 document.getElementById('userProfileBox').style.display = 'none';
-                document.getElementById('authModalTitle').textContent = 'تسجيل الدخول / إنشاء حساب';
+                document.getElementById('profilePreviewImg').style.display = 'none';
                 
-                // إظهار قفل الدعم لحين تسجيل الدخول
                 chatLockOverlay.style.display = 'flex';
                 document.getElementById('customer-id-tag').textContent = 'غير مسجل دخول';
             }
@@ -928,19 +708,12 @@
         function copySudanPlayId() {
             const spIdText = document.getElementById('userSudanPlayId').textContent;
             navigator.clipboard.writeText(spIdText).then(() => {
-                showToast('📋 تم نسخ الرقم التعريفي بنجاح!');
-            }).catch(() => {
-                showToast('❌ فشل النسخ');
+                showToast('📋 تم نسخ الرقم التعريفي بنجاح للاستخدام في التطبيقات والمنصات!');
             });
         }
 
-        function openAuthModal() {
-            document.getElementById('authModal').style.display = 'block';
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
+        function openAuthModal() { document.getElementById('authModal').style.display = 'block'; }
+        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
 
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
@@ -948,49 +721,67 @@
             const btn = document.getElementById('authSubmitBtn');
             const toggleText = document.getElementById('authToggleText');
             const toggleBtn = document.getElementById('authToggleBtn');
+            const registerFields = document.getElementById('registerFields');
 
             if (isRegisterMode) {
                 title.textContent = 'إنشاء حساب جديد';
-                btn.textContent = 'تسجيل';
+                btn.textContent = 'إنشاء الحساب';
                 toggleText.textContent = 'لديك حساب بالفعل؟';
                 toggleBtn.textContent = 'سجل دخولك';
+                registerFields.style.display = 'block';
             } else {
                 title.textContent = 'تسجيل الدخول';
                 btn.textContent = 'دخول';
                 toggleText.textContent = 'ليس لديك حساب؟';
                 toggleBtn.textContent = 'أنشئ حساباً جديداً';
+                registerFields.style.display = 'none';
             }
         }
 
-        function handleAuthSubmit(event) {
+        async function handleAuthSubmit(event) {
             event.preventDefault();
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
 
             if (isRegisterMode) {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then(() => {
-                        showToast('✅ تم إنشاء الحساب بنجاح!');
-                        closeAuthModal();
-                    })
-                    .catch(error => {
-                        showToast('❌ خطأ: ' + error.message);
+                const name = document.getElementById('authName').value;
+                const dob = document.getElementById('authDob').value;
+                const avatar = document.getElementById('authAvatar').value;
+
+                try {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    const uid = userCredential.user.uid;
+                    const spId = 'SP-' + Math.floor(10000 + Math.random() * 90000);
+
+                    // حفظ بيانات الحساب الإضافية والرقم التعريفي في الفايرستور
+                    await db.collection('users').doc(uid).set({
+                        name: name,
+                        email: email,
+                        dob: dob,
+                        avatar: avatar || '',
+                        sudanPlayId: spId,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+
+                    showToast('✅ تم إنشاء الحساب وتوليد الرقم التعريفي بنجاح!');
+                    closeAuthModal();
+                } catch (error) {
+                    showToast('❌ خطأ: ' + error.message);
+                }
             } else {
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        showToast('✅ تم تسجيل الدخول بنجاح!');
-                        closeAuthModal();
-                    })
-                    .catch(() => {
-                        showToast('❌ خطأ في البريد أو كلمة المرور');
-                    });
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    showToast('✅ تم تسجيل الدخول بنجاح!');
+                    closeAuthModal();
+                } catch (error) {
+                    showToast('❌ خطأ في البريد أو كلمة المرور');
+                }
             }
         }
 
         function logoutUser() {
             auth.signOut().then(() => {
-                showToast('👋 تم تسجيل الخروج');
+                showToast('👋 تم تسجيل الخروج بنجاح');
                 closeAuthModal();
             });
         }
@@ -1036,32 +827,11 @@
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active-page'));
             document.getElementById(pageId).classList.add('active-page');
-
-            document.getElementById('nav-main').classList.toggle('active', pageId === 'main-page');
-            document.getElementById('nav-about').classList.toggle('active', pageId === 'about-page');
-            document.getElementById('nav-support').classList.toggle('active', pageId === 'support-page');
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function goToDeveloperPage() {
             window.location.href = 'developer.html';
-        }
-
-        function detectAndShowDevice() {
-            const userAgent = navigator.userAgent || navigator.vendor;
-            const banner = document.getElementById('device-detection-banner');
-            const textElement = document.getElementById('detection-text');
-
-            if (/iPad|iPhone|iPod/.test(userAgent)) {
-                textElement.innerHTML = `<i class="fab fa-apple"></i> نظام iOS - تم التوافق مع الآيفون.`;
-                banner.classList.add('show');
-            } else if (/android/i.test(userAgent)) {
-                textElement.innerHTML = `<i class="fab fa-android"></i> أندرويد - تم التوافق مع الأندرويد.`;
-                banner.classList.add('show');
-            }
-            setTimeout(() => banner.classList.remove('show'), 3000);
-            loadApps();
         }
 
         function showToast(msg) {
@@ -1071,111 +841,26 @@
             setTimeout(() => t.classList.remove("show"), 3000);
         }
 
-        function formatDownloads(count) {
-            if (!count) return '0';
-            if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
-            if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
-            return count.toString();
-        }
-
-        function loadApps() {
-            const container = document.getElementById('apps-container');
+        window.onload = function() {
+            // جلب التطبيقات المبدئية إن وجدت
             db.collection('apps').onSnapshot(snapshot => {
-                container.innerHTML = '';
-                allApps = [];
-                const categories = new Set(['الكل']);
-
+                const container = document.getElementById('apps-container');
                 if (snapshot.empty) {
                     container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em; padding:20px;">لا توجد تطبيقات حالياً.</p>';
                     return;
                 }
-
+                container.innerHTML = '';
                 snapshot.forEach(doc => {
-                    const app = { id: doc.id, ...doc.data() };
-                    if (app.isVisible === false) return;
-
-                    allApps.push(app);
-                    const catName = app.category || app.appType || 'عام';
-                    categories.add(catName);
-
-                    const name = app.name || app.appName || 'تطبيق بدون عنوان';
-                    const icon = app.iconPath || app.appIconLink || 'https://via.placeholder.com/40';
-                    const rating = app.rating ? Number(app.rating).toFixed(1) : '5.0';
-                    const downloadsCount = app.downloads || 0;
-
+                    const app = doc.data();
                     container.innerHTML += `
-                        <div class="app-card" data-category="${catName}" data-name="${name}" onclick="showAppDetails('${app.id}')">
-                            <img src="${icon}" class="app-icon" alt="Icon" loading="lazy">
-                            <h4 class="app-title">${name}</h4>
-                            <div class="app-stats-row">
-                                <span class="app-rating" style="color: #f59e0b;"><i class="fas fa-star"></i> ${rating}</span>
-                                <span>•</span>
-                                <span><i class="fas fa-download"></i> ${formatDownloads(downloadsCount)}</span>
-                            </div>
+                        <div class="app-card">
+                            <img src="${app.iconPath || 'https://via.placeholder.com/40'}" class="app-icon" alt="Icon">
+                            <h4 class="app-title">${app.name || 'تطبيق'}</h4>
+                            <div class="app-stats-row"><span><i class="fas fa-download"></i> ${app.downloads || 0}</span></div>
                         </div>
                     `;
                 });
-
-                const catFilter = document.getElementById('categoryFilter');
-                catFilter.innerHTML = '';
-                categories.forEach(c => catFilter.innerHTML += `<option value="${c}">${c}</option>`);
-                document.getElementById('searchInput').addEventListener('input', filterApps);
-            }, err => {
-                console.error("Firestore Listen Error:", err);
-                container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em; color:red; padding:20px;">تعذر جلب التطبيقات، يرجى التحديث.</p>';
             });
-        }
-
-        function filterApps() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const category = document.getElementById('categoryFilter').value;
-
-            document.querySelectorAll('.app-card').forEach(card => {
-                const matchesCat = (category === 'الكل' || card.dataset.category === category);
-                const matchesSearch = card.dataset.name.toLowerCase().includes(query);
-                card.style.display = (matchesCat && matchesSearch) ? 'flex' : 'none';
-            });
-        }
-
-        function showAppDetails(appId) {
-            const app = allApps.find(a => a.id === appId);
-            if (!app) return;
-
-            document.getElementById('detailsTitle').textContent = app.name || app.appName || 'تطبيق';
-            document.getElementById('detailsIcon').src = app.iconPath || app.appIconLink || 'https://via.placeholder.com/48';
-            document.getElementById('detailsCategory').textContent = app.category || app.appType || 'عام';
-            document.getElementById('detailsDescription').textContent = app.fullDescription || app.appDescription || 'لا يوجد وصف متاح.';
-            document.getElementById('detailsRating').innerHTML = `<i class="fas fa-star"></i> ${app.rating ? Number(app.rating).toFixed(1) : '5.0'}`;
-            document.getElementById('detailsDownloads').innerHTML = `<i class="fas fa-download"></i> ${formatDownloads(app.downloads || 0)} تنزيل`;
-
-            const androidBtn = document.getElementById('detailsAndroidBtn');
-            const iosBtn = document.getElementById('detailsIosBtn');
-
-            const androidLink = app.downloadLink || app.appAndroidLink || '#';
-            const iosLink = app.iphoneDownloadLink || app.appIosLink || '#';
-
-            androidBtn.onclick = () => triggerDownload(app.id, androidLink);
-            iosBtn.onclick = () => triggerDownload(app.id, iosLink);
-
-            document.getElementById('appDetailsModal').style.display = 'block';
-        }
-
-        function triggerDownload(appId, url) {
-            if (!url || url === '#' || url.trim() === '') {
-                showToast('⚠️ رابط التحميل غير متاح حالياً.');
-                return;
-            }
-            db.collection('apps').doc(appId).update({
-                downloads: firebase.firestore.FieldValue.increment(1)
-            }).catch(err => console.log('Update error:', err));
-
-            window.open(url, '_blank');
-        }
-
-        function closeModal() { document.getElementById('appDetailsModal').style.display = 'none'; }
-
-        window.onclick = function(e) {
-            if (e.target.classList.contains('modal')) e.target.style.display = 'none';
         };
     </script>
 </body>
