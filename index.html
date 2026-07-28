@@ -500,7 +500,7 @@
                 <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
                 <a href="#" id="nav-dev" class="publish-btn" onclick="goToDeveloperPage()"><i class="fas fa-rocket"></i> انشر تطبيقك</a>
                 <a href="#" id="nav-support" onclick="switchPage('support-page')"><i class="fas fa-headset"></i> الدعم</a>
-                <!-- زر حسابي / تسجيل الدخول -->
+                <!-- زر حسابي / تسجيل الدخول الديناميكي -->
                 <a href="#" id="nav-auth" onclick="openAuthModal()" style="background: rgba(74, 107, 255, 0.2); border: 1px solid var(--primary);"><i class="fas fa-user-circle"></i> <span id="authBtnText">حسابي</span></a>
             </div>
         </nav>
@@ -581,11 +581,11 @@
         <div class="modal-content" style="text-align: right;">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
             <div style="text-align: center; margin-bottom: 15px;">
-                <h3 id="authModalTitle" style="font-size: 1.2em; font-weight: bold; color: var(--dark);">إنشاء حساب جديد</h3>
-                <p id="authModalSub" style="font-size: 0.78em; color: #64748b; margin-top: 3px;">سجل بياناتك للحصول على رقمك التعريفي (Sudan Play ID)</p>
+                <h3 id="authModalTitle" style="font-size: 1.2em; font-weight: bold; color: var(--dark);">تسجيل الدخول</h3>
+                <p id="authModalSub" style="font-size: 0.78em; color: #64748b; margin-top: 3px;">سجل دخولك أو أنشئ حساباً جديداً</p>
             </div>
 
-            <!-- نموذج التسجيل الدخول / إنشاء الحساب -->
+            <!-- نموذج تسجيل الدخول / إنشاء الحساب -->
             <form id="firebaseAuthForm" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
                 <div id="registerFields">
                     <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">الاسم الكامل</label>
@@ -607,15 +607,15 @@
                     <input type="password" id="authPassword" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85em; outline: none;" placeholder="••••••••">
                 </div>
                 
-                <button type="submit" id="authSubmitBtn" class="download-modal-btn" style="margin-top: 5px;">إنشاء الحساب</button>
+                <button type="submit" id="authSubmitBtn" class="download-modal-btn" style="margin-top: 5px;">تسجيل الدخول</button>
             </form>
 
             <div id="authToggleContainer" style="text-align: center; margin-top: 12px; font-size: 0.78em;">
-                <span id="authToggleText" style="color: #64748b;">لديك حساب بالفعل؟</span>
-                <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">سجل دخولك</a>
+                <span id="authToggleText" style="color: #64748b;">ليس لديك حساب؟</span>
+                <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">أنشئ حساباً جديداً</a>
             </div>
 
-            <!-- صندوق الملف الشخصي وعرض الاسم والرقم التعريفي مع زر شفاف للنسخ -->
+            <!-- صندوق الملف الشخصي وعرض الاسم والبريد والرقم التعريفي مع زر الشفاف للنسخ -->
             <div id="userProfileBox" style="display: none; text-align: center; padding: 10px 0;">
                 <img id="profilePreviewImg" src="" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid var(--primary); display: none;">
                 <h4 id="profileNameDisplay" style="font-size: 1.1em; color: var(--dark); font-weight: bold; margin-bottom: 4px;"></h4>
@@ -626,7 +626,7 @@
                         <span style="font-size: 0.7em; color: #64748b; display: block; margin-bottom: 2px;">الرقم التعريفي (Sudan Play ID):</span>
                         <span id="userSudanPlayId" style="font-size: 0.95em; font-weight: bold; color: var(--primary); font-family: monospace;">---</span>
                     </div>
-                    <!-- الزر الشفاف للنسخ المطلوب -->
+                    <!-- زر النسخ الشفاف -->
                     <button type="button" onclick="copySudanPlayId()" style="background: transparent; color: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 8px; font-size: 0.8em; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; transition: all 0.2s;" onmouseover="this.style.background='var(--primary)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='var(--primary)';">
                         <i class="fas fa-copy"></i> نسخ
                     </button>
@@ -640,7 +640,7 @@
     <div id="toast-message"></div>
 
     <script>
-        let isRegisterMode = true; 
+        let isRegisterMode = false; // افتراضياً يبدأ بتسجيل الدخول
         let currentUserUid = null;
 
         const firebaseConfig = {
@@ -662,17 +662,12 @@
             const form = document.getElementById('firebaseAuthForm');
             const toggleContainer = document.getElementById('authToggleContainer');
             const profileBox = document.getElementById('userProfileBox');
-            const modalTitle = document.getElementById('authModalTitle');
-            const modalSub = document.getElementById('authModalSub');
             
             if (user) {
                 currentUserUid = user.uid;
                 authBtnText.textContent = 'حسابي';
                 form.style.display = 'none';
                 toggleContainer.style.display = 'none';
-                modalTitle.textContent = 'حسابي الشخصي';
-                modalSub.textContent = 'إدارة حسابك والحصول على رقمك التعريفي';
-
                 chatLockOverlay.style.display = 'none';
 
                 const userDocRef = db.collection('users').doc(user.uid);
@@ -698,7 +693,7 @@
                     }, { merge: true });
                 }
 
-                document.getElementById('profileNameDisplay').textContent = nameVal;
+                document.getElementById('profileNameDisplay').textContent = `مرحباً، ${nameVal}`;
                 document.getElementById('userSudanPlayId').textContent = spId;
                 document.getElementById('loggedInEmail').textContent = user.email;
                 document.getElementById('customer-id-tag').textContent = `الرقم التعريفي: ${spId}`;
@@ -720,15 +715,8 @@
                 form.style.display = 'flex';
                 toggleContainer.style.display = 'block';
                 
-                if (isRegisterMode) {
-                    modalTitle.textContent = 'إنشاء حساب جديد';
-                    modalSub.textContent = 'سجل بياناتك للحصول على رقمك التعريفي (Sudan Play ID)';
-                    document.getElementById('registerFields').style.display = 'block';
-                } else {
-                    modalTitle.textContent = 'تسجيل الدخول';
-                    modalSub.textContent = 'ادخل بريدك وكلمة المرور للدخول إلى حسابك';
-                    document.getElementById('registerFields').style.display = 'none';
-                }
+                // تطبيق واجهة تسجيل الدخول أو التسجيل حسب حالة الزر
+                updateAuthModeUI();
 
                 chatLockOverlay.style.display = 'flex';
                 document.getElementById('customer-id-tag').textContent = 'غير مسجل دخول';
@@ -738,7 +726,7 @@
         function copySudanPlayId() {
             const spIdText = document.getElementById('userSudanPlayId').textContent;
             navigator.clipboard.writeText(spIdText).then(() => {
-                showToast('📋 تم نسخ الرقم التعريفي بنجاح للاستخدام في التطبيقات والمنصات!');
+                showToast('📋 تم نسخ الرقم التعريفي بنجاح!');
             });
         }
 
@@ -747,6 +735,10 @@
 
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
+            updateAuthModeUI();
+        }
+
+        function updateAuthModeUI() {
             const title = document.getElementById('authModalTitle');
             const sub = document.getElementById('authModalSub');
             const btn = document.getElementById('authSubmitBtn');
@@ -764,7 +756,7 @@
             } else {
                 title.textContent = 'تسجيل الدخول';
                 sub.textContent = 'ادخل بريدك وكلمة المرور للدخول إلى حسابك';
-                btn.textContent = 'دخول';
+                btn.textContent = 'تسجيل الدخول';
                 toggleText.textContent = 'ليس لديك حساب؟';
                 toggleBtn.textContent = 'أنشئ حساباً جديداً';
                 registerFields.style.display = 'none';
@@ -795,7 +787,7 @@
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
-                    showToast('✅ تم إنشاء الحساب وتوليد الرقم التعريفي بنجاح!');
+                    showToast(`✅ تم إنشاء الحساب بنجاح! مرحباً ${name} - رقمك التعريفي: ${spId}`);
                     closeAuthModal();
                 } catch (error) {
                     showToast('❌ خطأ: ' + error.message);
@@ -870,7 +862,7 @@
             const t = document.getElementById("toast-message");
             t.textContent = msg;
             t.classList.add("show");
-            setTimeout(() => t.classList.remove("show"), 3000);
+            setTimeout(() => t.classList.remove("show"), 4000);
         }
 
         window.onload = function() {
