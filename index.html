@@ -774,9 +774,21 @@
                 <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">أنشئ حساباً جديداً</a>
             </div>
 
+            <!-- صندوق الملف الشخصي وعرض الرقم التعريفي مع زر النسخ -->
             <div id="userProfileBox" style="display: none; text-align: center; padding: 10px 0;">
-                <p style="font-size: 0.85em; color: #334155; margin-bottom: 8px;">مرحباً بك، <span id="loggedInEmail" style="font-weight: bold; color: var(--primary);"></span></p>
-                <button onclick="logoutUser()" style="background: #ef4444; color: white; border: none; padding: 7px 15px; border-radius: 8px; font-size: 0.8em; cursor: pointer;">تسجيل الخروج</button>
+                <p style="font-size: 0.85em; color: #334155; margin-bottom: 6px;">مرحباً بك، <span id="loggedInEmail" style="font-weight: bold; color: var(--primary);"></span></p>
+                
+                <div style="background: rgba(74, 107, 255, 0.08); border: 1px dashed var(--primary); padding: 10px; border-radius: 10px; margin: 12px 0; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="text-align: right;">
+                        <span style="font-size: 0.7em; color: #64748b; display: block;">رقمك التعريفي (Sudan Play ID):</span>
+                        <span id="userSudanPlayId" style="font-size: 0.9em; font-weight: bold; color: var(--dark); font-family: monospace;">---</span>
+                    </div>
+                    <button type="button" onclick="copySudanPlayId()" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75em; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                        <i class="fas fa-copy"></i> نسخ
+                    </button>
+                </div>
+
+                <button onclick="logoutUser()" style="background: #ef4444; color: white; border: none; padding: 7px 15px; border-radius: 8px; font-size: 0.8em; cursor: pointer; width: 100%; margin-top: 5px;">تسجيل الخروج</button>
             </div>
         </div>
     </div>
@@ -801,8 +813,8 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // مراقبة حالة المصادقة لتحديث واجهة المستخدم والتعامل مع redirect_uri
-        auth.onAuthStateChanged(user => {
+        // مراقبة حالة المصادقة لتحديث واجهة المستخدم وجلب/توليد الرقم التعريفي
+        auth.onAuthStateChanged(async user => {
             const authBtnText = document.getElementById('authBtnText');
             if (user) {
                 authBtnText.textContent = user.email.split('@')[0];
@@ -810,8 +822,27 @@
                 document.getElementById('authToggleText').style.display = 'none';
                 document.getElementById('authToggleBtn').style.display = 'none';
                 document.getElementById('loggedInEmail').textContent = user.email;
-                document.getElementById('userProfileBox').style.display = 'block';
                 document.getElementById('authModalTitle').textContent = 'حسابي الشخصي';
+
+                // فحص ما إذا كان للمستخدم رقم تعريفي مخزن في Firestore مسبقاً، وإلا يتم توليده وحفظه
+                const userDocRef = db.collection('users').doc(user.uid);
+                const docSnap = await userDocRef.get();
+                
+                let spId = "";
+                if (docSnap.exists && docSnap.data().sudanPlayId) {
+                    spId = docSnap.data().sudanPlayId;
+                } else {
+                    // توليد رقم تعريفي فريد مثل SP-74821
+                    spId = 'SP-' + Math.floor(10000 + Math.random() * 90000);
+                    await userDocRef.set({
+                        email: user.email,
+                        sudanPlayId: spId,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                }
+
+                document.getElementById('userSudanPlayId').textContent = spId;
+                document.getElementById('userProfileBox').style.display = 'block';
 
                 // معالجة رابط التوجيه (redirect_uri) لإعادة المستخدم للمنصة الطالبة (مثل For-U)
                 const urlParams = new URLSearchParams(window.location.search);
@@ -820,7 +851,7 @@
                 if (redirectUri) {
                     showToast('🔄 يتم إعادة توجيهك للمنصة...');
                     setTimeout(() => {
-                        window.location.href = `${redirectUri}?email=${encodeURIComponent(user.email)}&uid=${user.uid}`;
+                        window.location.href = `${redirectUri}?email=${encodeURIComponent(user.email)}&uid=${user.uid}&sudan_play_id=${spId}`;
                     }, 1200);
                 }
             } else {
@@ -832,6 +863,16 @@
                 document.getElementById('authModalTitle').textContent = 'تسجيل الدخول / إنشاء حساب';
             }
         });
+
+        // دالة نسخ الرقم التعريفي إلى الحافظة
+        function copySudanPlayId() {
+            const spIdText = document.getElementById('userSudanPlayId').textContent;
+            navigator.clipboard.writeText(spIdText).then(() => {
+                showToast('📋 تم نسخ الرقم التعريفي بنجاح!');
+            }).catch(err => {
+                showToast('❌فشل نسخ الرقم التعريفي');
+            });
+        }
 
         function openAuthModal() {
             document.getElementById('authModal').style.display = 'block';
@@ -1098,7 +1139,7 @@
             window.open(url, '_blank');
         }
 
-        fn closeModal() { document.getElementById('appDetailsModal').style.display = 'none'; } // تم تصحيح بناء الدالة
+        function closeModal() { document.getElementById('appDetailsModal').style.display = 'none'; }
 
         window.onclick = function(e) {
             if (e.target.classList.contains('modal')) e.target.style.display = 'none';
