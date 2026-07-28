@@ -500,7 +500,7 @@
                 <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
                 <a href="#" id="nav-dev" class="publish-btn" onclick="goToDeveloperPage()"><i class="fas fa-rocket"></i> انشر تطبيقك</a>
                 <a href="#" id="nav-support" onclick="switchPage('support-page')"><i class="fas fa-headset"></i> الدعم</a>
-                <!-- زر حسابي / تسجيل الدخول الديناميكي -->
+                <!-- زر حسابي في النافذة -->
                 <a href="#" id="nav-auth" onclick="openAuthModal()" style="background: rgba(74, 107, 255, 0.2); border: 1px solid var(--primary);"><i class="fas fa-user-circle"></i> <span id="authBtnText">حسابي</span></a>
             </div>
         </nav>
@@ -542,7 +542,6 @@
             </div>
 
             <div class="chat-container">
-                <!-- طبقة حجب الدردشة إذا لم يكن المستخدم مسجل دخول -->
                 <div id="chat-lock-overlay">
                     <i class="fas fa-lock" style="font-size: 2.2em; color: var(--primary); margin-bottom: 10px;"></i>
                     <h3>الدعم الفني مخصص للمستخدمين المسجلين</h3>
@@ -576,7 +575,7 @@
         <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة</p>
     </footer>
 
-    <!-- نافذة حسابي / تسجيل الدخول الشاملة -->
+    <!-- نافذة الحساب وتفاصيل المستخدم -->
     <div id="authModal" class="modal">
         <div class="modal-content" style="text-align: right;">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
@@ -615,11 +614,11 @@
                 <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">أنشئ حساباً جديداً</a>
             </div>
 
-            <!-- صندوق الملف الشخصي وعرض الاسم والبريد والرقم التعريفي مع زر الشفاف للنسخ -->
+            <!-- صندوق معلومات الملف الشخصي (يظهر بعد تسجيل الدخول وعند الضغط على زر حسابي) -->
             <div id="userProfileBox" style="display: none; text-align: center; padding: 10px 0;">
                 <img id="profilePreviewImg" src="" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid var(--primary); display: none;">
                 <h4 id="profileNameDisplay" style="font-size: 1.1em; color: var(--dark); font-weight: bold; margin-bottom: 4px;"></h4>
-                <p style="font-size: 0.78em; color: #64748b; margin-bottom: 12px;"><span id="loggedInEmail"></span></p>
+                <p style="font-size: 0.8em; color: #64748b; margin-bottom: 12px;"><i class="fas fa-envelope"></i> <span id="loggedInEmail"></span></p>
                 
                 <div style="background: rgba(74, 107, 255, 0.05); border: 1px solid rgba(74, 107, 255, 0.2); padding: 12px; border-radius: 12px; margin: 12px 0; display: flex; align-items: center; justify-content: space-between;">
                     <div style="text-align: right;">
@@ -640,7 +639,7 @@
     <div id="toast-message"></div>
 
     <script>
-        let isRegisterMode = false; // افتراضياً يبدأ بتسجيل الدخول
+        let isRegisterMode = false; // يبدأ افتراضياً بتسجيل الدخول
         let currentUserUid = null;
 
         const firebaseConfig = {
@@ -715,7 +714,6 @@
                 form.style.display = 'flex';
                 toggleContainer.style.display = 'block';
                 
-                // تطبيق واجهة تسجيل الدخول أو التسجيل حسب حالة الزر
                 updateAuthModeUI();
 
                 chatLockOverlay.style.display = 'flex';
@@ -730,8 +728,13 @@
             });
         }
 
-        function openAuthModal() { document.getElementById('authModal').style.display = 'block'; }
-        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+        function openAuthModal() { 
+            document.getElementById('authModal').style.display = 'block'; 
+        }
+        
+        function closeAuthModal() { 
+            document.getElementById('authModal').style.display = 'none'; 
+        }
 
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
@@ -794,8 +797,13 @@
                 }
             } else {
                 try {
-                    await auth.signInWithEmailAndPassword(email, password);
-                    showToast('✅ تم تسجيل الدخول بنجاح!');
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    const uid = userCredential.user.uid;
+                    let docSnap = await db.collection('users').doc(uid).get();
+                    let nameVal = docSnap.exists ? (docSnap.data().name || email.split('@')[0]) : email.split('@')[0];
+                    let spId = docSnap.exists ? (docSnap.data().sudanPlayId || '') : '';
+
+                    showToast(`✅ مرحباً بعودتك ${nameVal}! رقمك التعريفي: ${spId}`);
                     closeAuthModal();
                 } catch (error) {
                     showToast('❌ خطأ في البريد أو كلمة المرور');
