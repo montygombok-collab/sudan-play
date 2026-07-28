@@ -576,7 +576,7 @@
         <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة</p>
     </footer>
 
-    <!-- نافذة تسجيل الدخول / إنشاء الحساب الشاملة -->
+    <!-- نافذة حسابي / تسجيل الدخول الشاملة -->
     <div id="authModal" class="modal">
         <div class="modal-content" style="text-align: right;">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
@@ -585,7 +585,7 @@
                 <p style="font-size: 0.78em; color: #64748b; margin-top: 3px;">سجل بياناتك للحصول على رقمك التعريفي (Sudan Play ID)</p>
             </div>
 
-            <!-- نموذج التسجيل المخصص (الاسم، البريد، تاريخ الميلاد، صورة اختيارية، كلمة المرور) -->
+            <!-- نموذج التسجيل المخصص -->
             <form id="firebaseAuthForm" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
                 <div id="registerFields">
                     <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">الاسم الكامل</label>
@@ -615,23 +615,24 @@
                 <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">سجل دخولك</a>
             </div>
 
-            <!-- صندوق الملف الشخصي وعرض الرقم التعريفي Sudan Play ID مع زر النسخ وتسجيل الخروج -->
+            <!-- صندوق الملف الشخصي وعرض الاسم والرقم التعريفي مع زر شفاف للنسخ -->
             <div id="userProfileBox" style="display: none; text-align: center; padding: 10px 0;">
                 <img id="profilePreviewImg" src="" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid var(--primary); display: none;">
-                <h4 id="profileNameDisplay" style="font-size: 1em; color: var(--dark);"></h4>
-                <p style="font-size: 0.8em; color: #64748b; margin-bottom: 6px;"><span id="loggedInEmail"></span></p>
+                <h4 id="profileNameDisplay" style="font-size: 1.1em; color: var(--dark); font-weight: bold; margin-bottom: 4px;"></h4>
+                <p style="font-size: 0.78em; color: #64748b; margin-bottom: 12px;"><span id="loggedInEmail"></span></p>
                 
-                <div style="background: rgba(74, 107, 255, 0.08); border: 1px dashed var(--primary); padding: 10px; border-radius: 10px; margin: 12px 0; display: flex; align-items: center; justify-content: space-between;">
+                <div style="background: rgba(74, 107, 255, 0.05); border: 1px solid rgba(74, 107, 255, 0.2); padding: 12px; border-radius: 12px; margin: 12px 0; display: flex; align-items: center; justify-content: space-between;">
                     <div style="text-align: right;">
-                        <span style="font-size: 0.7em; color: #64748b; display: block;">الرقم التعريفي (Sudan Play ID):</span>
-                        <span id="userSudanPlayId" style="font-size: 0.9em; font-weight: bold; color: var(--dark); font-family: monospace;">---</span>
+                        <span style="font-size: 0.7em; color: #64748b; display: block; margin-bottom: 2px;">الرقم التعريفي (Sudan Play ID):</span>
+                        <span id="userSudanPlayId" style="font-size: 0.95em; font-weight: bold; color: var(--primary); font-family: monospace;">---</span>
                     </div>
-                    <button type="button" onclick="copySudanPlayId()" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75em; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                    <!-- الزر الشفاف للنسخ المطلوب -->
+                    <button type="button" onclick="copySudanPlayId()" style="background: transparent; color: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 8px; font-size: 0.8em; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; transition: all 0.2s;" onmouseover="this.style.background='var(--primary)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='var(--primary)';">
                         <i class="fas fa-copy"></i> نسخ
                     </button>
                 </div>
 
-                <button onclick="logoutUser()" style="background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.8em; cursor: pointer; width: 100%; margin-top: 5px; font-weight: bold;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+                <button onclick="logoutUser()" style="background: #ef4444; color: white; border: none; padding: 9px 15px; border-radius: 8px; font-size: 0.82em; cursor: pointer; width: 100%; margin-top: 10px; font-weight: bold;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
             </div>
         </div>
     </div>
@@ -639,7 +640,7 @@
     <div id="toast-message"></div>
 
     <script>
-        let isRegisterMode = true; // الافتراضي إنشاء حساب
+        let isRegisterMode = true; 
         let currentUserUid = null;
 
         const firebaseConfig = {
@@ -669,27 +670,43 @@
 
                 chatLockOverlay.style.display = 'none';
 
-                // جلب بيانات المستخدم الإضافية من قاعدة البيانات
+                // جلب بيانات المستخدم وإنشاء الرقم التعريفي تلقائياً إن لم يكن موجوداً مسبقاً
                 const userDocRef = db.collection('users').doc(user.uid);
-                const docSnap = await userDocRef.get();
+                let docSnap = await userDocRef.get();
                 
                 let spId = "";
+                let nameVal = user.email.split('@')[0];
+                let avatarVal = "";
+
                 if (docSnap.exists) {
                     const data = docSnap.data();
+                    nameVal = data.name || nameVal;
+                    avatarVal = data.avatar || '';
                     spId = data.sudanPlayId || '';
-                    document.getElementById('profileNameDisplay').textContent = data.name || user.email;
-                    if (data.avatar) {
-                        const img = document.getElementById('profilePreviewImg');
-                        img.src = data.avatar;
-                        img.style.display = 'inline-block';
-                    }
                 }
 
+                // إذا لم يكن لديه رقم تعريفي محفوظ لسبب ما، نقوم بتوليده وحفظه فوراً
+                if (!spId) {
+                    spId = 'SP-' + Math.floor(10000 + Math.random() * 90000);
+                    await userDocRef.set({
+                        email: user.email,
+                        sudanPlayId: spId,
+                        name: nameVal
+                    }, { merge: true });
+                }
+
+                document.getElementById('profileNameDisplay').textContent = nameVal;
                 document.getElementById('userSudanPlayId').textContent = spId;
                 document.getElementById('loggedInEmail').textContent = user.email;
                 document.getElementById('customer-id-tag').textContent = `الرقم التعريفي: ${spId}`;
-                document.getElementById('userProfileBox').style.display = 'block';
+                
+                if (avatarVal) {
+                    const img = document.getElementById('profilePreviewImg');
+                    img.src = avatarVal;
+                    img.style.display = 'inline-block';
+                }
 
+                document.getElementById('userProfileBox').style.display = 'block';
                 loadChatHistory(user.uid);
             } else {
                 currentUserUid = null;
@@ -744,7 +761,7 @@
             const password = document.getElementById('authPassword').value;
 
             if (isRegisterMode) {
-                const name = document.getElementById('authName').value;
+                const name = document.getElementById('authName').value || email.split('@')[0];
                 const dob = document.getElementById('authDob').value;
                 const avatar = document.getElementById('authAvatar').value;
 
@@ -753,7 +770,7 @@
                     const uid = userCredential.user.uid;
                     const spId = 'SP-' + Math.floor(10000 + Math.random() * 90000);
 
-                    // حفظ بيانات الحساب الإضافية والرقم التعريفي في الفايرستور
+                    // حفظ البيانات وتوليد الرقم التعريفي بدقة في قاعدة البيانات
                     await db.collection('users').doc(uid).set({
                         name: name,
                         email: email,
@@ -842,7 +859,6 @@
         }
 
         window.onload = function() {
-            // جلب التطبيقات المبدئية إن وجدت
             db.collection('apps').onSnapshot(snapshot => {
                 const container = document.getElementById('apps-container');
                 if (snapshot.empty) {
