@@ -582,10 +582,10 @@
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
             <div style="text-align: center; margin-bottom: 15px;">
                 <h3 id="authModalTitle" style="font-size: 1.2em; font-weight: bold; color: var(--dark);">إنشاء حساب جديد</h3>
-                <p style="font-size: 0.78em; color: #64748b; margin-top: 3px;">سجل بياناتك للحصول على رقمك التعريفي (Sudan Play ID)</p>
+                <p id="authModalSub" style="font-size: 0.78em; color: #64748b; margin-top: 3px;">سجل بياناتك للحصول على رقمك التعريفي (Sudan Play ID)</p>
             </div>
 
-            <!-- نموذج التسجيل المخصص -->
+            <!-- نموذج التسجيل الدخول / إنشاء الحساب -->
             <form id="firebaseAuthForm" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
                 <div id="registerFields">
                     <label style="font-size: 0.8em; color: #334155; display: block; margin-bottom: 3px;">الاسم الكامل</label>
@@ -610,7 +610,7 @@
                 <button type="submit" id="authSubmitBtn" class="download-modal-btn" style="margin-top: 5px;">إنشاء الحساب</button>
             </form>
 
-            <div style="text-align: center; margin-top: 12px; font-size: 0.78em;">
+            <div id="authToggleContainer" style="text-align: center; margin-top: 12px; font-size: 0.78em;">
                 <span id="authToggleText" style="color: #64748b;">لديك حساب بالفعل؟</span>
                 <a href="#" onclick="toggleAuthMode(); return false;" id="authToggleBtn" style="color: var(--primary); font-weight: bold; margin-right: 4px;">سجل دخولك</a>
             </div>
@@ -659,18 +659,22 @@
         auth.onAuthStateChanged(async user => {
             const authBtnText = document.getElementById('authBtnText');
             const chatLockOverlay = document.getElementById('chat-lock-overlay');
+            const form = document.getElementById('firebaseAuthForm');
+            const toggleContainer = document.getElementById('authToggleContainer');
+            const profileBox = document.getElementById('userProfileBox');
+            const modalTitle = document.getElementById('authModalTitle');
+            const modalSub = document.getElementById('authModalSub');
             
             if (user) {
                 currentUserUid = user.uid;
                 authBtnText.textContent = 'حسابي';
-                document.getElementById('firebaseAuthForm').style.display = 'none';
-                document.getElementById('authToggleText').style.display = 'none';
-                document.getElementById('authToggleBtn').style.display = 'none';
-                document.getElementById('authModalTitle').textContent = 'حسابي الشخصي';
+                form.style.display = 'none';
+                toggleContainer.style.display = 'none';
+                modalTitle.textContent = 'حسابي الشخصي';
+                modalSub.textContent = 'إدارة حسابك والحصول على رقمك التعريفي';
 
                 chatLockOverlay.style.display = 'none';
 
-                // جلب بيانات المستخدم وإنشاء الرقم التعريفي تلقائياً إن لم يكن موجوداً مسبقاً
                 const userDocRef = db.collection('users').doc(user.uid);
                 let docSnap = await userDocRef.get();
                 
@@ -685,7 +689,6 @@
                     spId = data.sudanPlayId || '';
                 }
 
-                // إذا لم يكن لديه رقم تعريفي محفوظ لسبب ما، نقوم بتوليده وحفظه فوراً
                 if (!spId) {
                     spId = 'SP-' + Math.floor(10000 + Math.random() * 90000);
                     await userDocRef.set({
@@ -706,17 +709,27 @@
                     img.style.display = 'inline-block';
                 }
 
-                document.getElementById('userProfileBox').style.display = 'block';
+                profileBox.style.display = 'block';
                 loadChatHistory(user.uid);
             } else {
                 currentUserUid = null;
                 authBtnText.textContent = 'حسابي';
-                document.getElementById('firebaseAuthForm').style.display = 'flex';
-                document.getElementById('authToggleText').style.display = 'inline';
-                document.getElementById('authToggleBtn').style.display = 'inline';
-                document.getElementById('userProfileBox').style.display = 'none';
+                profileBox.style.display = 'none';
                 document.getElementById('profilePreviewImg').style.display = 'none';
                 
+                form.style.display = 'flex';
+                toggleContainer.style.display = 'block';
+                
+                if (isRegisterMode) {
+                    modalTitle.textContent = 'إنشاء حساب جديد';
+                    modalSub.textContent = 'سجل بياناتك للحصول على رقمك التعريفي (Sudan Play ID)';
+                    document.getElementById('registerFields').style.display = 'block';
+                } else {
+                    modalTitle.textContent = 'تسجيل الدخول';
+                    modalSub.textContent = 'ادخل بريدك وكلمة المرور للدخول إلى حسابك';
+                    document.getElementById('registerFields').style.display = 'none';
+                }
+
                 chatLockOverlay.style.display = 'flex';
                 document.getElementById('customer-id-tag').textContent = 'غير مسجل دخول';
             }
@@ -735,6 +748,7 @@
         function toggleAuthMode() {
             isRegisterMode = !isRegisterMode;
             const title = document.getElementById('authModalTitle');
+            const sub = document.getElementById('authModalSub');
             const btn = document.getElementById('authSubmitBtn');
             const toggleText = document.getElementById('authToggleText');
             const toggleBtn = document.getElementById('authToggleBtn');
@@ -742,12 +756,14 @@
 
             if (isRegisterMode) {
                 title.textContent = 'إنشاء حساب جديد';
+                sub.textContent = 'سجل بياناتك للحصول على رقمك التعريفي (Sudan Play ID)';
                 btn.textContent = 'إنشاء الحساب';
                 toggleText.textContent = 'لديك حساب بالفعل؟';
                 toggleBtn.textContent = 'سجل دخولك';
                 registerFields.style.display = 'block';
             } else {
                 title.textContent = 'تسجيل الدخول';
+                sub.textContent = 'ادخل بريدك وكلمة المرور للدخول إلى حسابك';
                 btn.textContent = 'دخول';
                 toggleText.textContent = 'ليس لديك حساب؟';
                 toggleBtn.textContent = 'أنشئ حساباً جديداً';
@@ -770,7 +786,6 @@
                     const uid = userCredential.user.uid;
                     const spId = 'SP-' + Math.floor(10000 + Math.random() * 90000);
 
-                    // حفظ البيانات وتوليد الرقم التعريفي بدقة في قاعدة البيانات
                     await db.collection('users').doc(uid).set({
                         name: name,
                         email: email,
