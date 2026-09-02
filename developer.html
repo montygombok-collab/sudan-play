@@ -307,7 +307,7 @@
             border: 1px solid var(--glass-border);
             border-radius: var(--radius);
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
             padding: 25px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
@@ -332,10 +332,25 @@
         .modal-body {
             font-size: 0.88em;
             color: var(--text-muted);
-            line-height: 1.6;
+            line-height: 1.7;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-body a {
+            color: var(--primary);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .modal-body code {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--warning);
+            padding: 2px 5px;
+            border-radius: 4px;
         }
 
         .free-badge {
@@ -419,7 +434,7 @@
             </div>
 
             <button type="button" class="btn btn-learn" onclick="openLearnModal()">
-                <i class="fas fa-question-circle"></i> تعلم كيف تنشر تطبيقك (دليل الاستخدام)
+                <i class="fas fa-question-circle"></i> تعلم كيف تحصل على رابط الـ APK وتنشره (دليل الاستخدام)
             </button>
 
             <div class="dev-stats-grid">
@@ -441,7 +456,7 @@
                 <span><i class="fas fa-cubes"></i> طلبات وتطبيقاتي المرسلة</span>
             </div>
             <div class="my-apps-list" id="myAppsContainer">
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">جاري تحميل طلباتك وتطبيقاتك...</p>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.85em; padding: 15px;">جاري تحميل طلبات وتطبيقاتك...</p>
             </div>
 
             <div class="section-title" style="margin-top: 25px;">
@@ -479,11 +494,11 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group">
-                        <label>رابط ملف APK للتطبيق (Android)</label>
-                        <input type="url" id="appAndroidLink" placeholder="https://...">
+                        <label>رابط ملف APK للتطبيق (رابط مباشر ينتهي بـ .apk)</label>
+                        <input type="url" id="appAndroidLink" placeholder="https://files.catbox.moe/xxxx.apk">
                     </div>
                     <div class="form-group">
-                        <label>رابط  (iOS / Web)</label>
+                        <label>رابط (iOS / Web)</label>
                         <input type="url" id="appIosLink" placeholder="https://...">
                     </div>
                 </div>
@@ -510,16 +525,21 @@
         </div>
     </div>
 
+    <!-- نافذة دليل الاستخدام الشامل المحدثة -->
     <div id="learnModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <h3><i class="fas fa-info-circle" style="color: var(--warning);"></i> دليل النشر في Sudan Play</h3>
+                <h3><i class="fas fa-info-circle" style="color: var(--warning);"></i> دليل المطور: النشر في Sudan Play</h3>
                 <button class="close-modal" onclick="closeLearnModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p><strong>1. كيف تضع الصور في روابط؟</strong><br>قم برفع صور واجهات التطبيق على أي موقع رفع صور موثوق وخذ الروابط المباشرة.</p>
-                <p><strong>2. كيف تضع ملف APK أو رابط iOS/ويبسايت؟</strong><br>قم برفع ملف الـ APK أو توفير رابط متجر آبل (iOS) أو رابط الموقع الإلكتروني الخاص بالتطبيق.</p>
-                <p><strong>3. فترة المراجعة:</strong><br>يتم مراجعة الطلب من قبل الإدارة خلال <strong>72 ساعة</strong> قبل اعتماده.</p>
+                <p><strong>1. كيف تحصل على رابط ملف الـ APK المباشر؟</strong><br>
+                قم برفع ملف تطبيقك (APK) على مواقع رفع مجانية وآمنة مثل <a href="https://catbox.moe" target="_blank">Catbox.moe</a>، <a href="https://gofile.io" target="_blank">Gofile.io</a>، أو عبر الإصدارات في <a href="https://github.com" target="_blank">GitHub Releases</a>، وتأكد أن الرابط ينتهي بالامتداد <code>.apk</code> لضمان التحميل الفوري دون أخطاء (مثل خطأ 403).</p>
+                
+                <p><strong>2. كيف ترفع صور الواجهات؟</strong><br>قم برفع لقطات الشاشة على أي موقع استضافة صور موثوق وخذ الروابط المباشرة وافصل بينها بفواصل.</p>
+                
+                <p><strong>3. فترة المراجعة:</strong><br>تتم مراجعة الطلب من قبل الإدارة خلال <strong>72 ساعة</strong> قبل اعتماده ونشره للمستخدمين.</p>
+                
                 <div class="free-badge">
                     <i class="fas fa-gift"></i> الخدمة مقدمة من Monty Go SDN بشكل مجاني حاليا.
                 </div>
