@@ -1,347 +1,975 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="dark">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monty Go SDN | الرئيسية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Sudan Play - متجر التطبيقات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6bff;
+            --secondary: #ff5e7d;
+            --accent: #2ec4b6;
+            --dark: #0f111a;
+            --light: #f0f3f9;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-card: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.75);
+            --glass-shadow: 0 4px 15px 0 rgba(31, 38, 135, 0.05);
+            --radius: 16px;
+        }
+
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            background: linear-gradient(135deg, #eef2f3 0%, #8e9eab 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #1e293b;
             overflow-x: hidden;
         }
 
-        /* خلفية شبكية تقنية دقيقة */
-        .tech-grid {
-            background-size: 50px 50px;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        #device-detection-banner {
+            background: rgba(46, 196, 182, 0.9);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            font-size: 0.85em;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            transition: all 0.4s ease;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* حركات الزجاج السائل والكرات الضوئية */
-        .liquid-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.45;
-            animation: float 18s infinite alternate ease-in-out;
-            pointer-events: none;
-            z-index: 0;
+        #device-detection-banner.show {
+            opacity: 1;
+            height: auto;
+            padding: 8px;
         }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(60px, -40px) scale(1.15); }
-            100% { transform: translate(-40px, 50px) scale(0.95); }
+        header {
+            background: rgba(15, 17, 26, 0.88);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        /* تصميم الزجاج السائل - Liquid Glass */
-        .liquid-glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        .liquid-glass:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 12px 40px 0 rgba(56, 189, 248, 0.2);
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            gap: 8px;
+            color: #fff;
+        }
+        
+        .logo img {
+            height: 35px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(74, 107, 255, 0.4);
         }
 
-        /* الوضع الداكن التقني */
-        .dark {
-            background-color: #060911;
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a {
             color: #e2e8f0;
-        }
-        .dark .nav-bg {
-            background: rgba(6, 9, 17, 0.65);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            text-decoration: none;
+            font-size: 0.82em;
+            padding: 6px 10px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
         }
 
-        /* الوضع الفاتح */
-        .light {
-            background-color: #f1f5f9;
-            color: #0f172a;
+        .nav-links a.active, .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
         }
-        .light .tech-grid {
-            background-image: 
-                linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+
+        /* زر "انشر تطبيقك" بلون متناسق مع الشعار */
+        .nav-links a.publish-btn {
+            background: linear-gradient(135deg, #4a6bff, #2ec4b6, #4a6bff);
+            background-size: 200% auto;
+            color: #fff;
+            font-weight: bold;
+            padding: 7px 14px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(74, 107, 255, 0.5);
+            animation: shinePulse 3s infinite linear;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        .light .liquid-glass {
-            background: rgba(255, 255, 255, 0.55);
+
+        .nav-links a.publish-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 22px rgba(46, 196, 182, 0.8);
+        }
+
+        @keyframes shinePulse {
+            0% { background-position: 0% 50%; box-shadow: 0 0 10px rgba(74, 107, 255, 0.4); }
+            50% { background-position: 100% 50%; box-shadow: 0 0 20px rgba(46, 196, 182, 0.8); }
+            100% { background-position: 0% 50%; box-shadow: 0 0 10px rgba(74, 107, 255, 0.4); }
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        .page-section.active-page {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero {
+            margin: 15px auto;
+            max-width: 1200px;
+            padding: 25px 15px;
+            text-align: center;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            width: 95%;
+        }
+
+        .hero h2 {
+            font-size: 1.7em;
+            margin-bottom: 8px;
+            color: #0f111a;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 0.9em;
+            color: #334155;
+            margin-bottom: 18px;
+        }
+
+        .hero button {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
+        }
+
+        #apps-view {
+            padding: 10px 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .search-filter-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 9px 35px 9px 12px;
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            font-size: 0.88em;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            outline: none;
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 0.88em;
+        }
+
+        #categoryFilter {
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            font-size: 0.85em;
+            outline: none;
+        }
+
+        /* شبكة عرض التطبيقات: 5 تطبيقات في الصف الواحد للشاشات الكبيرة ومتجاوبة */
+        #apps-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        /* تصميم عنصر التطبيق: إطار بسيط مع زوايا مستديرة وبدون كروت ضخمة */
+        .app-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            box-shadow: var(--glass-shadow);
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            cursor: pointer;
         }
-        .light .liquid-glass:hover {
-            background: rgba(255, 255, 255, 0.75);
-            border-color: rgba(2, 132, 199, 0.4);
-            box-shadow: 0 12px 40px 0 rgba(2, 132, 199, 0.12);
+
+        .app-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            border-color: var(--primary);
         }
-        .light .nav-bg {
-            background: rgba(241, 245, 249, 0.7);
+
+        .app-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            background: #fff;
+            margin-bottom: 6px;
+        }
+
+        .app-title {
+            font-size: 0.82em;
+            color: #0f111a;
+            font-weight: 700;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px;
+        }
+
+        .app-stats-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 0.68em;
+            color: #64748b;
+        }
+
+        #support-page {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 15px;
+        }
+
+        .support-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .support-card i {
+            font-size: 2em;
+            color: var(--primary);
+        }
+
+        .chat-container {
+            background: var(--glass-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: rgba(15, 17, 26, 0.9);
+            color: white;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-msg {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .chat-msg.user {
+            align-self: flex-start;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-msg.agent {
+            align-self: flex-end;
+            background: #e2e8f0;
+            color: #0f111a;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            gap: 8px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            margin-bottom: 0;
+            border-radius: 20px;
+            padding: 10px 15px;
+            outline: none;
+            border: 1px solid var(--glass-border);
+        }
+
+        .chat-input-area button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #about-page {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 15px;
+        }
+
+        .company-hero {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .company-hero h2 {
+            font-size: 1.8em;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .company-hero p {
+            color: #475569;
+            font-size: 0.95em;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .company-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .service-card:hover { transform: translateY(-4px); }
+
+        .service-card i {
+            font-size: 2.2em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 17, 26, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--glass-border);
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 18px;
+            width: 92%;
+            max-width: 520px;
+            position: relative;
+            max-height: 88vh;
+            overflow-y: auto;
         }
 
-        .text-muted { color: #94a3b8; }
-        .light .text-muted { color: #64748b; }
-        .text-heading { color: #f8fafc; }
-        .light .text-heading { color: #0f172a; }
+        .close-btn {
+            color: #64748b;
+            font-size: 22px;
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            cursor: pointer;
+        }
 
-        .hero-title-gradient {
-            background: linear-gradient(135deg, #ffffff 20%, #a5f3fc 50%, #38bdf8 100%);
+        .download-modal-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+
+        footer {
+            background: rgba(15, 17, 26, 0.88);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            padding: 20px 15px 12px 15px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-branding-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .brand-logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .brand-title {
+            font-size: 1.05em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4a6bff, #ff5e7d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .light .hero-title-gradient {
-            background: linear-gradient(135deg, #0f172a 20%, #0284c7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+
+        .footer-rights {
+            font-size: 0.72em;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 8px;
+        }
+
+        #toast-message {
+            visibility: hidden;
+            min-width: 200px;
+            background: rgba(15, 17, 26, 0.9);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 9px;
+            position: fixed;
+            z-index: 3000;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
+            opacity: 0;
+            transition: all 0.3s;
+            font-size: 0.82em;
+        }
+
+        #toast-message.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* التجاوب مع مختلف الشاشات لتثبيت عدد العناصر في الصف بمرونة */
+        @media (max-width: 1200px) {
+            #apps-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            #apps-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 8px 10px; }
+            .nav-links a { padding: 4px 7px; font-size: 0.72em; }
+            .logo span { font-size: 0.85em; }
+            #apps-container { 
+                grid-template-columns: repeat(3, 1fr) !important; 
+                gap: 8px !important; 
+            }
+            .app-icon {
+                width: 48px;
+                height: 48px;
+            }
         }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 </head>
-<body class="tech-grid min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white relative">
+<body onload="detectAndShowDevice(); initCustomerProfile();">
 
-    <!-- خلفية السائل الساطع (Liquid Orbs) -->
-    <div class="liquid-orb w-96 h-96 bg-cyan-500/30 top-10 right-10"></div>
-    <div class="liquid-orb w-80 h-80 bg-blue-600/30 top-96 left-10" style="animation-delay: -5s;"></div>
-    <div class="liquid-orb w-96 h-96 bg-purple-600/20 bottom-20 right-1/3" style="animation-delay: -10s;"></div>
+    <div id="device-detection-banner">
+        <div class="banner-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span id="detection-text">جاري التعرف على الجهاز...</span>
+        </div>
+    </div>
 
-    <!-- Navbar -->
-    <header class="sticky top-0 z-50 nav-bg transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center relative z-10">
-            <a href="index.html" class="flex items-center gap-3">
-                <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png?ts=1784548145" alt="شعار Monty Go SDN" class="h-9 w-9 rounded-xl object-cover shadow-lg border border-white/20">
-                <span class="font-bold text-lg tracking-tight text-heading">Monty Go SDN</span>
+    <header>
+        <nav>
+            <a href="#" class="logo" onclick="switchPage('main-page')">
+                <img src="https://www.appcreator24.com/srv/imgs/gen/3834410_splash.png" alt="Sudan Play Logo">
+                <span>Sudan Play</span>
             </a>
-
-            <nav class="hidden md:flex items-center gap-6 font-medium text-sm text-muted">
-                <a href="index.html" class="text-cyan-400 font-semibold">الرئيسية</a>
-                <a href="services.html" class="hover:text-cyan-400 transition-colors">الخدمات</a>
-                <a href="portfolio.html" class="hover:text-cyan-400 transition-colors">معرض الأعمال</a>
-                <a href="events.html" class="hover:text-cyan-400 transition-colors">الأحداث</a>
-                <a href="about.html" class="hover:text-cyan-400 transition-colors">عن الشركة</a>
-                <a href="customer-service.html" class="hover:text-cyan-400 transition-colors">خدمة العملاء</a>
-                <a href="contact.html" class="hover:text-cyan-400 transition-colors">اتصل بنا</a>
-            </nav>
-
-            <div class="flex items-center gap-3">
-                <button id="theme-toggle" aria-label="تبديل الوضع" class="p-2 rounded-xl liquid-glass text-muted hover:text-cyan-400 transition-all">
-                    <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
-                </button>
-                <button id="menu-button" type="button" class="p-2 rounded-xl text-muted md:hidden liquid-glass" aria-label="فتح القائمة">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
+            <div class="nav-links">
+                <a href="#" id="nav-main" class="active" onclick="switchPage('main-page')"><i class="fas fa-th"></i> الرئيسية</a>
+                <a href="#" id="nav-about" onclick="switchPage('about-page')"><i class="fas fa-building"></i> عن الشركة</a>
+                <!-- زر انشر تطبيقك بلون متناسق ولامع -->
+                <a href="#" id="nav-dev" class="publish-btn" onclick="goToDeveloperPage()"><i class="fas fa-rocket"></i> انشر تطبيقك</a>
+                <a href="#" id="nav-support" onclick="switchPage('support-page')"><i class="fas fa-headset"></i> الدعم</a>
             </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out border-b border-white/10">
-            <div class="px-4 py-3 space-y-2 text-sm text-muted backdrop-blur-2xl">
-                <a href="index.html" class="block text-cyan-400 font-semibold py-1">الرئيسية</a>
-                <a href="services.html" class="block hover:text-cyan-400 py-1">الخدمات</a>
-                <a href="portfolio.html" class="block hover:text-cyan-400 py-1">معرض الأعمال</a>
-                <a href="events.html" class="block hover:text-cyan-400 py-1">الأحداث</a>
-                <a href="about.html" class="block hover:text-cyan-400 py-1">عن الشركة</a>
-                <a href="customer-service.html" class="block hover:text-cyan-400 py-1">خدمة العملاء</a>
-                <a href="contact.html" class="block hover:text-cyan-400 py-1">اتصل بنا</a>
-            </div>
-        </div>
+        </nav>
     </header>
 
-    <main class="flex-grow relative z-10">
-        <!-- Hero Section -->
-        <section id="hero" class="py-24 md:py-36 text-center relative">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass text-cyan-400 text-xs font-medium mb-8">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_#22d3ee]"></span>
-                    <span>عالم التكنولوجيا السائلة</span>
+    <main>
+        <section id="main-page" class="page-section active-page">
+            <div class="hero">
+                <h2>متجر السودان</h2>
+                <p>استكشف وحمّل أحدث التطبيقات المحلية والعالمية سريعاً.</p>
+                <button onclick="document.getElementById('apps-view').scrollIntoView({behavior: 'smooth'});">تصفح الآن</button>
+            </div>
+
+            <div id="apps-view">
+                <div class="search-filter-wrapper">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="ابحث عن تطبيق...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <select id="categoryFilter" onchange="filterApps()">
+                        <option value="الكل">الكل</option>
+                    </select>
                 </div>
 
-                <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight hero-title-gradient">
-                    نحو مستقبل رقمي واعد ومتطور
-                </h1>
-                
-                <p class="text-base sm:text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-                    شريكك البرمجي الموثوق لتطوير الأنظمة والتطبيقات والحلول الرقمية المتكاملة بأسلوب هندسي مبتكر.
-                </p>
-
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="services.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(6,182,212,0.4)]">
-                        <span>اكتشف خدماتنا</span>
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                    </a>
-                    <a href="contact.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl liquid-glass text-heading font-semibold text-sm transition-all duration-300">
-                        <span>استشارة تقنية</span>
-                    </a>
+                <div id="apps-container">
+                    <h3 style="text-align: center; grid-column: 1/-1; color: #64748b; font-size: 0.85em; padding: 20px 0;">جاري تحميل التطبيقات...</h3>
                 </div>
             </div>
         </section>
 
-        <!-- Features Section -->
-        <section id="features" class="py-16 md:py-24">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-2xl mx-auto mb-16">
-                    <h2 class="text-2xl md:text-4xl font-bold text-heading mb-4">لماذا نختار Monty Go؟</h2>
-                    <p class="text-muted text-sm md:text-base">نجمع بين المعايير البرمجية الصارمة والرؤية المبتكرة لنضمن نمو واستدامة أعمالك.</p>
+        <section id="support-page" class="page-section">
+            <div class="support-card">
+                <i class="fas fa-envelope-open-text"></i>
+                <div>
+                    <h3 style="font-size: 1.1em; color: var(--dark);">البريد الإلكتروني للدعم</h3>
+                    <p style="font-size: 0.85em; color: #64748b;">تواصل معنا مباشرة عبر البريد الإلكتروني الرسمي:</p>
+                    <a href="mailto:montygosdn@gmail.com" style="color: var(--primary); font-weight: bold; font-size: 0.9em; text-decoration: none;">support@montygo.sd</a>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="liquid-glass p-8 rounded-3xl transition-all duration-300">
-                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-                            <i data-lucide="cpu" class="w-7 h-7"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-heading mb-3">الابتكار والحلول المخصصة</h3>
-                        <p class="text-muted text-sm leading-relaxed">بناء أنظمة متكاملة ومصممة بدقة عالية تناسب متطلبات المؤسسات وتضمن لك التفوق التقني.</p>
-                    </div>
+            </div>
 
-                    <div class="liquid-glass p-8 rounded-3xl transition-all duration-300">
-                        <div class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(96,165,250,0.2)]">
-                            <i data-lucide="layers" class="w-7 h-7"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-heading mb-3">الجودة والموثوقية</h3>
-                        <p class="text-muted text-sm leading-relaxed">تطبيق أعلى بروتوكولات الأمان والجودة البرمجية لضمان عمل تطبيقاتك بأداء عالٍ الموثوقية.</p>
-                    </div>
-
-                    <div class="liquid-glass p-8 rounded-3xl transition-all duration-300">
-                        <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(192,132,252,0.2)]">
-                            <i data-lucide="sparkles" class="w-7 h-7"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-heading mb-3">الشراكة والدعم المستمر</h3>
-                        <p class="text-muted text-sm leading-relaxed">دعم فني واستشاري متواصل لمواكبة التحديثات المستمرة والتوسع المستقبلي لمشروعك.</p>
-                    </div>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <span style="font-size: 0.9em; font-weight: bold;"><i class="fas fa-comments"></i> الدردشة المباشرة مع الدعم</span>
+                    <span id="customer-id-tag" style="font-size: 0.72em; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 10px;">معرف العميل: جاري التعرف...</span>
+                </div>
+                <div class="chat-box" id="chatBox">
+                    <div class="chat-msg agent">مرحباً بك! كيف يمكننا مساعدتك ؟ تم التعرف على جلستك وستظل محادثتك محفوظة.</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> إرسال</button>
                 </div>
             </div>
         </section>
 
-        <!-- CTA Section -->
-        <section id="cta" class="py-16">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="liquid-glass p-10 md:p-14 rounded-3xl text-center border border-cyan-500/30 relative overflow-hidden">
-                    <h2 class="text-2xl md:text-4xl font-bold text-heading mb-4">هل أنت مستعد للبدء؟</h2>
-                    <p class="text-muted text-sm md:text-base max-w-xl mx-auto mb-8">دعنا نناقش متطلبات مشروعك ونحول الفكرة إلى منصة رقمية فائقة الأداء.</p>
-                    <a href="contact.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-sm py-3.5 px-8 rounded-2xl transition duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)]">
-                        <span>اطلب استشارة مجانية</span>
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                    </a>
+        <section id="about-page" class="page-section">
+            <div class="glass-panel" style="background: var(--glass-card); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 25px 15px; box-shadow: var(--glass-shadow);">
+                <div class="company-hero">
+                    <h2>Monty Go SDN</h2>
+                    <p>شركة متخصصة في صناعة وتطوير المواقع الإلكترونية، التطبيقات الحديثة، والحلول البرمجية متكاملة الخدمات لتلبية احتياجات السوق الرقمي المحلي والعالمي.</p>
+                </div>
+
+                <div class="company-services">
+                    <div class="service-card">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h4>تطوير التطبيقات</h4>
+                        <p>تصميم وبناء تطبيقات الجوال المبتكرة للأندرويد والآيفون بكفاءة عالية وأداء سلس.</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-globe"></i>
+                        <h4>تطوير المواقع</h4>
+                        <p>بناء منصات ومواقع إلكترونية بتصميم عصري ومتجاوب مع جميع المقاسات والشاشات.</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-cogs"></i>
+                        <h4>الخدمات البرمجية</h4>
+                        <p>تقديم حلول برمجية مخصصة، ربط الأنظمة، وإدارة واجهات البرمجة لتسريع أعمالك.</p>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="nav-bg py-10 transition-colors duration-300 relative z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted">
-            <div class="mb-6 flex justify-center items-center gap-2">
-                <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png?ts=1784548145" alt="شعار Monty Go SDN" class="h-8 w-8 rounded-lg object-cover">
-                <span class="text-lg font-bold text-heading">Monty Go SDN</span>
-            </div>
-            
-            <nav class="flex flex-wrap justify-center gap-6 text-xs md:text-sm mb-6">
-                <a href="index.html" class="hover:text-cyan-400 transition-colors">الرئيسية</a>
-                <a href="services.html" class="hover:text-cyan-400 transition-colors">الخدمات</a>
-                <a href="portfolio.html" class="hover:text-cyan-400 transition-colors">معرض الأعمال</a>
-                <a href="events.html" class="hover:text-cyan-400 transition-colors">الأحداث</a>
-                <a href="about.html" class="hover:text-cyan-400 transition-colors">عن الشركة</a>
-                <a href="customer-service.html" class="hover:text-cyan-400 transition-colors">خدمة العملاء</a>
-                <a href="contact.html" class="hover:text-cyan-400 transition-colors">اتصل بنا</a>
-            </nav>
-
-            <div class="flex justify-center gap-4 mb-6">
-                <a href="https://web.facebook.com/people/Monty-Go-SDN/61584046784545/" target="_blank" class="p-2.5 rounded-xl liquid-glass hover:text-cyan-400 transition-all" aria-label="فيسبوك">
-                    <i data-lucide="facebook" class="w-5 h-5"></i>
-                </a>
-                <a href="#" target="_blank" class="p-2.5 rounded-xl liquid-glass hover:text-cyan-400 transition-all" aria-label="إنستجرام">
-                    <i data-lucide="instagram" class="w-5 h-5"></i>
-                </a>
-                <a href="#" target="_blank" class="p-2.5 rounded-xl liquid-glass hover:text-cyan-400 transition-all" aria-label="واتساب">
-                    <i data-lucide="message-square" class="w-5 h-5"></i>
-                </a>
-                <a href="mailto:contact@montygo.sd" class="p-2.5 rounded-xl liquid-glass hover:text-cyan-400 transition-all" aria-label="بريد إلكتروني">
-                    <i data-lucide="mail" class="w-5 h-5"></i>
-                </a>
-            </div>
-
-            <p class="text-xs">© 2026 Monty Go SDN. جميع الحقوق محفوظة.</p>
+    <footer>
+        <div class="footer-branding-box">
+            <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png" alt="Monty Go SDN Logo" class="brand-logo-img">
+            <div class="brand-title">Monty Go SDN</div>
+        </div>
+        <div class="footer-rights">
+            <p>&copy; 2026 Sudan Play - جميع الحقوق محفوظة لـ Monty Go SDN - السودان - ولاية الخرطوم</p>
         </div>
     </footer>
 
+    <div id="appDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
+                <img id="detailsIcon" src="" alt="Icon" style="width: 48px; height: 48px; border-radius: 10px; object-fit: cover;">
+                <div>
+                    <h3 id="detailsTitle" style="font-size: 1em;"></h3>
+                    <p id="detailsCategory" style="color: var(--primary); font-size: 0.78em;"></p>
+                    <div style="display: flex; gap: 8px; font-size: 0.75em; color: #64748b; margin-top: 2px;">
+                        <span id="detailsRating" style="color: #f59e0b; font-weight: 700;"><i class="fas fa-star"></i> 5.0</span>
+                        <span id="detailsDownloads"><i class="fas fa-download"></i> 0 تنزيل</span>
+                    </div>
+                </div>
+            </div>
+            <h4 style="margin-bottom: 4px; font-size: 0.85em;">الوصف</h4>
+            <p id="detailsDescription" style="color: #475569; line-height: 1.5; font-size: 0.8em; margin-bottom: 12px;"></p>
+            
+            <div style="display: flex; gap: 6px;">
+                <button id="detailsAndroidBtn" class="download-modal-btn" style="background:#2ea44f;"><i class="fab fa-android"></i> أندرويد</button>
+                <button id="detailsIosBtn" class="download-modal-btn" style="background:#007AFF;"><i class="fab fa-apple"></i> آيفون</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-message"></div>
+
     <script>
-        const menuButton = document.getElementById('menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
+        let allApps = [];
+        let customerId = "";
 
-        menuButton.addEventListener('click', () => {
-            if (mobileMenu.classList.contains('max-h-0')) {
-                mobileMenu.classList.remove('max-h-0');
-                mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
-            } else {
-                mobileMenu.style.maxHeight = null;
-                mobileMenu.classList.add('max-h-0');
-            }
-        });
-
-        const htmlElement = document.documentElement;
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-
-        function getInitialTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) return savedTheme;
-            return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-        }
-
-        function setTheme(theme) {
-            if (theme === 'dark') {
-                htmlElement.classList.add('dark');
-                htmlElement.classList.remove('light'); 
-                themeIcon.setAttribute('data-lucide', 'sun'); 
-            } else {
-                htmlElement.classList.remove('dark');
-                htmlElement.classList.add('light'); 
-                themeIcon.setAttribute('data-lucide', 'moon'); 
-            }
-            localStorage.setItem('theme', theme);
-            lucide.createIcons(); 
-        }
-
-        setTheme(getInitialTheme());
-        
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
-            setTheme(currentTheme === 'light' ? 'dark' : 'light');
-        });
-
-        window.onload = function() {
-            lucide.createIcons();
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
+            authDomain: "sudan-play.firebaseapp.com",
+            projectId: "sudan-play",
+            storageBucket: "sudan-play.appspot.com",
+            messagingSenderId: "981764948623",
+            appId: "1:981764948623:web:00e5c9268198f70e39a6fa"
         };
-    </script>
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDQ4lkT0g00bmMDtnSXAUxpjpdLDiwsx1M",
-        authDomain: "starlink-sudan.firebaseapp.com",
-        projectId: "starlink-sudan",
-        storageBucket: "starlink-sudan.firebasestorage.app",
-        messagingSenderId: "343295177307",
-        appId: "1:343295177307:web:52044a51cf77bf6ed7857e",
-        measurementId: "G-ZGM7P50BXR"
-      };
+        function getCookie(name) {
+            let nameEQ = name + "=";
+            let ca = document.cookie.split(';');
+            for(let i=0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
 
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days*24*60*60*1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
+
+        function initCustomerProfile() {
+            customerId = localStorage.getItem('sp_customer_id') || getCookie('sp_customer_id');
+            if (!customerId) {
+                customerId = 'cust_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('sp_customer_id', customerId);
+                setCookie('sp_customer_id', customerId, 365);
+            }
+            document.getElementById('customer-id-tag').textContent = `معرف العميل: ${customerId}`;
+            loadChatHistory();
+        }
+
+        function loadChatHistory() {
+            const chatBox = document.getElementById('chatBox');
+            db.collection('chats').doc(customerId).collection('messages')
+              .orderBy('timestamp', 'asc')
+              .onSnapshot(snapshot => {
+                  if (snapshot.empty) return;
+                  chatBox.innerHTML = '';
+                  snapshot.forEach(doc => {
+                      const msg = doc.data();
+                      const msgDiv = document.createElement('div');
+                      msgDiv.className = `chat-msg ${msg.sender === 'user' ? 'user' : 'agent'}`;
+                      msgDiv.textContent = msg.text;
+                      chatBox.appendChild(msgDiv);
+                  });
+                  chatBox.scrollTop = chatBox.scrollHeight;
+              });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            db.collection('chats').doc(customerId).collection('messages').add({
+                text: text,
+                sender: 'user',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            input.value = '';
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active-page'));
+            document.getElementById(pageId).classList.add('active-page');
+
+            document.getElementById('nav-main').classList.toggle('active', pageId === 'main-page');
+            document.getElementById('nav-about').classList.toggle('active', pageId === 'about-page');
+            document.getElementById('nav-support').classList.toggle('active', pageId === 'support-page');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToDeveloperPage() {
+            window.location.href = 'developer.html';
+        }
+
+        function detectAndShowDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor;
+            const banner = document.getElementById('device-detection-banner');
+            const textElement = document.getElementById('detection-text');
+
+            if (/iPad|iPhone|iPod/.test(userAgent)) {
+                textElement.innerHTML = `<i class="fab fa-apple"></i> نظام iOS - تم التوافق مع الآيفون.`;
+                banner.classList.add('show');
+            } else if (/android/i.test(userAgent)) {
+                textElement.innerHTML = `<i class="fab fa-android"></i> أندرويد - تم التوافق مع الأندرويد.`;
+                banner.classList.add('show');
+            }
+            setTimeout(() => banner.classList.remove('show'), 3000);
+            loadApps();
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById("toast-message");
+            t.textContent = msg;
+            t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), 3000);
+        }
+
+        function formatDownloads(count) {
+            if (!count) return '0';
+            if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
+            if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
+            return count.toString();
+        }
+
+        function loadApps() {
+            const container = document.getElementById('apps-container');
+            db.collection('apps').onSnapshot(snapshot => {
+                container.innerHTML = '';
+                allApps = [];
+                const categories = new Set(['الكل']);
+
+                if (snapshot.empty) {
+                    container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em; padding:20px;">لا توجد تطبيقات حالياً.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const app = { id: doc.id, ...doc.data() };
+                    
+                    if (app.isVisible === false) return;
+
+                    allApps.push(app);
+                    const catName = app.category || app.appType || 'عام';
+                    categories.add(catName);
+
+                    const name = app.name || app.appName || 'تطبيق بدون عنوان';
+                    const icon = app.iconPath || app.appIconLink || 'https://via.placeholder.com/40';
+                    const rating = app.rating ? Number(app.rating).toFixed(1) : '5.0';
+                    const downloadsCount = app.downloads || 0;
+
+                    // عرض الشعار (الأيقونة) مع الاسم تحته مباشرة وبدون كروت ضخمة أو أزرار خارجية، مع إطار وزوايا مستديرة
+                    container.innerHTML += `
+                        <div class="app-card" data-category="${catName}" data-name="${name}" onclick="showAppDetails('${app.id}')">
+                            <img src="${icon}" class="app-icon" alt="Icon" loading="lazy">
+                            <h4 class="app-title">${name}</h4>
+                            <div class="app-stats-row">
+                                <span class="app-rating" style="color: #f59e0b;"><i class="fas fa-star"></i> ${rating}</span>
+                                <span>•</span>
+                                <span><i class="fas fa-download"></i> ${formatDownloads(downloadsCount)}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const catFilter = document.getElementById('categoryFilter');
+                catFilter.innerHTML = '';
+                categories.forEach(c => catFilter.innerHTML += `<option value="${c}">${c}</option>`);
+                document.getElementById('searchInput').addEventListener('input', filterApps);
+            }, err => {
+                console.error("Firestore Listen Error:", err);
+                container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.85em; color:red; padding:20px;">تعذر جلب التطبيقات، يرجى التحديث.</p>';
+            });
+        }
+
+        function filterApps() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+
+            document.querySelectorAll('.app-card').forEach(card => {
+                const matchesCat = (category === 'الكل' || card.dataset.category === category);
+                const matchesSearch = card.dataset.name.toLowerCase().includes(query);
+                card.style.display = (matchesCat && matchesSearch) ? 'flex' : 'none';
+            });
+        }
+
+        function showAppDetails(appId) {
+            const app = allApps.find(a => a.id === appId);
+            if (!app) return;
+
+            document.getElementById('detailsTitle').textContent = app.name || app.appName || 'تطبيق';
+            document.getElementById('detailsIcon').src = app.iconPath || app.appIconLink || 'https://via.placeholder.com/48';
+            document.getElementById('detailsCategory').textContent = app.category || app.appType || 'عام';
+            document.getElementById('detailsDescription').textContent = app.fullDescription || app.appDescription || 'لا يوجد وصف متاح.';
+            document.getElementById('detailsRating').innerHTML = `<i class="fas fa-star"></i> ${app.rating ? Number(app.rating).toFixed(1) : '5.0'}`;
+            document.getElementById('detailsDownloads').innerHTML = `<i class="fas fa-download"></i> ${formatDownloads(app.downloads || 0)} تنزيل`;
+
+            const androidBtn = document.getElementById('detailsAndroidBtn');
+            const iosBtn = document.getElementById('detailsIosBtn');
+
+            const androidLink = app.downloadLink || app.appAndroidLink || '#';
+            const iosLink = app.iphoneDownloadLink || app.appIosLink || '#';
+
+            androidBtn.onclick = () => triggerDownload(app.id, androidLink);
+            iosBtn.onclick = () => triggerDownload(app.id, iosLink);
+
+            document.getElementById('appDetailsModal').style.display = 'block';
+        }
+
+        function triggerDownload(appId, url) {
+            if (!url || url === '#' || url.trim() === '') {
+                showToast('⚠️ رابط التحميل غير متاح حالياً.');
+                return;
+            }
+            db.collection('apps').doc(appId).update({
+                downloads: firebase.firestore.FieldValue.increment(1)
+            }).catch(err => console.log('Update error:', err));
+
+            window.open(url, '_blank');
+        }
+
+        function closeModal() { document.getElementById('appDetailsModal').style.display = 'none'; }
+
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal')) e.target.style.display = 'none';
+        };
     </script>
 </body>
 </html>
