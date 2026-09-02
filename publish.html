@@ -6,6 +6,7 @@
     <title>Sudan Play - نشر تطبيق جديد</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* أنماط CSS الأساسية المنسقة مع الداشبورد */
         * {
             margin: 0;
             padding: 0;
@@ -14,8 +15,8 @@
         }
 
         :root {
-            --primary: rgb(74, 107, 255);
-            --secondary: rgb(255, 94, 125);
+            --primary: rgb(74, 107, 255); /* أزرق أساسي */
+            --secondary: rgb(255, 94, 125); /* وردي/أحمر ثانوي */
             --accent: rgb(46, 196, 182);
             --dark: rgb(30, 30, 45);
             --light: rgb(248, 249, 254);
@@ -32,6 +33,7 @@
             flex-direction: column;
         }
 
+        /* --- Header / Navigation --- */
         header {
             background-color: var(--dark);
             color: var(--light);
@@ -98,6 +100,7 @@
             font-weight: 600;
         }
         
+        /* --- Publish App Section Styles --- */
         #publish-app {
             padding: 60px 20px;
             max-width: 900px;
@@ -134,6 +137,45 @@
             text-align: center;
             line-height: 1.7;
             padding: 0 15px;
+        }
+
+        /* --- دليل الاستخدام الجديد --- */
+        .guide-box {
+            background: #f0f4ff;
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: right;
+        }
+
+        .guide-box h4 {
+            color: var(--primary);
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .guide-box h4 i {
+            margin-left: 8px;
+        }
+
+        .guide-box ol {
+            margin-right: 20px;
+            font-size: 0.95em;
+            color: #444;
+            line-height: 1.8;
+        }
+
+        .guide-box li {
+            margin-bottom: 8px;
+        }
+
+        .guide-box a {
+            color: var(--primary);
+            font-weight: bold;
+            text-decoration: underline;
         }
 
         #publish-app .form-group {
@@ -271,6 +313,7 @@
             margin-left: 8px;
         }
         
+        /* --- Footer --- */
         footer {
             background-color: var(--dark);
             color: var(--light);
@@ -285,6 +328,7 @@
             font-size: 0.95em;
         }
 
+        /* --- Toast Notification --- */
         #toast-message {
             visibility: hidden;
             min-width: 250px;
@@ -352,28 +396,44 @@
             <h2>نشر تطبيق جديد</h2>
 
             <p class="section-intro">
-                مرحباً بك في منصة السودان للمطورين. يرجى ملء النموذج أدناه لاختيار ملف الـ APK من جهازك وتقديم طلب النشر على متجر Sudan Play.
+                مرحباً بك في منصة السودان للمطورين. يرجى ملء النموذج التالي بدقة لتقديم طلب نشر تطبيقك على متجر Sudan Play. 
+                سيتم مراجعة الطلب خلال **30 ساعة** من التحقق من عملية الدفع.
             </p>
 
             <div class="publish-form-container">
+                
+                <!-- دليل الاستخدام الشامل للمطورين -->
+                <div class="guide-box">
+                    <h4><i class="fas fa-book-open"></i> دليل المطور: كيف تحصل على رابط التحميل المباشر للـ APK؟</h4>
+                    <ol>
+                        <li><strong>ارفع ملف الـ APK:</strong> قم برفع ملف تطبيقك (APK) على أي منصة استضافة مجانية تختارها مثل:
+                            <a href="https://catbox.moe" target="_blank">Catbox.moe</a>، 
+                            <a href="https://gofile.io" target="_blank">Gofile.io</a>، 
+                            أو عبر ميزة <a href="https://github.com" target="_blank">GitHub Releases</a>.
+                        </li>
+                        <li><strong>انسخ الرابط المباشر:</strong> تأكد من أن الرابط الذي تنسخه يقوم بالتحميل أو يفتح مباشرة وينتهي بالامتداد (<code>.apk</code>).</li>
+                        <li><strong>ألصق الرابط أدناه:</strong> ضع الرابط في حقل "رابط ملف التطبيق" لضمان عمل زر التحميل للمستخدمين دون أخطاء (مثل خطأ 403).</li>
+                    </ol>
+                </div>
+
                 <form id="publishAppForm">
                     <h3 style="color: var(--primary);"><i class="fas fa-info-circle"></i> معلومات التطبيق الأساسية</h3>
 
                     <div class="form-group">
                         <label for="appName"><i class="fas fa-mobile-alt"></i> اسم التطبيق:</label>
-                        <input type="text" id="appName" name="appName" class="form-control" placeholder="ادخل الاسم الكامل للتطبيق" required>
+                        <input type="text" id="appName" name="appName" class="form-control" placeholder="ادخل الاسم الكامل للتطبيق (مثال: محفظتي السودانية)" required>
                     </div>
                     
-                    <!-- حقل رفع ملف الـ APK مباشرة من الجهاز -->
                     <div class="form-group">
-                        <label for="apkFile"><i class="fas fa-file-arrow-up"></i> اختر ملف الـ APK من جهازك:</label>
-                        <input type="file" id="apkFile" name="apkFile" class="form-control" accept=".apk" required style="padding: 12px; background: #fff;">
-                        <small style="color: #666; display: block; margin-top: 5px;">(سيتم رفع الملف تلقائياً واستخراج رابط التحميل عند الضغط على إرسال)</small>
+                        <label for="appLink"><i class="fas fa-link"></i> رابط ملف التطبيق (رابط مباشر ينتهي بـ .apk):</label>
+                        <input type="url" id="appLink" name="appLink" class="form-control" placeholder="https://example.com/files/app.apk" required>
+                        <small style="color: #666; display: block; margin-top: 5px;">أدخل رابط التحميل المباشر الذي تحصل عليه بعد رفع ملف الـ APK.</small>
                     </div>
 
                     <div class="form-group">
-                        <label for="appScreenshots"><i class="fas fa-images"></i> روابط صور/لقطات الشاشة (افصل بينها بفاصلة):</label>
-                        <textarea id="appScreenshots" name="appScreenshots" class="form-textarea" rows="4" placeholder="رابط الصورة 1, رابط الصورة 2, ..." required></textarea>
+                        <label for="appScreenshots"><i class="fas fa-images"></i> روابط صور/لقطات الشاشة (3 روابط على الأقل - افصل بينها بفاصلة):</label>
+                        <textarea id="appScreenshots" name="appScreenshots" class="form-textarea" rows="4" placeholder="رابط الصورة 1, رابط الصورة 2, رابط الصورة 3, ..." required></textarea>
+                        <small style="color: #777; display: block; margin-top: 5px;">(يجب أن تكون الروابط قابلة للوصول ومستضافة خارجياً)</small>
                     </div>
 
                     <h3><i class="fas fa-code"></i> معلومات المطور والشركة</h3>
@@ -385,7 +445,7 @@
                     
                     <div class="form-group">
                         <label for="developerEmail"><i class="fas fa-at"></i> البريد الإلكتروني للتواصل:</label>
-                        <input type="email" id="developerEmail" name="developerEmail" class="form-control" placeholder="example@domain.com" required>
+                        <input type="email" id="developerEmail" name="developerEmail" class="form-control" placeholder="example@domain.com (البريد الرسمي للمطور)" required>
                     </div>
                     
                     <div class="form-group">
@@ -398,12 +458,12 @@
                     <div class="fixed-info">
                         <p>رقم الحساب الثابت لمتجر Sudan Play (الرجاء التحويل إليه):</p>
                         <p style="font-family: 'Courier New', Courier, monospace;">SDPLAY-ACC-123456789</p>
-                        <small>(استخدم هذا الرقم لإتمام عملية التحويل لتكاليف النشر)</small>
+                        <small>(استخدم هذا الرقم لإتمام عملية التحويل عبر وسيلة الدفع المتاحة لديك لتكاليف النشر)</small>
                     </div>
 
                     <div class="form-group">
                         <label for="transactionID"><i class="fas fa-receipt"></i> رقم عملية التحويل (للتحقق من الدفع):</label>
-                        <input type="text" id="transactionID" name="transactionID" class="form-control" placeholder="أدخل رقم العملية الذي يظهر في إيصال التحويل" required>
+                        <input type="text" id="transactionID" name="transactionID" class="form-control" placeholder="أدخل رقم العملية الذي يظهر في إيصال التحويل المصرفي" required>
                     </div>
 
                     <button type="submit" class="submit-publish-btn">
@@ -411,11 +471,12 @@
                     </button>
                     
                     <p class="info-note">
-                        <i class="fas fa-clock"></i> ملاحظة هامة: سيتم التحقق من الطلب والموافقة عليه خلال مدة تصل إلى **30 ساعة** بعد التحقق من صحة الدفع.
+                        <i class="fas fa-clock"></i> ملاحظة هامة: سيتم التحقق من الطلب والموافقة عليه خلال مدة تصل إلى **30 ساعة** بعد التحقق من صحة رقم عملية التحويل المرفق.
                     </p>
                 </form>
             </div>
         </section>
+        
     </main>
 
     <footer>
@@ -450,71 +511,44 @@
             }, duration);
         }
 
-        // دالة إرسال النموذج مع الرفع المباشر لملف الـ APK
-        document.getElementById('publishAppForm').addEventListener('submit', async function(e) {
+        document.getElementById('publishAppForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const form = e.target;
             const submitButton = form.querySelector('.submit-publish-btn');
-            const apkFileInput = document.getElementById('apkFile').files[0];
-            
-            if (!apkFileInput) {
-                showToast('❌ الرجاء اختيار ملف APK من الجهاز.', 4000);
-                return;
-            }
             
             submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-left: 5px;"></i> جاري رفع ملف الـ APK...';
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-left: 5px;"></i> جاري الإرسال...';
             
-            try {
-                // 1. رفع ملف APK إلى السيرفر الخارجي المجاني للحصول على رابط مباشر
-                const formData = new FormData();
-                formData.append('reqtype', 'fileupload');
-                formData.append('fileToUpload', apkFileInput);
+            const screenshotsText = form.appScreenshots.value;
+            const appImagesArray = screenshotsText.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            
+            const submissionData = {
+                appName: form.appName.value,
+                appLink: form.appLink.value,
+                devName: form.developerName.value,
+                devEmail: form.developerEmail.value,
+                companyName: form.companyName.value || '',
+                transactionId: form.transactionID.value,
+                appImages: appImagesArray,
+                reviewStatus: 'Pending',
+                appType: 'Application',
+                submissionDate: firebase.firestore.FieldValue.serverTimestamp()
+            };
 
-                const uploadResponse = await fetch('https://catbox.moe/user/api.php', {
-                    method: 'POST',
-                    body: formData
+            db.collection('submissions').add(submissionData)
+                .then(() => {
+                    showToast('✅ تم استلام طلب نشر تطبيقك بنجاح! سيتم مراجعته خلال 30 ساعة بعد التحقق من الدفع.', 7000);
+                    form.reset();
+                })
+                .catch(error => {
+                    showToast('❌ حدث خطأ أثناء إرسال الطلب: ' + error.message, 5000);
+                    console.error("Error submitting application: ", error);
+                })
+                .finally(() => {
+                     submitButton.disabled = false;
+                     submitButton.innerHTML = '<i class="fas fa-paper-plane" style="margin-left: 8px;"></i> إرسال وطلب مراجعة التطبيق';
                 });
-
-                const downloadUrl = await uploadResponse.text();
-
-                if (!downloadUrl || !downloadUrl.startsWith('http')) {
-                    throw new Error('فشل رفع ملف التطبيق للسيرفر السحابي.');
-                }
-
-                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-left: 5px;"></i> جاري حفظ بيانات التطبيق...';
-
-                // 2. تجهيز بيانات الصور
-                const screenshotsText = form.appScreenshots.value;
-                const appImagesArray = screenshotsText.split(',').map(s => s.trim()).filter(s => s.length > 0);
-                
-                const submissionData = {
-                    appName: form.appName.value,
-                    appLink: downloadUrl.trim(), // رابط الـ APK الناتج عن الرفع المباشر
-                    devName: form.developerName.value,
-                    devEmail: form.developerEmail.value,
-                    companyName: form.companyName.value || '',
-                    transactionId: form.transactionID.value,
-                    appImages: appImagesArray,
-                    reviewStatus: 'Pending',
-                    appType: 'Application',
-                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                // 3. حفظ البيانات في فايربيس (Firestore)
-                await db.collection('submissions').add(submissionData);
-                
-                showToast('✅ تم رفع ملف التطبيق وإرسال طلبك بنجاح! سيتم مراجعته خلال 30 ساعة.', 7000);
-                form.reset();
-
-            } catch (error) {
-                showToast('❌ حدث خطأ: ' + error.message, 5000);
-                console.error("Error submitting application: ", error);
-            } finally {
-                 submitButton.disabled = false;
-                 submitButton.innerHTML = '<i class="fas fa-paper-plane" style="margin-left: 8px;"></i> إرسال وطلب مراجعة التطبيق';
-            }
         });
     </script>
 </body>
