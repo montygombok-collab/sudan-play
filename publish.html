@@ -6,7 +6,6 @@
     <title>Sudan Play - نشر تطبيق جديد</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* أنماط CSS الأساسية المنسقة مع الداشبورد */
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +14,8 @@
         }
 
         :root {
-            --primary: rgb(74, 107, 255); /* أزرق أساسي */
-            --secondary: rgb(255, 94, 125); /* وردي/أحمر ثانوي */
+            --primary: rgb(74, 107, 255);
+            --secondary: rgb(255, 94, 125);
             --accent: rgb(46, 196, 182);
             --dark: rgb(30, 30, 45);
             --light: rgb(248, 249, 254);
@@ -33,7 +32,6 @@
             flex-direction: column;
         }
 
-        /* --- Header / Navigation --- */
         header {
             background-color: var(--dark);
             color: var(--light);
@@ -100,7 +98,6 @@
             font-weight: 600;
         }
         
-        /* --- Publish App Section Styles --- */
         #publish-app {
             padding: 60px 20px;
             max-width: 900px;
@@ -139,43 +136,55 @@
             padding: 0 15px;
         }
 
-        /* --- دليل الاستخدام الجديد --- */
-        .guide-box {
-            background: #f0f4ff;
-            border: 2px dashed var(--primary);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
+        /* --- صندوق دليل الاستخدام الجديد --- */
+        .developer-guide {
+            background: linear-gradient(135deg, #f5f7ff 0%, #ebf0ff 100%);
+            border: 2px solid var(--primary);
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 35px;
             text-align: right;
+            box-shadow: var(--shadow-soft);
         }
 
-        .guide-box h4 {
+        .developer-guide h3 {
             color: var(--primary);
-            font-size: 1.2em;
-            margin-bottom: 12px;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
             display: flex;
             align-items: center;
         }
 
-        .guide-box h4 i {
-            margin-left: 8px;
-        }
-
-        .guide-box ol {
-            margin-right: 20px;
-            font-size: 0.95em;
-            color: #444;
-            line-height: 1.8;
-        }
-
-        .guide-box li {
-            margin-bottom: 8px;
-        }
-
-        .guide-box a {
+        .developer-guide h3 i {
+            margin-left: 10px;
             color: var(--primary);
+        }
+
+        .developer-guide ol {
+            margin-right: 20px;
+            color: #333;
+            line-height: 1.9;
+            font-size: 1.02em;
+        }
+
+        .developer-guide li {
+            margin-bottom: 10px;
+        }
+
+        .developer-guide code {
+            background: #e1e7ff;
+            color: var(--primary);
+            padding: 2px 6px;
+            border-radius: 4px;
             font-weight: bold;
+        }
+
+        .developer-guide a {
+            color: var(--primary);
             text-decoration: underline;
+            font-weight: 600;
         }
 
         #publish-app .form-group {
@@ -313,7 +322,6 @@
             margin-left: 8px;
         }
         
-        /* --- Footer --- */
         footer {
             background-color: var(--dark);
             color: var(--light);
@@ -328,7 +336,6 @@
             font-size: 0.95em;
         }
 
-        /* --- Toast Notification --- */
         #toast-message {
             visibility: hidden;
             min-width: 250px;
@@ -402,17 +409,13 @@
 
             <div class="publish-form-container">
                 
-                <!-- دليل الاستخدام الشامل للمطورين -->
-                <div class="guide-box">
-                    <h4><i class="fas fa-book-open"></i> دليل المطور: كيف تحصل على رابط التحميل المباشر للـ APK؟</h4>
+                <!-- دليل الاستخدام المفصل للمطورين -->
+                <div class="developer-guide">
+                    <h3><i class="fas fa-book-reader"></i> دليل المطور: كيفية الحصول على رابط التحميل المباشر</h3>
                     <ol>
-                        <li><strong>ارفع ملف الـ APK:</strong> قم برفع ملف تطبيقك (APK) على أي منصة استضافة مجانية تختارها مثل:
-                            <a href="https://catbox.moe" target="_blank">Catbox.moe</a>، 
-                            <a href="https://gofile.io" target="_blank">Gofile.io</a>، 
-                            أو عبر ميزة <a href="https://github.com" target="_blank">GitHub Releases</a>.
-                        </li>
-                        <li><strong>انسخ الرابط المباشر:</strong> تأكد من أن الرابط الذي تنسخه يقوم بالتحميل أو يفتح مباشرة وينتهي بالامتداد (<code>.apk</code>).</li>
-                        <li><strong>ألصق الرابط أدناه:</strong> ضع الرابط في حقل "رابط ملف التطبيق" لضمان عمل زر التحميل للمستخدمين دون أخطاء (مثل خطأ 403).</li>
+                        <li><strong>رفع ملف الـ APK:</strong> قم برفع ملف تطبيقك على مواقع الاستضافة السحابية الآمنة مثل <a href="https://catbox.moe" target="_blank">Catbox.moe</a>، <a href="https://gofile.io" target="_blank">Gofile.io</a>، أو عبر الإصدارات في <a href="https://github.com" target="_blank">GitHub Releases</a>.</li>
+                        <li><strong>نسخ الرابط المباشر:</strong> تأكد من أن الرابط الذي تنسخه يبدأ بـ <code>https://</code> وينتهي بالامتداد الصريح <code>.apk</code> لضمان استجابة سريعة وخلوّه من مشاكل الحظر (خطأ 403).</li>
+                        <li><strong>إلصاق الرابط:</strong> ضع الرابط المباشر في حقل <strong>"رابط ملف التطبيق"</strong> أدناه لكي يتمكن المستخدمون من تحميله بسلاسة.</li>
                     </ol>
                 </div>
 
@@ -426,8 +429,7 @@
                     
                     <div class="form-group">
                         <label for="appLink"><i class="fas fa-link"></i> رابط ملف التطبيق (رابط مباشر ينتهي بـ .apk):</label>
-                        <input type="url" id="appLink" name="appLink" class="form-control" placeholder="https://example.com/files/app.apk" required>
-                        <small style="color: #666; display: block; margin-top: 5px;">أدخل رابط التحميل المباشر الذي تحصل عليه بعد رفع ملف الـ APK.</small>
+                        <input type="url" id="appLink" name="appLink" class="form-control" placeholder="https://files.catbox.moe/xxxxxx.apk" required>
                     </div>
 
                     <div class="form-group">
