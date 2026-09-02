@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monty Go SDN | الرئيسية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* خلفية شبكية تقنية دقيقة */
+        .tech-grid {
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+
+        /* حركات الزجاج السائل والكرات الضوئية */
+        .liquid-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.45;
+            animation: float 18s infinite alternate ease-in-out;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, -40px) scale(1.15); }
+            100% { transform: translate(-40px, 50px) scale(0.95); }
+        }
+
+        /* تصميم الزجاج السائل - Liquid Glass */
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .liquid-glass:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 12px 40px 0 rgba(56, 189, 248, 0.2);
+        }
+
+        /* الوضع الداكن التقني */
+        .dark {
+            background-color: #060911;
+            color: #e2e8f0;
+        }
+        .dark .nav-bg {
+            background: rgba(6, 9, 17, 0.65);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* الوضع الفاتح */
+        .light {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .light .tech-grid {
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        }
+        .light .liquid-glass {
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        .light .liquid-glass:hover {
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(2, 132, 199, 0.4);
+            box-shadow: 0 12px 40px 0 rgba(2, 132, 199, 0.12);
+        }
+        .light .nav-bg {
+            background: rgba(241, 245, 249, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .text-muted { color: #94a3b8; }
+        .light .text-muted { color: #64748b; }
+        .text-heading { color: #f8fafc; }
+        .light .text-heading { color: #0f172a; }
+
+        .hero-title-gradient {
+            background: linear-gradient(135deg, #ffffff 20%, #a5f3fc 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .light .hero-title-gradient {
+            background: linear-gradient(135deg, #0f172a 20%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="tech-grid min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white relative">
+
+    <!-- خلفية السائل الساطع (Liquid Orbs) -->
+    <div class="liquid-orb w-96 h-96 bg-cyan-500/30 top-10 right-10"></div>
+    <div class="liquid-orb w-80 h-80 bg-blue-600/30 top-96 left-10" style="animation-delay: -5s;"></div>
+    <div class="liquid-orb w-96 h-96 bg-purple-600/20 bottom-20 right-1/3" style="animation-delay: -10s;"></div>
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 nav-bg transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center relative z-10">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png?ts=1784548145" alt="شعار Monty Go SDN" class="h-9 w-9 rounded-xl object-cover shadow-lg border border-white/20">
+                <span class="font-bold text-lg tracking-tight text-heading">Monty Go SDN</span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6 font-medium text-sm text-muted">
+                <a href="index.html" class="text-cyan-400 font-semibold">الرئيسية</a>
+                <a href="services.html" class="hover:text-cyan-400 transition-colors">الخدمات</a>
+                <a href="portfolio.html" class="hover:text-cyan-400 transition-colors">معرض الأعمال</a>
+                <a href="events.html" class="hover:text-cyan-400 transition-colors">الأحداث</a>
+                <a href="about.html" class="hover:text-cyan-400 transition-colors">عن الشركة</a>
+                <a href="customer-service.html" class="hover:text-cyan-400 transition-colors">خدمة العملاء</a>
+                <a href="contact.html" class="hover:text-cyan-400 transition-colors">اتصل بنا</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" aria-label="تبديل الوضع" class="p-2 rounded-xl liquid-glass text-muted hover:text-cyan-400 transition-all">
+                    <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
+                </button>
+                <button id="menu-button" type="button" class="p-2 rounded-xl text-muted md:hidden liquid-glass" aria-label="فتح القائمة">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out border-b border-white/10">
+            <div class="px-4 py-3 space-y-2 text-sm text-muted backdrop-blur-2xl">
+                <a href="index.html" class="block text-cyan-400 font-semibold py-1">الرئيسية</a>
+                <a href="services.html" class="block hover:text-cyan-400 py-1">الخدمات</a>
+                <a href="portfolio.html" class="block hover:text-cyan-400 py-1">معرض الأعمال</a>
+                <a href="events.html" class="block hover:text-cyan-400 py-1">الأحداث</a>
+                <a href="about.html" class="block hover:text-cyan-400 py-1">عن الشركة</a>
+                <a href="customer-service.html" class="block hover:text-cyan-400 py-1">خدمة العملاء</a>
+                <a href="contact.html" class="block hover:text-cyan-400 py-1">اتصل بنا</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow relative z-10">
+        <!-- Hero Section -->
+        <section id="hero" class="py-24 md:py-36 text-center relative">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass text-cyan-400 text-xs font-medium mb-8">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_#22d3ee]"></span>
+                    <span>عالم التكنولوجيا السائلة</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight hero-title-gradient">
+                    نحو مستقبل رقمي واعد ومتطور
+                </h1>
+                
+                <p class="text-base sm:text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+                    شريكك البرمجي الموثوق لتطوير الأنظمة والتطبيقات والحلول الرقمية المتكاملة بأسلوب هندسي مبتكر.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="services.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(6,182,212,0.4)]">
+                        <span>اكتشف خدماتنا</span>
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    </a>
+                    <a href="contact.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl liquid-glass text-heading font-semibold text-sm transition-all duration-300">
+                        <span>استشارة تقنية</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <h2 class="text-2xl md:text-4xl font-bold text-heading mb-4">لماذا نختار Monty Go؟</h2>
+                    <p class="text-muted text-sm md:text-base">نجمع بين المعايير البرمجية الصارمة والرؤية المبتكرة لنضمن نمو واستدامة أعمالك.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="liquid-glass p-8 rounded-3xl transition-all duration-300">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                            <i data-lucide="cpu" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-heading mb-3">الابتكار والحلول المخصصة</h3>
+                        <p class="text-muted text-sm leading-relaxed">بناء أنظمة متكاملة ومصممة بدقة عالية تناسب متطلبات المؤسسات وتضمن لك التفوق التقني.</p>
+                    </div>
+
+                    <div class="liquid-glass p-8 rounded-3xl transition-all duration-300">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(96,165,250,0.2)]">
+                            <i data-lucide="layers" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-heading mb-3">الجودة والموثوقية</h3>
+                        <p class="text-muted text-sm leading-relaxed">تطبيق أعلى بروتوكولات الأمان والجودة البرمجية لضمان عمل تطبيقاتك بأداء عالٍ الموثوقية.</p>
+                    </div>
+
+                    <div class="liquid-glass p-8 rounded-3xl transition-all duration-300">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(192,132,252,0.2)]">
+                            <i data-lucide="sparkles" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-heading mb-3">الشراكة والدعم المستمر</h3>
+                        <p class="text-muted text-sm leading-relaxed">دعم فني واستشاري متواصل لمواكبة التحديثات المستمرة والتوسع المستقبلي لمشروعك.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="cta" class="py-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="liquid-glass p-10 md:p-14 rounded-3xl text-center border border-cyan-500/30 relative overflow-hidden">
+                    <h2 class="text-2xl md:text-4xl font-bold text-heading mb-4">هل أنت مستعد للبدء؟</h2>
+                    <p class="text-muted text-sm md:text-base max-w-xl mx-auto mb-8">دعنا نناقش متطلبات مشروعك ونحول الفكرة إلى منصة رقمية فائقة الأداء.</p>
+                    <a href="contact.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-sm py-3.5 px-8 rounded-2xl transition duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+                        <span>اطلب استشارة مجانية</span>
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="nav-bg py-10 transition-colors duration-300 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted">
+            <div class="mb-6 flex justify-center items-center gap-2">
+                <img src="https://www.appcreator24.com/srv/imgs/gen/3444153_splash.png?ts=1784548145" alt="شعار Monty Go SDN" class="h-8 w-8 rounded-lg object-cover">
+                <span class="text-lg font-bold text-heading">Monty Go SDN</span>
+            </div>
+            
+            <nav class="flex flex-wrap justify-center gap-6 text-xs md:text-sm mb-6">
+                <a href="index.html" class="hover:text-cyan-400 transition-colors">الرئيسية</a>
+                <a href="services.html" class="hover:text-cyan-400 transition-colors">الخدمات</a>
+                <a href="portfolio.html" class="hover:text-cyan-400 transition-colors">معرض الأعمال</a>
+                <a href="events.html" class="hover:text-cyan-400 transition-colors">الأحداث</a>
+                <a href="about.html" class="hover:text-cyan-400 transition-colors">عن الشركة</a>
+                <a href="customer-service.html" class="hover:text-cyan-400 transition-colors">خدمة العملاء</a>
+                <a href="contact.html" class="hover:text-cyan-400 transition-colors">اتصل بنا</a>
+            </nav>
+
+            <div class="flex justify-center gap-4 mb-6">
+                <a href="https://web.facebook.com/people/Monty-Go-SDN/61584046784545/" target="_blank" class="p-2.5 rounded-xl liquid-glass hover:text-cyan-400 transition-all" aria-label="فيسبوك">
+                    <i data-lucide="facebook" class="w-5 h-5"></i>
+                </a>
+                <a href="#" target="_blank" class="p-2.5 rounded-xl liquid-glass hover:text-cyan-400 transition-all" aria-label="إنستجرام">
+                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                </a>
+                <a href="#" target="_blank" class="p-2.5 rounded-xl liquid-glass hover:text-cyan-400 transition-all" aria-label="واتساب">
+                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                </a>
+                <a href="mailto:contact@montygo.sd" class="p-2.5 rounded-xl liquid-glass hover:text-cyan-400 transition-all" aria-label="بريد إلكتروني">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                </a>
+            </div>
+
+            <p class="text-xs">© 2026 Monty Go SDN. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        const menuButton = document.getElementById('menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('max-h-0')) {
+                mobileMenu.classList.remove('max-h-0');
+                mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+            } else {
+                mobileMenu.style.maxHeight = null;
+                mobileMenu.classList.add('max-h-0');
+            }
+        });
+
+        const htmlElement = document.documentElement;
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        function getInitialTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) return savedTheme;
+            return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light'); 
+                themeIcon.setAttribute('data-lucide', 'sun'); 
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light'); 
+                themeIcon.setAttribute('data-lucide', 'moon'); 
+            }
+            localStorage.setItem('theme', theme);
+            lucide.createIcons(); 
+        }
+
+        setTheme(getInitialTheme());
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            setTheme(currentTheme === 'light' ? 'dark' : 'light');
+        });
+
+        window.onload = function() {
+            lucide.createIcons();
+        };
+    </script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDQ4lkT0g00bmMDtnSXAUxpjpdLDiwsx1M",
+        authDomain: "starlink-sudan.firebaseapp.com",
+        projectId: "starlink-sudan",
+        storageBucket: "starlink-sudan.firebasestorage.app",
+        messagingSenderId: "343295177307",
+        appId: "1:343295177307:web:52044a51cf77bf6ed7857e",
+        measurementId: "G-ZGM7P50BXR"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+</body>
+</html>
