@@ -288,7 +288,6 @@
             font-weight: bold;
         }
 
-        /* تصميم شريط التحميل */
         #uploadProgressContainer {
             display: none;
             margin-top: 15px;
@@ -306,10 +305,9 @@
             margin-top: 8px;
         }
         .progress-bar-fill {
-            width: 0%;
+            width: 100%;
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--success));
-            transition: width 0.2s ease;
         }
         .progress-info {
             display: flex;
@@ -337,9 +335,12 @@
         #toast.show { visibility: visible; }
     </style>
 
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -443,7 +444,7 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group">
-                        <label>اختر ملف APK (رفع مباشر)</label>
+                        <label>اختر ملف APK (رفع إلى Supabase)</label>
                         <input type="file" id="apkFileInput" accept=".apk" required>
                     </div>
                     <div class="form-group">
@@ -467,11 +468,11 @@
                     <label for="termsAgreement" style="display:inline; margin:0; color:var(--text-main); cursor:pointer;">أوافق على الشروط والأحكام وسياسة النشر الخاصة بـ Sudan Play</label>
                 </div>
 
-                <!-- شريط التحميل المرئي -->
+                <!-- شريط التحميل -->
                 <div id="uploadProgressContainer">
                     <div class="progress-info">
-                        <span id="uploadStatusText">جاري رفع ملف الـ APK...</span>
-                        <span id="uploadPercentage">0%</span>
+                        <span id="uploadStatusText">جاري رفع الملف...</span>
+                        <span id="uploadPercentage">يرجى الانتظار</span>
                     </div>
                     <div class="progress-bar-bg">
                         <div id="uploadProgressBar" class="progress-bar-fill"></div>
@@ -488,6 +489,7 @@
     <div id="toast">رسالة تنبيهية</div>
 
     <script>
+        // إعدادات فايربيس (Auth & Firestore)
         const firebaseConfig = {
             apiKey: "AIzaSyBJE_Ee-Dyh83iny45eH8lVtTSrIVqTzOI",
             authDomain: "sudan-play.firebaseapp.com",
@@ -500,6 +502,11 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
+
+        // إعدادات سوبابيز (مدمجة مباشرة لمشروعك الجديد)
+        const SUPABASE_URL = 'https://iokykmbnubqqydugneif.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlvcmt5a21mbnVicXF5ZHVnbmVpZiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzI2MDI5MTAwLCJleHAiOjIwNDE2MDUxMDB9.EXAMPLE_KEY_REPLACE_IF_NEEDED'; // استبدله بالمفتاح الفعلي إذا أردت، أو اتركه إذا قمت بنسخه
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let isRegisterMode = false;
         let currentDevEmail = "";
@@ -625,7 +632,7 @@
             document.getElementById('avgRatingCount').textContent = rating.toFixed(1) + ' ⭐';
         }
 
-        function handlePublishApp(e) {
+        async function handlePublishApp(e) {
             e.preventDefault();
             const appName = document.getElementById('appName').value;
             const appType = document.getElementById('appCategory').value;
@@ -647,91 +654,65 @@
                 return;
             }
 
-            // إظهار شريط التحميل وتعطيل زر الإرسال لمنع التكرار
             const progressContainer = document.getElementById('uploadProgressContainer');
-            const progressBar = document.getElementById('uploadProgressBar');
-            const progressText = document.getElementById('uploadPercentage');
-            const statusText = document.getElementById('uploadStatusText');
             const submitBtn = document.getElementById('submitAppBtn');
+            const statusText = document.getElementById('uploadStatusText');
 
             progressContainer.style.display = 'block';
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.5';
-            progressBar.style.width = '0%';
-            progressText.textContent = '0%';
-            statusText.textContent = 'جاري رفع ملف الـ APK...';
+            statusText.textContent = 'جاري رفع ملف الـ APK إلى Supabase...';
 
-            const formData = new FormData();
-            formData.append('reqtype', 'fileupload');
-            formData.append('fileToUpload', apkFileInput);
+            try {
+                // رفع الملف إلى Supabase Storage (Bucket: sudan play)
+                const fileName = `apk_${Date.now()}_${apkFileInput.name.replace(/\s+/g, '_')}`;
+                const { data, error } = await supabaseClient.storage
+                    .from('sudan play')
+                    .upload(fileName, apkFileInput);
 
-            // استخدام XMLHttpRequest لمتابعة نسبة الرفع الحقيقية (Progress)
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://catbox.moe/user/api.php', true);
+                if (error) throw error;
 
-            xhr.upload.onprogress = function(event) {
-                if (event.lengthComputable) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    progressBar.style.width = percentComplete + '%';
-                    progressText.textContent = percentComplete + '%';
-                    if (percentComplete === 100) {
-                        statusText.textContent = 'جاري معالجة وحفظ البيانات في السيرفر...';
-                    }
-                }
-            };
+                // جلب رابط التحميل المباشر للـ APK من سوبابيز
+                const { data: publicURLData } = supabaseClient.storage
+                    .from('sudan play')
+                    .getPublicUrl(fileName);
 
-            xhr.onload = async function() {
+                const apkAndroidLink = publicURLData.publicUrl;
+                statusText.textContent = 'جاري حفظ بيانات التطبيق في Firebase...';
+
+                const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+                // حفظ بيانات الطلب ورابط السوبابيز داخل قاعدة بيانات فايربيس (Firestore)
+                await db.collection('submissions').add({
+                    appName: appName,
+                    appType: appType,
+                    appSize: appSize,
+                    appDescription: appDescription,
+                    appIconLink: appIconLink,
+                    appAndroidLink: apkAndroidLink, // رابط الـ APK المخزن في Supabase
+                    appIosLink: appIosLink,
+                    screenshotsPaths: screenshotsPaths,
+                    devEmail: currentDevEmail,
+                    devName: auth.currentUser.displayName || currentDevEmail,
+                    downloads: 0,
+                    rating: 5.0,
+                    reviewStatus: 'Pending',
+                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 progressContainer.style.display = 'none';
+                showToast('📤 تم إرسال طلب التطبيق بنجاح للمراجعة');
+                document.getElementById('newAppForm').reset();
 
-                if (xhr.status === 200) {
-                    const apkAndroidLink = xhr.responseText.trim();
-
-                    if (!apkAndroidLink.startsWith('http')) {
-                        showToast('❌ فشل رفع الملف، حاول مرة أخرى');
-                        return;
-                    }
-
-                    try {
-                        const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
-
-                        await db.collection('submissions').add({
-                            appName: appName,
-                            appType: appType,
-                            appSize: appSize,
-                            appDescription: appDescription,
-                            appIconLink: appIconLink,
-                            appAndroidLink: apkAndroidLink,
-                            appIosLink: appIosLink,
-                            screenshotsPaths: screenshotsPaths,
-                            devEmail: currentDevEmail,
-                            devName: auth.currentUser.displayName || currentDevEmail,
-                            downloads: 0,
-                            rating: 5.0,
-                            reviewStatus: 'Pending',
-                            submissionDate: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-
-                        showToast('📤 تم إرسال طلب التطبيق بنجاح للمراجعة');
-                        document.getElementById('newAppForm').reset();
-                    } catch (err) {
-                        showToast('❌ خطأ في حفظ بيانات التطبيق بقاعدة البيانات');
-                        console.error(err);
-                    }
-                } else {
-                    showToast('❌ فشل الاتصال بخادم الرفع');
-                }
-            };
-
-            xhr.onerror = function() {
+            } catch (err) {
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 progressContainer.style.display = 'none';
-                showToast('❌ حدث خطأ أثناء الاتصال بالشبكة');
-            };
-
-            xhr.send(formData);
+                showToast('❌ حدث خطأ: ' + (err.message || 'فشل الرفع'));
+                console.error(err);
+            }
         }
 
         function showToast(text) {
