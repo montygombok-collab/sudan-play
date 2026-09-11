@@ -339,6 +339,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -442,7 +444,7 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group">
-                        <label>اختر ملف APK (يبدأ الرفع تلقائياً على خوادم Monty GO)</label>
+                        <label>اختر ملف APK (يبدأ الرفع تلقائياً)</label>
                         <input type="file" id="apkFileInput" accept=".apk" onchange="autoUploadApk(event)" required>
                         <!-- حقل مخفي لحفظ رابط التحميل المباشر بعد الرفع التلقائي -->
                         <input type="hidden" id="uploadedApkUrl" required>
@@ -471,7 +473,7 @@
                 <!-- شريط التحميل التلقائي -->
                 <div id="uploadProgressContainer">
                     <div class="progress-info">
-                        <span id="uploadStatusText">جاري الرفع التلقائي لخوادم Monty GO...</span>
+                        <span id="uploadStatusText">جاري الرفع التلقائي للملف...</span>
                         <span id="uploadPercentage">يرجى الانتظار</span>
                     </div>
                     <div class="progress-bar-bg">
@@ -503,12 +505,10 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // إعدادات خوادم Monty GO
-        const MONTY_GO_API_URL = 'https://iokykmbnubqqydugneif.supabase.co'; // تم توجيهها لخوادم Monty GO
-        const MONTY_GO_KEY = 'sb_publishable_CVO1fpUUCDsXgd0HUUSWjA_pkkABSJH';
-
-        // محاكي عميل خوادم Monty GO للتعامل مع الرفع والتخزين السحابي
-        const montyGoClient = supabase.createClient(MONTY_GO_API_URL, MONTY_GO_KEY);
+        // إعدادات سوبابيز (Supabase Storage للـ APK)
+        const SUPABASE_URL = 'https://iokykmbnubqqydugneif.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_CVO1fpUUCDsXgd0HUUSWjA_pkkABSJH';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let isRegisterMode = false;
         let currentDevEmail = "";
@@ -634,7 +634,7 @@
             document.getElementById('avgRatingCount').textContent = rating.toFixed(1) + ' ⭐';
         }
 
-        // دالة الرفع التلقائي فور اختيار الملف عبر خوادم Monty GO
+        // دالة الرفع التلقائي فور اختيار الملف
         async function autoUploadApk(event) {
             const fileInput = event.target;
             const apkFile = fileInput.files[0];
@@ -648,20 +648,20 @@
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.5';
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع الـ APK...';
-            statusText.textContent = `جاري رفع "${apkFile.name}" إلى خوادم Monty GO...`;
+            statusText.textContent = `جاري رفع "${apkFile.name}" إلى Supabase...`;
 
             try {
                 const fileName = `apk_${Date.now()}_${apkFile.name.replace(/\s+/g, '_')}`;
                 
-                // الرفع إلى خوادم Monty GO (Bucket: sudan play)
-                const { data, error } = await montyGoClient.storage
+                // الرفع إلى Bucket: sudan play
+                const { data, error } = await supabaseClient.storage
                     .from('sudan play')
                     .upload(fileName, apkFile);
 
                 if (error) throw error;
 
-                // جلب الرابط المباشر من خوادم Monty GO
-                const { data: publicURLData } = montyGoClient.storage
+                // جلب الرابط المباشر
+                const { data: publicURLData } = supabaseClient.storage
                     .from('sudan play')
                     .getPublicUrl(fileName);
 
@@ -672,13 +672,13 @@
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال التطبيق للمراجعة (72 ساعة)';
-                showToast('✅ تم رفع ملف الـ APK بنجاح على خوادم Monty GO!');
+                showToast('✅ تم رفع ملف الـ APK بنجاح! يمكنك الآن النقر على إرسال.');
 
             } catch (err) {
                 progressContainer.style.display = 'none';
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '❌ فشل الرفع، حدد الملف مرة أخرى';
-                showToast('❌ خطأ في الرفع: ' + (err.message || 'فشل الاتصال بخوادم Monty GO'));
+                showToast('❌ خطأ في الرفع: ' + (err.message || 'فشل الاتصال'));
                 console.error(err);
             }
         }
@@ -708,19 +708,19 @@
             const submitBtn = document.getElementById('submitAppBtn');
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.5';
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري حفظ البيانات...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري حفظ البيانات في Firebase...';
 
             try {
                 const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
-                // حفظ بيانات الطلب ورابط خوادم Monty GO داخل قاعدة البيانات
+                // حفظ بيانات الطلب ورابط السوبابيز داخل قاعدة بيانات فايربيس (Firestore)
                 await db.collection('submissions').add({
                     appName: appName,
                     appType: appType,
                     appSize: appSize,
                     appDescription: appDescription,
                     appIconLink: appIconLink,
-                    appAndroidLink: apkAndroidLink, // الرابط الجاهز من خوادم Monty GO
+                    appAndroidLink: apkAndroidLink, // الرابط الجاهز من Supabase
                     appIosLink: appIosLink,
                     screenshotsPaths: screenshotsPaths,
                     devEmail: currentDevEmail,
@@ -734,7 +734,7 @@
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للمراجعة (72 ساعة)';
-                showToast('📤 تم إرسال طلب التطبيق بنجاح للمراجعة عبر خوادم Monty GO');
+                showToast('📤 تم إرسال طلب التطبيق بنجاح للمراجعة');
                 document.getElementById('newAppForm').reset();
                 document.getElementById('uploadedApkUrl').value = '';
 
