@@ -105,6 +105,7 @@
         input[type="email"],
         input[type="password"],
         input[type="url"],
+        input[type="file"],
         textarea, 
         select {
             width: 100%;
@@ -116,6 +117,11 @@
             font-size: 0.9em;
             outline: none;
             transition: border-color 0.3s;
+        }
+
+        input[type="file"] {
+            padding: 7px;
+            cursor: pointer;
         }
 
         input:focus, textarea:focus, select:focus {
@@ -158,11 +164,6 @@
 
         .btn:hover { opacity: 0.9; }
         .btn:active { transform: scale(0.98); }
-
-        .btn-learn {
-            background: linear-gradient(135deg, var(--warning), #d97706);
-            margin-bottom: 15px;
-        }
 
         .auth-switch {
             text-align: center;
@@ -287,84 +288,6 @@
             font-weight: bold;
         }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-        }
-
-        .modal-card {
-            background: #1e293b;
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 520px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 10px;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-
-        .modal-body {
-            font-size: 0.88em;
-            color: var(--text-muted);
-            line-height: 1.7;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
-        .modal-body a {
-            color: var(--primary);
-            text-decoration: underline;
-            font-weight: bold;
-        }
-
-        .modal-body code {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--warning);
-            padding: 2px 5px;
-            border-radius: 4px;
-        }
-
-        .free-badge {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-
         #toast {
             visibility: hidden;
             background: #0f172a;
@@ -433,10 +356,6 @@
                 </div>
             </div>
 
-            <button type="button" class="btn btn-learn" onclick="openLearnModal()">
-                <i class="fas fa-question-circle"></i> تعلم كيف تحصل على رابط الـ APK من Catbox (دليل الاستخدام)
-            </button>
-
             <div class="dev-stats-grid">
                 <div class="stat-box">
                     <h4>إجمالي تطبيقاتي</h4>
@@ -494,8 +413,8 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group">
-                        <label>رابط ملف APK المباشر من Catbox</label>
-                        <input type="url" id="appAndroidLink" placeholder="https://files.catbox.moe/xxxx.apk" required>
+                        <label>اختر ملف APK (رفع مباشر)</label>
+                        <input type="file" id="apkFileInput" accept=".apk" required>
                     </div>
                     <div class="form-group">
                         <label>رابط (iOS / Web)</label>
@@ -525,28 +444,6 @@
         </div>
     </div>
 
-    <!-- نافذة دليل الاستخدام الخاصة بـ Catbox -->
-    <div id="learnModal" class="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3><i class="fas fa-info-circle" style="color: var(--warning);"></i> دليل رفع ملف الـ APK عبر Catbox</h3>
-                <button class="close-modal" onclick="closeLearnModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p><strong>1. كيفية الحصول على رابط التحميل الفوري؟</strong><br>
-                توجه إلى موقع <a href="https://catbox.moe" target="_blank">Catbox.moe</a>، واجذب ملف تطبيقك (APK) وأفلته في خانة رفع الملفات، ثم انسخ الرابط المباشر الناتج الذي ينتهي بالامتداد <code>.apk</code>.</p>
-                
-                <p><strong>2. لماذا Catbox؟</strong><br>يمنحك رابطاً مباشراً نظيفاً يبدأ تنزيل التطبيق فوراً بضغطة زر واحدة لدى المستخدمين دون أي إعلانات أو صفحات وسيطة أو تحذيرات فحص.</p>
-                
-                <p><strong>3. فترة المراجعة:</strong><br>تتم مراجعة الطلب من قبل الإدارة خلال <strong>72 ساعة</strong> قبل اعتماده ونشره للمستخدمين.</p>
-                
-                <div class="free-badge">
-                    <i class="fas fa-gift"></i> الخدمة مقدمة من Monty Go SDN بشكل مجاني حاليا.
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="toast">رسالة تنبيهية</div>
 
     <script>
@@ -565,14 +462,6 @@
 
         let isRegisterMode = false;
         let currentDevEmail = "";
-
-        function openLearnModal() { document.getElementById('learnModal').style.display = 'flex'; }
-        function closeLearnModal() { document.getElementById('learnModal').style.display = 'none'; }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('learnModal');
-            if (event.target === modal) modal.style.display = 'none';
-        }
 
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -695,13 +584,13 @@
             document.getElementById('avgRatingCount').textContent = rating.toFixed(1) + ' ⭐';
         }
 
-        function handlePublishApp(e) {
+        async function handlePublishApp(e) {
             e.preventDefault();
             const appName = document.getElementById('appName').value;
             const appType = document.getElementById('appCategory').value;
             const appSize = document.getElementById('appSize').value;
             const appIconLink = document.getElementById('appIcon').value;
-            const appAndroidLink = document.getElementById('appAndroidLink').value;
+            const apkFileInput = document.getElementById('apkFileInput').files[0];
             const appIosLink = document.getElementById('appIosLink').value;
             const screenshotsInput = document.getElementById('appScreenshots').value;
             const appDescription = document.getElementById('appDescription').value;
@@ -712,30 +601,54 @@
                 return;
             }
 
-            const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            if (!apkFileInput) {
+                showToast('❌ الرجاء اختيار ملف الـ APK');
+                return;
+            }
 
-            db.collection('submissions').add({
-                appName: appName,
-                appType: appType,
-                appSize: appSize,
-                appDescription: appDescription,
-                appIconLink: appIconLink,
-                appAndroidLink: appAndroidLink,
-                appIosLink: appIosLink,
-                screenshotsPaths: screenshotsPaths,
-                devEmail: currentDevEmail,
-                devName: auth.currentUser.displayName || currentDevEmail,
-                downloads: 0,
-                rating: 5.0,
-                reviewStatus: 'Pending',
-                submissionDate: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                showToast('📤 تم إرسال طلب النشر إلى لوحة التحكم بنجاح، بانتظار مراجعة الإدارة (خلال 72 ساعة)');
+            showToast('⏳ جاري رفع ملف الـ APK في الخلفية، يرجى الانتظار...');
+
+            const formData = new FormData();
+            formData.append('reqtype', 'fileupload');
+            formData.append('fileToUpload', apkFileInput);
+
+            try {
+                // رفع الملف في الخلفية إلى Catbox للحصول على رابط مباشر مجاني
+                const response = await fetch('https://catbox.moe/user/api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const apkAndroidLink = (await response.text()).trim();
+
+                if (!apkAndroidLink.startsWith('http')) {
+                    throw new Error('فشل الرفع');
+                }
+
+                const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+                await db.collection('submissions').add({
+                    appName: appName,
+                    appType: appType,
+                    appSize: appSize,
+                    appDescription: appDescription,
+                    appIconLink: appIconLink,
+                    appAndroidLink: apkAndroidLink, // الرابط المباشر الناتج أوتوماتيكياً
+                    appIosLink: appIosLink,
+                    screenshotsPaths: screenshotsPaths,
+                    devEmail: currentDevEmail,
+                    devName: auth.currentUser.displayName || currentDevEmail,
+                    downloads: 0,
+                    rating: 5.0,
+                    reviewStatus: 'Pending',
+                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                showToast('📤 تم إرسال طلب التطبيق بنجاح، بانتظار مراجعة الإدارة (خلال 72 ساعة)');
                 document.getElementById('newAppForm').reset();
-            }).catch(err => {
-                showToast('❌ فشل في إرسال طلب التطبيق');
+            } catch (err) {
+                showToast('❌ فشل رفع الملف أو إرسال الطلب، تأكد من الاتصال');
                 console.error(err);
-            });
+            }
         }
 
         function showToast(text) {
