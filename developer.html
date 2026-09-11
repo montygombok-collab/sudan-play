@@ -613,7 +613,6 @@
             formData.append('fileToUpload', apkFileInput);
 
             try {
-                // رفع الملف في الخلفية إلى Catbox للحصول على رابط مباشر مجاني
                 const response = await fetch('https://catbox.moe/user/api.php', {
                     method: 'POST',
                     body: formData
@@ -632,7 +631,7 @@
                     appSize: appSize,
                     appDescription: appDescription,
                     appIconLink: appIconLink,
-                    appAndroidLink: apkAndroidLink, // الرابط المباشر الناتج أوتوماتيكياً
+                    appAndroidLink: apkAndroidLink,
                     appIosLink: appIosLink,
                     screenshotsPaths: screenshotsPaths,
                     devEmail: currentDevEmail,
