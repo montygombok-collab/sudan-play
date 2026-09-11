@@ -288,6 +288,36 @@
             font-weight: bold;
         }
 
+        /* تصميم شريط التحميل */
+        #uploadProgressContainer {
+            display: none;
+            margin-top: 15px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 12px;
+            margin-top: 8px;
+        }
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.2s ease;
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82em;
+            color: var(--text-muted);
+        }
+
         #toast {
             visibility: hidden;
             background: #0f172a;
@@ -437,7 +467,18 @@
                     <label for="termsAgreement" style="display:inline; margin:0; color:var(--text-main); cursor:pointer;">أوافق على الشروط والأحكام وسياسة النشر الخاصة بـ Sudan Play</label>
                 </div>
 
-                <button type="submit" class="btn" style="background: var(--success); margin-top: 5px;">
+                <!-- شريط التحميل المرئي -->
+                <div id="uploadProgressContainer">
+                    <div class="progress-info">
+                        <span id="uploadStatusText">جاري رفع ملف الـ APK...</span>
+                        <span id="uploadPercentage">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="uploadProgressBar" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="submitAppBtn" style="background: var(--success); margin-top: 15px;">
                     <i class="fas fa-paper-plane"></i> إرسال للمراجعة (72 ساعة)
                 </button>
             </form>
@@ -584,7 +625,7 @@
             document.getElementById('avgRatingCount').textContent = rating.toFixed(1) + ' ⭐';
         }
 
-        async function handlePublishApp(e) {
+        function handlePublishApp(e) {
             e.preventDefault();
             const appName = document.getElementById('appName').value;
             const appType = document.getElementById('appCategory').value;
@@ -606,48 +647,91 @@
                 return;
             }
 
-            showToast('⏳ جاري رفع ملف الـ APK في الخلفية، يرجى الانتظار...');
+            // إظهار شريط التحميل وتعطيل زر الإرسال لمنع التكرار
+            const progressContainer = document.getElementById('uploadProgressContainer');
+            const progressBar = document.getElementById('uploadProgressBar');
+            const progressText = document.getElementById('uploadPercentage');
+            const statusText = document.getElementById('uploadStatusText');
+            const submitBtn = document.getElementById('submitAppBtn');
+
+            progressContainer.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+            statusText.textContent = 'جاري رفع ملف الـ APK...';
 
             const formData = new FormData();
             formData.append('reqtype', 'fileupload');
             formData.append('fileToUpload', apkFileInput);
 
-            try {
-                const response = await fetch('https://catbox.moe/user/api.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                const apkAndroidLink = (await response.text()).trim();
+            // استخدام XMLHttpRequest لمتابعة نسبة الرفع الحقيقية (Progress)
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://catbox.moe/user/api.php', true);
 
-                if (!apkAndroidLink.startsWith('http')) {
-                    throw new Error('فشل الرفع');
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
+                    progressBar.style.width = percentComplete + '%';
+                    progressText.textContent = percentComplete + '%';
+                    if (percentComplete === 100) {
+                        statusText.textContent = 'جاري معالجة وحفظ البيانات في السيرفر...';
+                    }
                 }
+            };
 
-                const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            xhr.onload = async function() {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                progressContainer.style.display = 'none';
 
-                await db.collection('submissions').add({
-                    appName: appName,
-                    appType: appType,
-                    appSize: appSize,
-                    appDescription: appDescription,
-                    appIconLink: appIconLink,
-                    appAndroidLink: apkAndroidLink,
-                    appIosLink: appIosLink,
-                    screenshotsPaths: screenshotsPaths,
-                    devEmail: currentDevEmail,
-                    devName: auth.currentUser.displayName || currentDevEmail,
-                    downloads: 0,
-                    rating: 5.0,
-                    reviewStatus: 'Pending',
-                    submissionDate: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                if (xhr.status === 200) {
+                    const apkAndroidLink = xhr.responseText.trim();
 
-                showToast('📤 تم إرسال طلب التطبيق بنجاح، بانتظار مراجعة الإدارة (خلال 72 ساعة)');
-                document.getElementById('newAppForm').reset();
-            } catch (err) {
-                showToast('❌ فشل رفع الملف أو إرسال الطلب، تأكد من الاتصال');
-                console.error(err);
-            }
+                    if (!apkAndroidLink.startsWith('http')) {
+                        showToast('❌ فشل رفع الملف، حاول مرة أخرى');
+                        return;
+                    }
+
+                    try {
+                        const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+                        await db.collection('submissions').add({
+                            appName: appName,
+                            appType: appType,
+                            appSize: appSize,
+                            appDescription: appDescription,
+                            appIconLink: appIconLink,
+                            appAndroidLink: apkAndroidLink,
+                            appIosLink: appIosLink,
+                            screenshotsPaths: screenshotsPaths,
+                            devEmail: currentDevEmail,
+                            devName: auth.currentUser.displayName || currentDevEmail,
+                            downloads: 0,
+                            rating: 5.0,
+                            reviewStatus: 'Pending',
+                            submissionDate: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+
+                        showToast('📤 تم إرسال طلب التطبيق بنجاح للمراجعة');
+                        document.getElementById('newAppForm').reset();
+                    } catch (err) {
+                        showToast('❌ خطأ في حفظ بيانات التطبيق بقاعدة البيانات');
+                        console.error(err);
+                    }
+                } else {
+                    showToast('❌ فشل الاتصال بخادم الرفع');
+                }
+            };
+
+            xhr.onerror = function() {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                progressContainer.style.display = 'none';
+                showToast('❌ حدث خطأ أثناء الاتصال بالشبكة');
+            };
+
+            xhr.send(formData);
         }
 
         function showToast(text) {
