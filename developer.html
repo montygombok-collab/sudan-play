@@ -444,8 +444,10 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group">
-                        <label>اختر ملف APK (رفع إلى Supabase)</label>
-                        <input type="file" id="apkFileInput" accept=".apk" required>
+                        <label>اختر ملف APK (يبدأ الرفع تلقائياً)</label>
+                        <input type="file" id="apkFileInput" accept=".apk" onchange="autoUploadApk(event)" required>
+                        <!-- حقل مخفي لحفظ رابط التحميل المباشر بعد الرفع التلقائي -->
+                        <input type="hidden" id="uploadedApkUrl" required>
                     </div>
                     <div class="form-group">
                         <label>رابط (iOS / Web)</label>
@@ -468,10 +470,10 @@
                     <label for="termsAgreement" style="display:inline; margin:0; color:var(--text-main); cursor:pointer;">أوافق على الشروط والأحكام وسياسة النشر الخاصة بـ Sudan Play</label>
                 </div>
 
-                <!-- شريط التحميل -->
+                <!-- شريط التحميل التلقائي -->
                 <div id="uploadProgressContainer">
                     <div class="progress-info">
-                        <span id="uploadStatusText">جاري رفع الملف...</span>
+                        <span id="uploadStatusText">جاري الرفع التلقائي للملف...</span>
                         <span id="uploadPercentage">يرجى الانتظار</span>
                     </div>
                     <div class="progress-bar-bg">
@@ -479,8 +481,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn" id="submitAppBtn" style="background: var(--success); margin-top: 15px;">
-                    <i class="fas fa-paper-plane"></i> إرسال للمراجعة (72 ساعة)
+                <button type="submit" class="btn" id="submitAppBtn" style="background: var(--success); margin-top: 15px;" disabled>
+                    <i class="fas fa-paper-plane"></i> اختر ملف APK أولاً ليتم تجهيز الإرسال
                 </button>
             </form>
         </div>
@@ -503,9 +505,9 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // إعدادات سوبابيز (مدمجة مباشرة لمشروعك الجديد)
+        // إعدادات سوبابيز (Supabase Storage للـ APK)
         const SUPABASE_URL = 'https://iokykmbnubqqydugneif.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlvcmt5a21mbnVicXF5ZHVnbmVpZiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzI2MDI5MTAwLCJleHAiOjIwNDE2MDUxMDB9.EXAMPLE_KEY_REPLACE_IF_NEEDED'; // استبدله بالمفتاح الفعلي إذا أردت، أو اتركه إذا قمت بنسخه
+        const SUPABASE_ANON_KEY = 'sb_publishable_CVO1fpUUCDsXgd0HUUSWjA_pkkABSJH';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let isRegisterMode = false;
@@ -632,13 +634,62 @@
             document.getElementById('avgRatingCount').textContent = rating.toFixed(1) + ' ⭐';
         }
 
+        // دالة الرفع التلقائي فور اختيار الملف
+        async function autoUploadApk(event) {
+            const fileInput = event.target;
+            const apkFile = fileInput.files[0];
+            if (!apkFile) return;
+
+            const progressContainer = document.getElementById('uploadProgressContainer');
+            const submitBtn = document.getElementById('submitAppBtn');
+            const statusText = document.getElementById('uploadStatusText');
+
+            progressContainer.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع الـ APK...';
+            statusText.textContent = `جاري رفع "${apkFile.name}" إلى Supabase...`;
+
+            try {
+                const fileName = `apk_${Date.now()}_${apkFile.name.replace(/\s+/g, '_')}`;
+                
+                // الرفع إلى Bucket: sudan play
+                const { data, error } = await supabaseClient.storage
+                    .from('sudan play')
+                    .upload(fileName, apkFile);
+
+                if (error) throw error;
+
+                // جلب الرابط المباشر
+                const { data: publicURLData } = supabaseClient.storage
+                    .from('sudan play')
+                    .getPublicUrl(fileName);
+
+                // حفظ الرابط في الحقل المخفي
+                document.getElementById('uploadedApkUrl').value = publicURLData.publicUrl;
+
+                progressContainer.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال التطبيق للمراجعة (72 ساعة)';
+                showToast('✅ تم رفع ملف الـ APK بنجاح! يمكنك الآن النقر على إرسال.');
+
+            } catch (err) {
+                progressContainer.style.display = 'none';
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '❌ فشل الرفع، حدد الملف مرة أخرى';
+                showToast('❌ خطأ في الرفع: ' + (err.message || 'فشل الاتصال'));
+                console.error(err);
+            }
+        }
+
         async function handlePublishApp(e) {
             e.preventDefault();
             const appName = document.getElementById('appName').value;
             const appType = document.getElementById('appCategory').value;
             const appSize = document.getElementById('appSize').value;
             const appIconLink = document.getElementById('appIcon').value;
-            const apkFileInput = document.getElementById('apkFileInput').files[0];
+            const apkAndroidLink = document.getElementById('uploadedApkUrl').value;
             const appIosLink = document.getElementById('appIosLink').value;
             const screenshotsInput = document.getElementById('appScreenshots').value;
             const appDescription = document.getElementById('appDescription').value;
@@ -649,37 +700,17 @@
                 return;
             }
 
-            if (!apkFileInput) {
-                showToast('❌ الرجاء اختيار ملف الـ APK');
+            if (!apkAndroidLink) {
+                showToast('❌ الرجاء الانتظار حتى يتم رفع ملف الـ APK بنجاح');
                 return;
             }
 
-            const progressContainer = document.getElementById('uploadProgressContainer');
             const submitBtn = document.getElementById('submitAppBtn');
-            const statusText = document.getElementById('uploadStatusText');
-
-            progressContainer.style.display = 'block';
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.5';
-            statusText.textContent = 'جاري رفع ملف الـ APK إلى Supabase...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري حفظ البيانات في Firebase...';
 
             try {
-                // رفع الملف إلى Supabase Storage (Bucket: sudan play)
-                const fileName = `apk_${Date.now()}_${apkFileInput.name.replace(/\s+/g, '_')}`;
-                const { data, error } = await supabaseClient.storage
-                    .from('sudan play')
-                    .upload(fileName, apkFileInput);
-
-                if (error) throw error;
-
-                // جلب رابط التحميل المباشر للـ APK من سوبابيز
-                const { data: publicURLData } = supabaseClient.storage
-                    .from('sudan play')
-                    .getPublicUrl(fileName);
-
-                const apkAndroidLink = publicURLData.publicUrl;
-                statusText.textContent = 'جاري حفظ بيانات التطبيق في Firebase...';
-
                 const screenshotsPaths = screenshotsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
                 // حفظ بيانات الطلب ورابط السوبابيز داخل قاعدة بيانات فايربيس (Firestore)
@@ -689,7 +720,7 @@
                     appSize: appSize,
                     appDescription: appDescription,
                     appIconLink: appIconLink,
-                    appAndroidLink: apkAndroidLink, // رابط الـ APK المخزن في Supabase
+                    appAndroidLink: apkAndroidLink, // الرابط الجاهز من Supabase
                     appIosLink: appIosLink,
                     screenshotsPaths: screenshotsPaths,
                     devEmail: currentDevEmail,
@@ -702,15 +733,16 @@
 
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
-                progressContainer.style.display = 'none';
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للمراجعة (72 ساعة)';
                 showToast('📤 تم إرسال طلب التطبيق بنجاح للمراجعة');
                 document.getElementById('newAppForm').reset();
+                document.getElementById('uploadedApkUrl').value = '';
 
             } catch (err) {
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
-                progressContainer.style.display = 'none';
-                showToast('❌ حدث خطأ: ' + (err.message || 'فشل الرفع'));
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للمراجعة (72 ساعة)';
+                showToast('❌ حدث خطأ: ' + (err.message || 'فشل الحفظ'));
                 console.error(err);
             }
         }
